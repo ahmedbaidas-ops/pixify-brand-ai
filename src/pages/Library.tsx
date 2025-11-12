@@ -3,10 +3,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Upload, Grid, List, Image, FileText, Download } from "lucide-react";
+import { Search, Upload, Grid, List, Image, FileText, Download, Sparkles } from "lucide-react";
+import { MotionGeneratorModal } from "@/components/motion/MotionGeneratorModal";
 
 const Library = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [motionModalOpen, setMotionModalOpen] = useState(false);
+  const [selectedAssetId, setSelectedAssetId] = useState<string | undefined>();
+
+  const BRAND_ID = "default-brand-id"; // TODO: Get from context/auth
 
   // Assets data with actual logo
   const assets = [
@@ -125,20 +130,36 @@ const Library = () => {
                       </Badge>
                     ))}
                   </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="text-muted-foreground space-x-3">
-                      <span>{asset.views} views</span>
-                      <span>{asset.downloads} downloads</span>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="text-muted-foreground space-x-3">
+                        <span>{asset.views} views</span>
+                        <span>{asset.downloads} downloads</span>
+                      </div>
+                      {asset.url && (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleDownload(asset)}
+                          className="gap-2"
+                        >
+                          <Download className="h-3 w-3" />
+                          Download
+                        </Button>
+                      )}
                     </div>
-                    {asset.url && (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleDownload(asset)}
-                        className="gap-2"
+                    {(asset.type === "image" || asset.type === "logo") && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="w-full gap-2"
+                        onClick={() => {
+                          setSelectedAssetId(asset.id.toString());
+                          setMotionModalOpen(true);
+                        }}
                       >
-                        <Download className="h-3 w-3" />
-                        Download
+                        <Sparkles className="h-3 w-3" />
+                        Animate This
                       </Button>
                     )}
                   </div>
@@ -198,6 +219,13 @@ const Library = () => {
           </div>
         )}
       </div>
+
+      <MotionGeneratorModal
+        open={motionModalOpen}
+        onOpenChange={setMotionModalOpen}
+        assetId={selectedAssetId}
+        brandId={BRAND_ID}
+      />
     </div>
   );
 };

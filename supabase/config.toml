@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.optimize-platforms]
 verify_jwt = false
+
+[functions.motion-create]
+verify_jwt = false
+
+[functions.motion-status]
+verify_jwt = false
