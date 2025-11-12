@@ -1,10 +1,33 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, TrendingUp, Users, Target, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [progressValues, setProgressValues] = useState({
+    brandConsistency: 0,
+    assetLibrary: 0,
+    campaignPerformance: 0,
+    teamActivity: 0,
+  });
+
+  useEffect(() => {
+    // Animate progress bars on mount
+    const timer = setTimeout(() => {
+      setProgressValues({
+        brandConsistency: 87,
+        assetLibrary: 92,
+        campaignPerformance: 78,
+        teamActivity: 85,
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto px-6 py-8">
@@ -46,6 +69,122 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Key Metrics with Animated Progress Bars */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card className="shadow-lg border-2 border-primary/10">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-6 w-6 text-primary" />
+                  Brand Performance Metrics
+                </CardTitle>
+                <CardDescription>
+                  Real-time insights into your brand health and team activity
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Target className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">Brand Consistency Score</span>
+                    </div>
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", delay: 1.2 }}
+                      className="text-2xl font-bold text-primary"
+                    >
+                      {progressValues.brandConsistency}%
+                    </motion.span>
+                  </div>
+                  <Progress value={progressValues.brandConsistency} className="h-3" />
+                  <p className="text-xs text-muted-foreground">Excellent brand alignment across all touchpoints</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <FolderOpen className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">Asset Library Usage</span>
+                    </div>
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", delay: 1.4 }}
+                      className="text-2xl font-bold text-primary"
+                    >
+                      {progressValues.assetLibrary}%
+                    </motion.span>
+                  </div>
+                  <Progress value={progressValues.assetLibrary} className="h-3" />
+                  <p className="text-xs text-muted-foreground">High adoption rate across marketing teams</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">Campaign Performance</span>
+                    </div>
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", delay: 1.6 }}
+                      className="text-2xl font-bold text-primary"
+                    >
+                      {progressValues.campaignPerformance}%
+                    </motion.span>
+                  </div>
+                  <Progress value={progressValues.campaignPerformance} className="h-3" />
+                  <p className="text-xs text-muted-foreground">Strong engagement across active campaigns</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.0 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">Team Activity</span>
+                    </div>
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", delay: 1.8 }}
+                      className="text-2xl font-bold text-primary"
+                    >
+                      {progressValues.teamActivity}%
+                    </motion.span>
+                  </div>
+                  <Progress value={progressValues.teamActivity} className="h-3" />
+                  <p className="text-xs text-muted-foreground">Consistent collaboration across departments</p>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
 
         {/* Quick Actions Grid */}
