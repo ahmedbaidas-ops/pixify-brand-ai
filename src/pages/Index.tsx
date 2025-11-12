@@ -1,273 +1,274 @@
 import { Button } from "@/components/ui/button";
-import { Check, X, Menu } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import heroBg from "@/assets/hero-bg.jpg";
-import featureCardBg from "@/assets/feature-card-bg.jpg";
+import { useState, useEffect } from "react";
 
 const Index = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const features = [
-    { emoji: "🌿", title: "Simplicity", rotation: "rotate-0" },
-    { emoji: "🏅", title: "Quality", rotation: "-rotate-6" },
-    { emoji: "⚡", title: "Speed", rotation: "rotate-0" },
-    { emoji: "🤖", title: "Automation", rotation: "rotate-[4.8deg]" },
-    { emoji: "🔒", title: "Reliability", rotation: "-rotate-[9.7deg]" },
-    { emoji: "🔍", title: "Transparency", rotation: "-rotate-[12.6deg]" },
-  ];
+  const [scrolled, setScrolled] = useState(false);
 
-  const mainFeatures = [
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  const features = [
     {
-      title: "Simplicity",
-      description: "A clean and intuitive interface that makes navigation and project management effortless.",
+      icon: Sparkles,
+      title: "AI-Powered Excellence",
+      description: "Leverage cutting-edge AI to transform your creative workflows and deliver exceptional results faster.",
     },
     {
-      title: "Quality",
-      description: "Access to top-tier design professionals and AI-driven insights to deliver exceptional outcomes.",
+      icon: Zap,
+      title: "Lightning Fast",
+      description: "Streamline your entire creative process with automated workflows that save hours every day.",
     },
     {
-      title: "Automation",
-      description: "Smart workflows that handle repetitive tasks, allowing you to focus on creativity and strategy.",
+      icon: Shield,
+      title: "Enterprise Security",
+      description: "Bank-level security with SOC 2 compliance, keeping your creative assets safe and sound.",
     },
     {
-      title: "Speed",
-      description: "Accelerate project timelines with efficient task management and instant communication",
-    },
-    {
-      title: "Reliability",
-      description: "Secure platforms and trusted teams that ensure consistent delivery",
-    },
-    {
-      title: "Transparency",
-      description: "Real-time progress tracking and clear communication at every step.",
+      icon: Users,
+      title: "Team Collaboration",
+      description: "Built for teams. Real-time collaboration that keeps everyone aligned and moving forward.",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white font-[Montserrat]">
-      {/* Interactive Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#121212]/80 backdrop-blur-lg border-b border-[#362F2F] transition-all duration-300">
-        <div className="max-w-[1440px] mx-auto px-6 py-4">
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Modern Header */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'bg-background/80 backdrop-blur-xl border-b border-border' : 'bg-transparent'
+      }`}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group">
               <img 
                 src="/qatar-airways-logo.png" 
                 alt="Pixify Logo" 
-                className="h-12 w-auto transition-transform duration-300 group-hover:scale-110"
+                className="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
               />
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#9A33A6] to-[#E639C4] bg-clip-text text-transparent">
-                Pixify DAM
+              <span className="text-xl font-bold bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
+                Pixify
               </span>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-white/80 hover:text-white transition-colors duration-200 hover:scale-105 transform">
+              <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
                 Features
               </a>
-              <a href="#compare" className="text-white/80 hover:text-white transition-colors duration-200 hover:scale-105 transform">
-                Compare
+              <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
+                How it works
               </a>
-              <a href="#why" className="text-white/80 hover:text-white transition-colors duration-200 hover:scale-105 transform">
-                Why Pixify
+              <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
+                Pricing
               </a>
               <Link to="/auth">
-                <Button className="bg-gradient-to-r from-[#3F2D82] via-[#9A33A6] to-[#E639C4] hover:opacity-90 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_0_rgba(127,86,217,0.4)]">
+                <Button size="sm" className="bg-primary hover:bg-primary/90">
                   Get Started
                 </Button>
               </Link>
             </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <Menu size={24} />
-            </button>
           </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <nav className="md:hidden pt-4 pb-2 space-y-2 animate-fade-in">
-              <a href="#features" className="block py-2 text-white/80 hover:text-white hover:bg-white/5 rounded px-2 transition-all">
-                Features
-              </a>
-              <a href="#compare" className="block py-2 text-white/80 hover:text-white hover:bg-white/5 rounded px-2 transition-all">
-                Compare
-              </a>
-              <a href="#why" className="block py-2 text-white/80 hover:text-white hover:bg-white/5 rounded px-2 transition-all">
-                Why Pixify
-              </a>
-              <Link to="/auth" className="block pt-2">
-                <Button className="w-full bg-gradient-to-r from-[#3F2D82] via-[#9A33A6] to-[#E639C4]">
-                  Get Started
-                </Button>
-              </Link>
-            </nav>
-          )}
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="relative min-h-[1242px] flex items-center justify-center overflow-hidden pt-20"  id="why">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={heroBg}
-            alt="Background" 
-            className="w-full h-[824px] object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#121212]/50 to-[#121212]" />
-        </div>
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(154,51,166,0.15),transparent_50%)]" />
+        
+        <div className="max-w-7xl mx-auto relative">
+          <div className="text-center space-y-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-4">
+              <Sparkles className="w-4 h-4" />
+              AI-Powered Brand Management
+            </div>
+            
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight max-w-5xl mx-auto leading-[1.1]">
+              Your brand assets,
+              <span className="block bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
+                powered by AI
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Manage, organize, and distribute your creative assets with intelligence. 
+              Pixify transforms how teams work with digital assets.
+            </p>
 
-        {/* Main Hero Card */}
-        <div className="relative z-10 max-w-[1239px] w-full mx-auto px-4 mt-[260px]">
-          <div className="backdrop-blur-[21px] bg-gradient-to-r from-[rgba(39,39,39,0.18)] to-[rgba(0,0,0,0.12)] border border-[#362F2F] rounded-3xl p-12 text-center transition-all duration-500 hover:scale-[1.02] hover:border-[#9A33A6]/50 hover:shadow-[0_0_40px_0_rgba(154,51,166,0.3)]">
-            <div className="space-y-6">
-              <div className="text-xl font-bold">Why Pixify</div>
-              <h1 className="text-4xl font-bold">Simplifying Design with Automated Excellence</h1>
-              <p className="text-lg max-w-[888px] mx-auto">
-                Pixify eliminates the complexity of traditional design workflows. Whether you're a startup, agency, or corporation, our platform helps you manage projects effortlessly by matching you with expert teams and solutions tailored to your needs.
-              </p>
+            <div className="flex items-center justify-center gap-4 pt-4">
               <Link to="/auth">
-                <Button 
-                  className="w-full max-w-[576px] h-16 text-lg font-semibold bg-gradient-to-r from-[#3F2D82] via-[#9A33A6] via-[#E639C4] via-[#FF8451] to-[#FFBA9E] hover:opacity-90 shadow-[0_0_30px_0_rgba(127,86,217,0.2)]"
-                >
-                  Try Pixify
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8 h-14 group">
+                  Start for free
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
+              <Button size="lg" variant="outline" className="text-lg px-8 h-14">
+                Watch demo
+              </Button>
             </div>
+
+            <div className="pt-8 text-sm text-muted-foreground">
+              <div className="flex items-center justify-center gap-6 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>14-day free trial</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Cancel anytime</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Image/Visual */}
+          <div className="mt-20 relative animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl bg-card">
+              <div className="aspect-video bg-gradient-to-br from-primary/20 via-background to-background p-12">
+                <div className="grid grid-cols-3 gap-4 h-full">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div
+                      key={i}
+                      className="rounded-lg bg-muted/50 backdrop-blur-sm border border-border/50 hover:scale-105 transition-transform duration-300"
+                      style={{ animationDelay: `${i * 100}ms` }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-[#E639C4]/20 blur-3xl -z-10 opacity-50" />
           </div>
         </div>
+      </section>
 
-        {/* Floating Feature Badges with Concentric Circles */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[971px] h-[479px]">
-          {/* Concentric circles */}
-          <div className="absolute left-[11px] top-0 w-[950px] h-[950px] rounded-full border-2 border-[#525252]" />
-          <div className="absolute left-[111px] top-[74px] w-[750px] h-[750px] rounded-full border-2 border-[#525252]" />
-          <div className="absolute left-[211px] top-[161px] w-[550px] h-[550px] rounded-full border-2 border-[#525252]" />
-          
-          {/* Feature badges positioned around circles */}
-          <div className={`absolute left-[407px] top-[-52px] ${features[4].rotation} transition-all duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer`}>
-            <div className="flex items-center gap-2 px-7 py-[30px] rounded-3xl border border-[#525252] bg-[#1C1C1C] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] whitespace-nowrap hover:border-[#9A33A6] hover:shadow-[0_0_30px_0_rgba(154,51,166,0.5)] transition-all duration-300">
-              <span className="text-lg font-bold">{features[4].emoji} {features[4].title}</span>
-            </div>
-          </div>
-          <div className={`absolute left-[0px] top-[323px] ${features[1].rotation} transition-all duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer`}>
-            <div className="flex items-center gap-2 px-7 py-[30px] rounded-3xl border border-[#525252] bg-[#1C1C1C] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] whitespace-nowrap hover:border-[#9A33A6] hover:shadow-[0_0_30px_0_rgba(154,51,166,0.5)] transition-all duration-300">
-              <span className="text-lg font-bold">{features[1].emoji} {features[1].title}</span>
-            </div>
-          </div>
-          <div className={`absolute left-[230px] top-[262px] ${features[3].rotation} transition-all duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer`}>
-            <div className="flex items-center gap-2 px-7 py-[30px] rounded-3xl border border-[#525252] bg-[#1C1C1C] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] whitespace-nowrap hover:border-[#9A33A6] hover:shadow-[0_0_30px_0_rgba(154,51,166,0.5)] transition-all duration-300">
-              <span className="text-lg font-bold">{features[3].emoji} {features[3].title}</span>
-            </div>
-          </div>
-          <div className={`absolute left-[552px] top-[158px] ${features[2].rotation} transition-all duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer`}>
-            <div className="flex items-center gap-2 px-7 py-[30px] rounded-3xl border border-[#525252] bg-[#1C1C1C] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] whitespace-nowrap hover:border-[#9A33A6] hover:shadow-[0_0_30px_0_rgba(154,51,166,0.5)] transition-all duration-300">
-              <span className="text-lg font-bold">{features[2].emoji} {features[2].title}</span>
-            </div>
-          </div>
-          <div className={`absolute left-[780px] top-[259px] ${features[0].rotation} transition-all duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer`}>
-            <div className="flex items-center gap-2 px-7 py-[30px] rounded-3xl border border-[#525252] bg-[#1C1C1C] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] whitespace-nowrap hover:border-[#9A33A6] hover:shadow-[0_0_30px_0_rgba(154,51,166,0.5)] transition-all duration-300">
-              <span className="text-lg font-bold">{features[0].emoji} {features[0].title}</span>
-            </div>
-          </div>
-          <div className={`absolute left-[918px] top-[344px] ${features[5].rotation} transition-all duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer`}>
-            <div className="flex items-center gap-2 px-7 py-[30px] rounded-3xl border border-[#525252] bg-[#1C1C1C] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] whitespace-nowrap hover:border-[#9A33A6] hover:shadow-[0_0_30px_0_rgba(154,51,166,0.5)] transition-all duration-300">
-              <span className="text-lg font-bold">{features[5].emoji} {features[5].title}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Comparison Table Section */}
-      <div className="py-[120px] px-4" id="compare">
-        <div className="max-w-[1240px] mx-auto text-center space-y-14">
-          <div className="space-y-4">
-            <h2 className="text-4xl font-bold">Compare Pixify's Features</h2>
-            <p className="text-lg max-w-[666px] mx-auto">
-              Reasons why you should consider Pixify as your go to design agencies
+      {/* Features Section */}
+      <section id="features" className="py-32 px-6 bg-muted/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold">Everything you need</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Powerful features that transform how your team manages creative assets
             </p>
           </div>
 
-          {/* Comparison Table */}
-          <div className="space-y-6">
-            {/* Header Row */}
-            <div className="grid grid-cols-4 gap-4 text-xl font-bold pb-4 border-b border-dashed border-[#525252]">
-              <div></div>
-              <div>Pixify</div>
-              <div>Traditional design agency</div>
-              <div>Freelancers</div>
-            </div>
-
-            {/* Comparison Rows */}
-            {[
-              { feature: "Custom Request", pixify: true, traditional: false, freelancer: true },
-              { feature: "Progress Reports", pixify: true, traditional: true, freelancer: false },
-              { feature: "Team Selection", pixify: true, traditional: false, freelancer: true },
-              { feature: "Workflow Optimization", pixify: true, traditional: false, freelancer: false },
-              { feature: "Version Control", pixify: "(Real-Time)", traditional: false, freelancer: "(Manual)" },
-              { feature: "Dedicated Support", pixify: "(24/7)", traditional: "Office Hours", freelancer: "(Manual)" },
-              { feature: "Risk Mitigation", pixify: "(Built-in)", traditional: "(With Cost)", freelancer: false },
-            ].map((row, idx) => (
-              <div key={idx} className="grid grid-cols-4 gap-4 items-center py-4 border-b border-dashed border-[#525252] text-xl transition-all duration-300 hover:bg-white/5 hover:scale-[1.02] rounded-lg px-4 cursor-pointer">
-                <div className="font-bold text-left">{row.feature}</div>
-                <div className="flex justify-center">
-                  {typeof row.pixify === "boolean" ? (
-                    row.pixify ? <Check className="text-white" size={24} /> : <X className="text-red-500" size={24} />
-                  ) : (
-                    <span className="text-lg">{row.pixify}</span>
-                  )}
-                </div>
-                <div className="flex justify-center">
-                  {typeof row.traditional === "boolean" ? (
-                    row.traditional ? <Check className="text-white" size={24} /> : <X className="text-red-500" size={24} />
-                  ) : (
-                    <span className="text-lg">{row.traditional}</span>
-                  )}
-                </div>
-                <div className="flex justify-center">
-                  {typeof row.freelancer === "boolean" ? (
-                    row.freelancer ? <Check className="text-white" size={24} /> : <X className="text-red-500" size={24} />
-                  ) : (
-                    <span className="text-lg">{row.freelancer}</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Features Section */}
-      <div className="py-[120px] px-4" id="features">
-        <div className="max-w-[1240px] mx-auto text-center space-y-14">
-          <h2 className="text-4xl font-bold">Main Features</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mainFeatures.map((feature, idx) => (
-              <div 
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, idx) => (
+              <div
                 key={idx}
-                className="group relative rounded-3xl border border-[#181818] bg-[#1C1C1C] shadow-[2px_4px_12px_0_rgba(0,0,0,0.48)] overflow-hidden h-[379px] cursor-pointer transition-all duration-500 hover:scale-105 hover:border-[#9A33A6] hover:shadow-[0_0_40px_0_rgba(154,51,166,0.4)]"
+                className="group relative p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 cursor-pointer"
               >
-                <img 
-                  src={featureCardBg}
-                  alt="" 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1C1C1C]/50 to-[#1C1C1C] group-hover:via-[#1C1C1C]/70 transition-all duration-500" />
-                <div className="absolute bottom-6 left-6 right-6 space-y-4 transition-all duration-500 group-hover:bottom-8">
-                  <h3 className="text-2xl font-bold transition-all duration-300 group-hover:text-[#E639C4]">{feature.title}</h3>
-                  <p className="text-base opacity-90 group-hover:opacity-100 transition-opacity duration-300">{feature.description}</p>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                  <feature.icon className="w-6 h-6 text-primary" />
                 </div>
+                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold">Simple, powerful workflow</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Get started in minutes, not days
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              {
+                step: "01",
+                title: "Upload & Organize",
+                description: "Drag and drop your assets. Our AI automatically tags and categorizes everything.",
+              },
+              {
+                step: "02",
+                title: "Collaborate",
+                description: "Share with your team, get feedback, and approve assets in real-time.",
+              },
+              {
+                step: "03",
+                title: "Distribute",
+                description: "Deliver the right assets to the right channels at the right time.",
+              },
+            ].map((item, idx) => (
+              <div key={idx} className="relative">
+                <div className="text-6xl font-bold text-primary/10 mb-4">{item.step}</div>
+                <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                {idx < 2 && (
+                  <div className="hidden md:block absolute top-12 -right-6 w-12 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section id="pricing" className="py-32 px-6 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(230,57,196,0.15),transparent_50%)]" />
+        
+        <div className="max-w-4xl mx-auto text-center relative">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            Ready to transform your
+            <span className="block bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
+              creative workflow?
+            </span>
+          </h2>
+          
+          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Join thousands of teams already using Pixify to manage their brand assets.
+          </p>
+
+          <div className="flex items-center justify-center gap-4">
+            <Link to="/auth">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8 h-14 group">
+                Get started for free
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Button size="lg" variant="outline" className="text-lg px-8 h-14">
+              Talk to sales
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-border py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <img src="/qatar-airways-logo.png" alt="Pixify Logo" className="h-8 w-auto" />
+              <span className="text-sm text-muted-foreground">© 2024 Pixify. All rights reserved.</span>
+            </div>
+            <nav className="flex items-center gap-6">
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Terms
+              </a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Contact
+              </a>
+            </nav>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

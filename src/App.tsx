@@ -71,91 +71,93 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedLayout>
-                <Dashboard />
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/guideline"
-            element={
-              <ProtectedLayout>
-                <Guideline />
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/library"
-            element={
-              <ProtectedLayout>
-                <Library />
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/mindmap"
-            element={
-              <ProtectedLayout>
-                <Mindmap />
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/design-system"
-            element={
-              <ProtectedLayout>
-                <div className="p-8">
-                  <h1 className="text-4xl font-bold">Design System</h1>
-                  <p className="text-muted-foreground mt-2">Coming soon</p>
-                </div>
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/playbook"
-            element={
-              <ProtectedLayout>
-                <div className="p-8">
-                  <h1 className="text-4xl font-bold">Playbook</h1>
-                  <p className="text-muted-foreground mt-2">Coming soon</p>
-                </div>
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/requests"
-            element={
-              <ProtectedLayout>
-                <div className="p-8">
-                  <h1 className="text-4xl font-bold">Requests</h1>
-                  <p className="text-muted-foreground mt-2">Coming soon</p>
-                </div>
-              </ProtectedLayout>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedLayout>
-                <div className="p-8">
-                  <h1 className="text-4xl font-bold">Admin</h1>
-                  <p className="text-muted-foreground mt-2">Coming soon</p>
-                </div>
-              </ProtectedLayout>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <div className="dark">
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedLayout>
+                  <Dashboard />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/guideline"
+              element={
+                <ProtectedLayout>
+                  <Guideline />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/library"
+              element={
+                <ProtectedLayout>
+                  <Library />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/mindmap"
+              element={
+                <ProtectedLayout>
+                  <Mindmap />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/design-system"
+              element={
+                <ProtectedLayout>
+                  <div className="p-8">
+                    <h1 className="text-4xl font-bold">Design System</h1>
+                    <p className="text-muted-foreground mt-2">Coming soon</p>
+                  </div>
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/playbook"
+              element={
+                <ProtectedLayout>
+                  <div className="p-8">
+                    <h1 className="text-4xl font-bold">Playbook</h1>
+                    <p className="text-muted-foreground mt-2">Coming soon</p>
+                  </div>
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/requests"
+              element={
+                <ProtectedLayout>
+                  <div className="p-8">
+                    <h1 className="text-4xl font-bold">Requests</h1>
+                    <p className="text-muted-foreground mt-2">Coming soon</p>
+                  </div>
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedLayout>
+                  <div className="p-8">
+                    <h1 className="text-4xl font-bold">Admin</h1>
+                    <p className="text-muted-foreground mt-2">Coming soon</p>
+                  </div>
+                </ProtectedLayout>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </TooltipProvider>
   </QueryClientProvider>
 );
