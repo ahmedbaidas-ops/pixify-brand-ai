@@ -1,4 +1,4 @@
-import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone } from "lucide-react";
+import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone, Zap } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -18,6 +18,7 @@ const navigation = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Brand Health", url: "/brand-health", icon: Activity },
   { title: "Marketing Suite", url: "/marketing", icon: Megaphone },
+  { title: "Platform Optimizer", url: "/marketing/optimizer", icon: Zap },
   { title: "Competitors", url: "/competitors", icon: Plane },
   { title: "Generate", url: "/generate", icon: Sparkles },
   { title: "Mindmap View", url: "/mindmap", icon: Network },
