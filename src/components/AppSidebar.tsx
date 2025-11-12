@@ -1,4 +1,4 @@
-import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles } from "lucide-react";
+import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -15,6 +15,7 @@ import {
 
 const navigation = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Mindmap View", url: "/mindmap", icon: Network },
   { title: "Guideline", url: "/guideline", icon: FileText },
   { title: "Library", url: "/library", icon: FolderOpen },
   { title: "Design System", url: "/design-system", icon: Palette },

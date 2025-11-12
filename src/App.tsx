@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Guideline from "./pages/Guideline";
 import Library from "./pages/Library";
+import Mindmap from "./pages/Mindmap";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -97,6 +98,14 @@ const App = () => (
             element={
               <ProtectedLayout>
                 <Library />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/mindmap"
+            element={
+              <ProtectedLayout>
+                <Mindmap />
               </ProtectedLayout>
             }
           />
