@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Zap, Shield, Users } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +16,32 @@ const Index = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleDownloadLogo = async () => {
+    try {
+      const response = await fetch("/qatar-airways-logo.png");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "pixify-logo.png";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast({
+        title: "Logo downloaded",
+        description: "The logo has been saved to your downloads folder.",
+      });
+    } catch (error) {
+      toast({
+        title: "Download failed",
+        description: "There was an error downloading the logo.",
+        variant: "destructive",
+      });
+    }
+  };
   const features = [
     {
       icon: Sparkles,
@@ -44,18 +73,30 @@ const Index = () => {
       }`}>
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 group">
-              <img 
-                src="/qatar-airways-logo.png" 
-                alt="Pixify Logo" 
-                className="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
-              />
-              <span className="text-xl font-bold bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
-                Pixify
-              </span>
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link to="/" className="flex items-center gap-3 group">
+                <img 
+                  src="/qatar-airways-logo.png" 
+                  alt="Pixify Logo" 
+                  className="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
+                />
+                <span className="text-xl font-bold bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
+                  Pixify
+                </span>
+              </Link>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDownloadLogo}
+                className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <Download className="w-4 h-4" />
+                <span className="text-xs">Download Logo</span>
+              </Button>
+            </div>
 
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
                 Features
               </a>
@@ -65,6 +106,9 @@ const Index = () => {
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
                 Pricing
               </a>
+              
+              <ThemeToggle />
+              
               <Link to="/auth">
                 <Button size="sm" className="bg-primary hover:bg-primary/90">
                   Get Started
