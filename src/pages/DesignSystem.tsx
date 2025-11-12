@@ -29,7 +29,16 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { ComponentPlayground } from "@/components/ComponentPlayground";
+import { Link } from "react-router-dom";
 
 type ViewMode = "grid" | "list";
 type ComponentType = "button" | "badge" | "input" | "progress" | "card";
@@ -152,6 +161,23 @@ const DesignSystem = () => {
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
       <aside className="w-72 border-r border-border bg-card/30 backdrop-blur-sm fixed h-screen overflow-y-auto">
+        {/* Breadcrumb at top of sidebar */}
+        <div className="p-6 border-b border-border">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/dashboard">Dashboard</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Design System</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        {/* Brand Identity */}
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
