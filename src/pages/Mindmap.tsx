@@ -1,361 +1,361 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Palette, Type, Box, Sparkles, Target, FileText } from "lucide-react";
-
-interface Node {
-  id: string;
-  label: string;
-  category: string;
-  x: number;
-  y: number;
-  color: string;
-  icon: typeof Palette;
-  items?: string[];
-}
-
-const nodes: Node[] = [
-  {
-    id: "brand",
-    label: "Qatar Airways",
-    category: "Brand Core",
-    x: 50,
-    y: 50,
-    color: "hsl(330 88% 20%)",
-    icon: Sparkles,
-    items: ["Premium airline", "Global reach", "Exceptional service"],
-  },
-  {
-    id: "strategy",
-    label: "Strategy",
-    category: "Foundation",
-    x: 20,
-    y: 20,
-    color: "hsl(330 70% 30%)",
-    icon: Target,
-    items: ["Caregiver/Explorer", "Warm & Premium", "Trustworthy"],
-  },
-  {
-    id: "colors",
-    label: "Colors",
-    category: "Visual System",
-    x: 80,
-    y: 20,
-    color: "hsl(330 88% 35%)",
-    icon: Palette,
-    items: ["Qatar Maroon #5C0A3A", "Sand #CBB59C", "Neutral #0F1020"],
-  },
-  {
-    id: "typography",
-    label: "Typography",
-    category: "Visual System",
-    x: 20,
-    y: 80,
-    color: "hsl(30 32% 70%)",
-    icon: Type,
-    items: ["Display: Cormorant Garamond", "UI: Inter", "Scale: 12-72px"],
-  },
-  {
-    id: "components",
-    label: "Components",
-    category: "Design System",
-    x: 80,
-    y: 80,
-    color: "hsl(30 40% 60%)",
-    icon: Box,
-    items: ["Buttons", "Cards", "Navigation", "Forms"],
-  },
-  {
-    id: "guidelines",
-    label: "Guidelines",
-    category: "Documentation",
-    x: 50,
-    y: 15,
-    color: "hsl(240 37% 20%)",
-    icon: FileText,
-    items: ["Logo usage", "Color rules", "Typography scale"],
-  },
-];
-
-const connections = [
-  { from: "brand", to: "strategy" },
-  { from: "brand", to: "colors" },
-  { from: "brand", to: "typography" },
-  { from: "brand", to: "components" },
-  { from: "brand", to: "guidelines" },
-  { from: "strategy", to: "guidelines" },
-  { from: "colors", to: "components" },
-  { from: "typography", to: "components" },
-];
+import { Sparkles } from "lucide-react";
 
 const Mindmap = () => {
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-
-  const getNodePosition = (node: Node) => ({
-    left: `${node.x}%`,
-    top: `${node.y}%`,
-  });
-
-  const getConnectionPath = (from: Node, to: Node) => {
-    const startX = (from.x / 100) * 1200;
-    const startY = (from.y / 100) * 800;
-    const endX = (to.x / 100) * 1200;
-    const endY = (to.y / 100) * 800;
-
-    const midX = (startX + endX) / 2;
-    const midY = (startY + endY) / 2;
-
-    return `M ${startX} ${startY} Q ${midX} ${midY}, ${endX} ${endY}`;
-  };
-
-  const handleNodeClick = (node: Node) => {
-    setSelectedNode(node);
-  };
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
-      <div className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold mb-3">Brand Mindmap</h1>
-          <p className="text-xl text-muted-foreground">
-            Interactive visualization of Qatar Airways brand system
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Mindmap Canvas */}
-          <div className="lg:col-span-2">
-            <Card className="relative h-[800px] overflow-hidden bg-card shadow-xl">
-              {/* SVG Connections */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                style={{ zIndex: 1 }}
-              >
-                <defs>
-                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="hsl(330 88% 20%)" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="hsl(330 88% 20%)" stopOpacity="0.6" />
-                  </linearGradient>
-                </defs>
-                {connections.map((conn, idx) => {
-                  const fromNode = nodes.find((n) => n.id === conn.from);
-                  const toNode = nodes.find((n) => n.id === conn.to);
-                  if (!fromNode || !toNode) return null;
-
-                  const isHighlighted =
-                    hoveredNode === conn.from || hoveredNode === conn.to;
-
-                  return (
-                    <path
-                      key={idx}
-                      d={getConnectionPath(fromNode, toNode)}
-                      stroke="url(#lineGradient)"
-                      strokeWidth={isHighlighted ? "3" : "2"}
-                      fill="none"
-                      className="transition-all duration-300"
-                      style={{
-                        opacity: isHighlighted ? 1 : 0.4,
-                      }}
-                    />
-                  );
-                })}
-              </svg>
-
-              {/* Nodes */}
-              <div className="relative w-full h-full" style={{ zIndex: 2 }}>
-                {nodes.map((node) => {
-                  const Icon = node.icon;
-                  const isHovered = hoveredNode === node.id;
-                  const isSelected = selectedNode?.id === node.id;
-                  const isCentral = node.id === "brand";
-
-                  return (
-                    <div
-                      key={node.id}
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-                      style={getNodePosition(node)}
-                      onMouseEnter={() => setHoveredNode(node.id)}
-                      onMouseLeave={() => setHoveredNode(null)}
-                      onClick={() => handleNodeClick(node)}
-                    >
-                      {/* Node Circle */}
-                      <div
-                        className={`relative transition-all duration-300 ${
-                          isCentral
-                            ? "w-40 h-40"
-                            : isHovered || isSelected
-                            ? "w-32 h-32"
-                            : "w-28 h-28"
-                        }`}
-                      >
-                        <div
-                          className={`w-full h-full rounded-full flex flex-col items-center justify-center shadow-lg transition-all duration-300 ${
-                            isHovered || isSelected ? "shadow-xl scale-110" : ""
-                          }`}
-                          style={{
-                            backgroundColor: node.color,
-                          }}
-                        >
-                          <Icon
-                            className={`text-white mb-2 ${
-                              isCentral ? "h-12 w-12" : "h-8 w-8"
-                            }`}
-                          />
-                          <span
-                            className={`text-white font-bold text-center px-2 ${
-                              isCentral ? "text-lg" : "text-sm"
-                            }`}
-                          >
-                            {node.label}
-                          </span>
-                        </div>
-
-                        {/* Pulse animation for central node */}
-                        {isCentral && (
-                          <div
-                            className="absolute inset-0 rounded-full animate-pulse"
-                            style={{
-                              backgroundColor: node.color,
-                              opacity: 0.3,
-                              animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                            }}
-                          />
-                        )}
-
-                        {/* Category badge */}
-                        {!isCentral && (
-                          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                            <Badge
-                              variant="secondary"
-                              className="text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              {node.category}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Instructions */}
-              <div className="absolute bottom-6 left-6 z-10">
-                <Card className="px-4 py-2 bg-background/80 backdrop-blur-sm border-primary/20">
-                  <p className="text-sm text-muted-foreground">
-                    Click nodes to view details • Hover to highlight connections
-                  </p>
-                </Card>
-              </div>
-            </Card>
-          </div>
-
-          {/* Details Panel */}
-          <div className="lg:col-span-1">
-            <Card className="p-6 h-[800px] overflow-y-auto shadow-xl">
-              {selectedNode ? (
-                <div className="space-y-6 animate-fade-in">
-                  <div>
-                    <div
-                      className="w-20 h-20 rounded-2xl flex items-center justify-center mb-4"
-                      style={{ backgroundColor: selectedNode.color }}
-                    >
-                      {(() => {
-                        const Icon = selectedNode.icon;
-                        return <Icon className="h-10 w-10 text-white" />;
-                      })()}
-                    </div>
-                    <h2 className="text-3xl font-bold mb-2">{selectedNode.label}</h2>
-                    <Badge>{selectedNode.category}</Badge>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-muted-foreground">
-                      Key Elements
-                    </h3>
-                    {selectedNode.items?.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                      >
-                        <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0" />
-                        <p className="text-sm">{item}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Connected Nodes */}
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold text-muted-foreground">
-                      Connected To
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {connections
-                        .filter(
-                          (conn) =>
-                            conn.from === selectedNode.id || conn.to === selectedNode.id
-                        )
-                        .map((conn, idx) => {
-                          const connectedId =
-                            conn.from === selectedNode.id ? conn.to : conn.from;
-                          const connectedNode = nodes.find((n) => n.id === connectedId);
-                          if (!connectedNode) return null;
-
-                          return (
-                            <Badge
-                              key={idx}
-                              variant="outline"
-                              className="cursor-pointer hover:bg-primary/10 transition-colors"
-                              onClick={() => handleNodeClick(connectedNode)}
-                            >
-                              {connectedNode.label}
-                            </Badge>
-                          );
-                        })}
-                    </div>
-                  </div>
+    <div className="min-h-screen bg-[#000000] overflow-hidden">
+      {/* Top Navigation Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">Q</span>
                 </div>
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="h-10 w-10 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-2">Explore the Brand System</h3>
-                    <p className="text-muted-foreground">
-                      Click any node to view detailed information about that element
-                    </p>
-                  </div>
-                </div>
-              )}
-            </Card>
+                <span className="text-white font-bold">Qatar Airways</span>
+              </div>
+              <nav className="hidden md:flex items-center gap-6 text-sm">
+                <span className="text-white/80 hover:text-white transition-colors cursor-pointer">
+                  Brand Guidelines
+                </span>
+                <span className="text-white/60 hover:text-white transition-colors cursor-pointer">
+                  Design Foundations
+                </span>
+                <span className="text-white/60 hover:text-white transition-colors cursor-pointer">
+                  Resources
+                </span>
+              </nav>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Legend */}
-        <Card className="mt-8 p-6">
-          <h3 className="text-lg font-bold mb-4">System Overview</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {nodes.map((node) => {
-              const Icon = node.icon;
-              return (
-                <div key={node.id} className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: node.color }}
+      {/* Floating Cards Grid */}
+      <div className="pt-24 pb-12 px-6 min-h-screen">
+        <div className="container mx-auto max-w-[1600px]">
+          {/* Row 1 */}
+          <div className="grid grid-cols-12 gap-6 mb-6">
+            {/* Gradient Card - Large */}
+            <div 
+              className="col-span-12 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(1)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-gradient-to-br from-[#5C0A3A] via-[#8B1655] to-[#CBB59C] border-0 overflow-hidden relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-4 left-4 text-white/80 text-sm">
+                  Brand Essence
+                </div>
+              </Card>
+            </div>
+
+            {/* Color Card - Primary */}
+            <div 
+              className="col-span-6 md:col-span-2 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(2)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-between">
+                <div>
+                  <div className="text-xs text-muted-foreground mb-2">Primary Color</div>
+                  <div className="text-2xl font-bold text-[#5C0A3A]">#5C0A3A</div>
+                </div>
+                <div className="text-xs text-muted-foreground">Qatar Maroon</div>
+              </Card>
+            </div>
+
+            {/* Circular Progress */}
+            <div 
+              className="col-span-6 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(3)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex items-center justify-center relative">
+                <svg className="w-full h-full max-w-[200px] max-h-[200px]" viewBox="0 0 200 200">
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="80"
+                    fill="none"
+                    stroke="#f0f0f0"
+                    strokeWidth="12"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="80"
+                    fill="none"
+                    stroke="#5C0A3A"
+                    strokeWidth="12"
+                    strokeDasharray={`${2 * Math.PI * 80 * 0.85} ${2 * Math.PI * 80}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 100 100)"
+                  />
+                  <text
+                    x="100"
+                    y="100"
+                    textAnchor="middle"
+                    dy="0.3em"
+                    className="text-4xl font-bold"
+                    fill="#5C0A3A"
                   >
-                    <Icon className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm">{node.label}</p>
-                    <p className="text-xs text-muted-foreground">{node.category}</p>
+                    85%
+                  </text>
+                  <text
+                    x="100"
+                    y="135"
+                    textAnchor="middle"
+                    className="text-xs"
+                    fill="#666"
+                  >
+                    Brand Consistency
+                  </text>
+                </svg>
+              </Card>
+            </div>
+
+            {/* Abstract Pattern */}
+            <div 
+              className="col-span-12 md:col-span-4 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(4)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-[2/1] bg-[#CBE962] border-0 overflow-hidden relative">
+                <div className="absolute inset-0 opacity-80">
+                  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M0 20 Q10 10, 20 20 T40 20" stroke="#000" fill="none" strokeWidth="3" />
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#pattern)" />
+                  </svg>
+                </div>
+                <div className="absolute bottom-4 left-4 text-black/70 text-sm font-medium">
+                  Pattern Library
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="grid grid-cols-12 gap-6 mb-6">
+            {/* Typography Card */}
+            <div 
+              className="col-span-12 md:col-span-4 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(5)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-[2/1] bg-white border-0 p-6 flex flex-col justify-center">
+                <div className="text-5xl font-serif mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+                  Aa
+                </div>
+                <div className="text-sm text-muted-foreground">Cormorant Garamond</div>
+                <div className="text-xs text-muted-foreground mt-1">Display Typography</div>
+              </Card>
+            </div>
+
+            {/* Input Example */}
+            <div 
+              className="col-span-12 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(6)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex items-center justify-center">
+                <div className="w-full space-y-3">
+                  <div className="text-xs text-muted-foreground mb-4">Enter booking code</div>
+                  <div className="flex gap-2 justify-center">
+                    <div className="w-3 h-3 rounded-full bg-[#5C0A3A]" />
+                    <div className="w-3 h-3 rounded-full bg-[#5C0A3A]" />
+                    <div className="w-3 h-3 rounded-full bg-[#5C0A3A]" />
+                    <div className="w-3 h-3 rounded-full bg-gray-200" />
                   </div>
                 </div>
-              );
-            })}
+              </Card>
+            </div>
+
+            {/* Color Swatch - Sand */}
+            <div 
+              className="col-span-6 md:col-span-2 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(7)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-[#CBB59C] border-0 p-6 flex flex-col justify-between">
+                <div className="text-white text-2xl font-bold">#CBB59C</div>
+                <div className="text-white/80 text-xs">Sand</div>
+              </Card>
+            </div>
+
+            {/* Icon Card */}
+            <div 
+              className="col-span-6 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(8)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 border-0 p-6 flex items-center justify-center">
+                <Sparkles className="w-24 h-24 text-[#5C0A3A]" />
+              </Card>
+            </div>
           </div>
-        </Card>
+
+          {/* Row 3 */}
+          <div className="grid grid-cols-12 gap-6 mb-6">
+            {/* Stats Card */}
+            <div 
+              className="col-span-6 md:col-span-2 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(9)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-between">
+                <div>
+                  <div className="text-xs text-muted-foreground mb-2">Assets</div>
+                  <div className="text-3xl font-bold text-[#5C0A3A]">247</div>
+                </div>
+                <div className="text-xs text-green-600">↑ 12% this month</div>
+              </Card>
+            </div>
+
+            {/* Large Color Block */}
+            <div 
+              className="col-span-12 md:col-span-4 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(10)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-[2/1] bg-[#0F1020] border-0 p-6 flex flex-col justify-between">
+                <div className="text-white text-2xl font-bold">#0F1020</div>
+                <div className="text-white/60 text-sm">Neutral Dark</div>
+              </Card>
+            </div>
+
+            {/* Distribution Chart */}
+            <div 
+              className="col-span-12 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(11)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs text-muted-foreground">Asset Types</span>
+                  <span className="text-xs text-muted-foreground">View</span>
+                </div>
+                <div className="relative w-32 h-32 mx-auto mb-4">
+                  <svg viewBox="0 0 100 100" className="transform -rotate-90">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#5C0A3A" strokeWidth="20" strokeDasharray="100 150" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#CBB59C" strokeWidth="20" strokeDasharray="60 190" strokeDashoffset="-100" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#8B1655" strokeWidth="20" strokeDasharray="40 210" strokeDashoffset="-160" />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">73%</div>
+                      <div className="text-xs text-muted-foreground">Images</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <div>
+                    <div className="font-medium text-[#5C0A3A]">10%</div>
+                    <div className="text-muted-foreground">Logos</div>
+                  </div>
+                  <div>
+                    <div className="font-medium text-[#8B1655]">10%</div>
+                    <div className="text-muted-foreground">Docs</div>
+                  </div>
+                  <div>
+                    <div className="font-medium text-[#CBB59C]">7%</div>
+                    <div className="text-muted-foreground">Video</div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* 3D Effect Card */}
+            <div 
+              className="col-span-6 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(12)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-gradient-to-br from-yellow-400 via-green-400 to-blue-500 border-0 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-40">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.1) 10px, rgba(255,255,255,.1) 20px)`,
+                  }} />
+                </div>
+                <div className="absolute bottom-4 left-4 text-white text-sm font-medium">
+                  Brand Energy
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Row 4 */}
+          <div className="grid grid-cols-12 gap-6">
+            {/* UI Typography */}
+            <div 
+              className="col-span-6 md:col-span-2 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(13)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-center">
+                <div className="text-3xl font-sans mb-2">Aa</div>
+                <div className="text-xs text-muted-foreground">Inter</div>
+                <div className="text-xs text-muted-foreground mt-1">UI Typography</div>
+              </Card>
+            </div>
+
+            {/* Metric Card */}
+            <div 
+              className="col-span-6 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(14)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-between">
+                <div>
+                  <div className="text-xs text-muted-foreground mb-2">Downloads</div>
+                  <div className="text-3xl font-bold text-[#5C0A3A]">1,247</div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full w-3/4 bg-[#5C0A3A] rounded-full" />
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Accent Card */}
+            <div 
+              className="col-span-12 md:col-span-4 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(15)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-[2/1] bg-gradient-to-br from-[#5C0A3A] to-[#8B1655] border-0 p-8 flex items-center justify-center relative overflow-hidden">
+                <div className="text-white text-center relative z-10">
+                  <div className="text-4xl font-bold mb-2">Premium</div>
+                  <div className="text-white/80 text-sm">Brand Experience</div>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" />
+              </Card>
+            </div>
+
+            {/* Badge Card */}
+            <div 
+              className="col-span-12 md:col-span-3 transition-transform duration-300 hover:scale-105"
+              onMouseEnter={() => setHoveredCard(16)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <Card className="aspect-square bg-white border-0 p-6 flex flex-col items-center justify-center gap-3">
+                <Badge className="bg-[#5C0A3A] hover:bg-[#5C0A3A]">Premium</Badge>
+                <Badge variant="outline" className="border-[#5C0A3A] text-[#5C0A3A]">Trustworthy</Badge>
+                <Badge variant="secondary">Innovation</Badge>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
