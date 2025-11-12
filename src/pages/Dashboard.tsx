@@ -112,7 +112,11 @@ const Dashboard = () => {
         <div className="mb-12">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h1 className="text-5xl font-bold mb-3 text-foreground">Qatar Airways</h1>
+              <img 
+                src="/qatar-airways-logo.png" 
+                alt="Qatar Airways" 
+                className="h-16 mb-3"
+              />
               <p className="text-xl text-muted-foreground">
                 Premium airline brand guidelines & digital asset management
               </p>
