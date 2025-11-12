@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import pixifyLogo from "@/assets/pixify-logo.png";
 
 const navigation = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -34,16 +35,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border px-4 py-4">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">P</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Pixify DAM</h1>
-            <p className="text-xs text-muted-foreground">Brand Management</p>
-          </div>
-        </div>
+      <SidebarHeader className="border-b border-sidebar-border px-6 py-6">
+        <img 
+          src={pixifyLogo} 
+          alt="Pixify" 
+          className="h-10 w-auto object-contain"
+        />
       </SidebarHeader>
 
       <SidebarContent>
