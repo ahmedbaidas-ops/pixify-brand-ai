@@ -115,7 +115,7 @@ const Dashboard = () => {
               <img 
                 src="/qatar-airways-logo.png" 
                 alt="Qatar Airways" 
-                className="h-24 mb-3"
+                className="h-48 mb-3"
               />
               <p className="text-xl text-muted-foreground">
                 Premium airline brand guidelines & digital asset management
