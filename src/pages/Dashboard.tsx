@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, TrendingUp, Users, Target, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -146,120 +147,132 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Key Metrics with Animated Progress Bars */}
+          {/* Key Metrics with Modern Card Design */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            <Card className="shadow-lg border-2 border-primary/10">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-6 w-6 text-primary" />
-                  Brand Performance Metrics
-                </CardTitle>
-                <CardDescription>
-                  Real-time insights into your brand health and team activity
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Target className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Brand Consistency Score</span>
-                    </div>
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", delay: 1.2 }}
-                      className="text-2xl font-bold text-primary"
-                    >
-                      {progressValues.brandConsistency}%
-                    </motion.span>
+            {/* Brand Consistency Score */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
+              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <Target className="h-5 w-5 text-primary" />
+                    <Badge variant="secondary" className="text-xs">Live</Badge>
                   </div>
-                  <Progress value={progressValues.brandConsistency} className="h-3" />
-                  <p className="text-xs text-muted-foreground">Excellent brand alignment across all touchpoints</p>
-                </motion.div>
+                </CardHeader>
+                <CardContent>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.6, stiffness: 200 }}
+                    className="text-4xl font-bold mb-1"
+                  >
+                    {progressValues.brandConsistency}
+                    <span className="text-lg text-muted-foreground ml-1">%</span>
+                  </motion.div>
+                  <p className="text-sm font-medium mb-3">Brand Consistency</p>
+                  <Progress value={progressValues.brandConsistency} className="h-1.5" />
+                  <p className="text-xs text-muted-foreground mt-2">Excellent alignment</p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <FolderOpen className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Asset Library Usage</span>
-                    </div>
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", delay: 1.4 }}
-                      className="text-2xl font-bold text-primary"
-                    >
-                      {progressValues.assetLibrary}%
-                    </motion.span>
+            {/* Asset Library Usage */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+            >
+              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <FolderOpen className="h-5 w-5 text-primary" />
+                    <Badge variant="secondary" className="text-xs">Live</Badge>
                   </div>
-                  <Progress value={progressValues.assetLibrary} className="h-3" />
-                  <p className="text-xs text-muted-foreground">High adoption rate across marketing teams</p>
-                </motion.div>
+                </CardHeader>
+                <CardContent>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.7, stiffness: 200 }}
+                    className="text-4xl font-bold mb-1"
+                  >
+                    {progressValues.assetLibrary}
+                    <span className="text-lg text-muted-foreground ml-1">%</span>
+                  </motion.div>
+                  <p className="text-sm font-medium mb-3">Asset Library Usage</p>
+                  <Progress value={progressValues.assetLibrary} className="h-1.5" />
+                  <p className="text-xs text-muted-foreground mt-2">High adoption rate</p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Zap className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Campaign Performance</span>
-                    </div>
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", delay: 1.6 }}
-                      className="text-2xl font-bold text-primary"
-                    >
-                      {progressValues.campaignPerformance}%
-                    </motion.span>
+            {/* Campaign Performance */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+            >
+              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <Zap className="h-5 w-5 text-primary" />
+                    <Badge variant="secondary" className="text-xs">Live</Badge>
                   </div>
-                  <Progress value={progressValues.campaignPerformance} className="h-3" />
-                  <p className="text-xs text-muted-foreground">Strong engagement across active campaigns</p>
-                </motion.div>
+                </CardHeader>
+                <CardContent>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.8, stiffness: 200 }}
+                    className="text-4xl font-bold mb-1"
+                  >
+                    {progressValues.campaignPerformance}
+                    <span className="text-lg text-muted-foreground ml-1">%</span>
+                  </motion.div>
+                  <p className="text-sm font-medium mb-3">Campaign Performance</p>
+                  <Progress value={progressValues.campaignPerformance} className="h-1.5" />
+                  <p className="text-xs text-muted-foreground mt-2">Strong engagement</p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 1.0 }}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Team Activity</span>
-                    </div>
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", delay: 1.8 }}
-                      className="text-2xl font-bold text-primary"
-                    >
-                      {progressValues.teamActivity}%
-                    </motion.span>
+            {/* Team Activity */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
+            >
+              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <Users className="h-5 w-5 text-primary" />
+                    <Badge variant="secondary" className="text-xs">Live</Badge>
                   </div>
-                  <Progress value={progressValues.teamActivity} className="h-3" />
-                  <p className="text-xs text-muted-foreground">Consistent collaboration across departments</p>
-                </motion.div>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", delay: 0.9, stiffness: 200 }}
+                    className="text-4xl font-bold mb-1"
+                  >
+                    {progressValues.teamActivity}
+                    <span className="text-lg text-muted-foreground ml-1">%</span>
+                  </motion.div>
+                  <p className="text-sm font-medium mb-3">Team Activity</p>
+                  <Progress value={progressValues.teamActivity} className="h-1.5" />
+                  <p className="text-xs text-muted-foreground mt-2">Active collaboration</p>
+                </CardContent>
+              </Card>
+            </motion.div>
           </motion.div>
         </div>
 
