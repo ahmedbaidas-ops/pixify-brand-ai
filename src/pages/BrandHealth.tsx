@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { 
   TrendingUp, 
   TrendingDown,
@@ -11,7 +12,8 @@ import {
   MessageSquare,
   Shield,
   Clock,
-  Eye
+  Eye,
+  Download
 } from "lucide-react";
 import {
   Breadcrumb,
@@ -22,6 +24,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
+import { exportBrandHealthPDF } from "@/utils/exportBrandHealthPDF";
+import { useToast } from "@/hooks/use-toast";
 
 // Mock data - In production, this would come from Qatar Airways Instagram API and website analytics
 const brandHealthData = {
@@ -140,12 +144,33 @@ const getTierInfo = (score: number) => {
 const BrandHealth = () => {
   const tierInfo = getTierInfo(brandHealthData.overallScore);
   const TierIcon = tierInfo.icon;
+  const { toast } = useToast();
+
+  const handleExportPDF = async () => {
+    try {
+      toast({
+        title: "Generating PDF...",
+        description: "Your report is being created",
+      });
+      await exportBrandHealthPDF(brandHealthData);
+      toast({
+        title: "Success!",
+        description: "Brand Health report downloaded successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Could not generate PDF report",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header with Breadcrumb */}
       <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="px-8 py-4">
+        <div className="px-8 py-4 flex items-center justify-between">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -159,6 +184,13 @@ const BrandHealth = () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          <Button 
+            onClick={handleExportPDF}
+            className="gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Export PDF Report
+          </Button>
         </div>
       </div>
 
