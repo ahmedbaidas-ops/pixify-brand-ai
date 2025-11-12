@@ -6,6 +6,7 @@ import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activi
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Dashboard = () => {
   const [progressValues, setProgressValues] = useState({
@@ -14,19 +15,94 @@ const Dashboard = () => {
     campaignPerformance: 0,
     teamActivity: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Animate progress bars on mount
-    const timer = setTimeout(() => {
-      setProgressValues({
-        brandConsistency: 87,
-        assetLibrary: 92,
-        campaignPerformance: 78,
-        teamActivity: 85,
-      });
-    }, 300);
+    // Fetch brand metrics from database
+    const fetchMetrics = async () => {
+      try {
+        // First get the Qatar Airways brand
+        const { data: brands, error: brandsError } = await supabase
+          .from('brands')
+          .select('id')
+          .eq('name', 'Qatar Airways')
+          .single();
 
-    return () => clearTimeout(timer);
+        if (brandsError) throw brandsError;
+
+        if (brands) {
+          // Fetch metrics for this brand
+          const { data: metrics, error: metricsError } = await supabase
+            .from('brand_metrics')
+            .select('*')
+            .eq('brand_id', brands.id)
+            .single();
+
+          if (metricsError) throw metricsError;
+
+          if (metrics) {
+            // Animate to the actual values
+            setTimeout(() => {
+              setProgressValues({
+                brandConsistency: metrics.brand_consistency_score,
+                assetLibrary: metrics.asset_library_usage,
+                campaignPerformance: metrics.campaign_performance,
+                teamActivity: metrics.team_activity,
+              });
+              setIsLoading(false);
+            }, 300);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching brand metrics:', error);
+        // Fallback to default values
+        setTimeout(() => {
+          setProgressValues({
+            brandConsistency: 87,
+            assetLibrary: 92,
+            campaignPerformance: 78,
+            teamActivity: 85,
+          });
+          setIsLoading(false);
+        }, 300);
+      }
+    };
+
+    fetchMetrics();
+
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('brand-metrics-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'brand_metrics'
+        },
+        (payload) => {
+          console.log('Brand metrics updated:', payload);
+          if (payload.new && typeof payload.new === 'object' && 'brand_consistency_score' in payload.new) {
+            const newMetrics = payload.new as {
+              brand_consistency_score: number;
+              asset_library_usage: number;
+              campaign_performance: number;
+              team_activity: number;
+            };
+            setProgressValues({
+              brandConsistency: newMetrics.brand_consistency_score,
+              assetLibrary: newMetrics.asset_library_usage,
+              campaignPerformance: newMetrics.campaign_performance,
+              teamActivity: newMetrics.team_activity,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
   return (
     <div className="min-h-screen bg-gradient-hero">

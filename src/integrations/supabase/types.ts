@@ -92,6 +92,47 @@ export type Database = {
           },
         ]
       }
+      brand_metrics: {
+        Row: {
+          asset_library_usage: number
+          brand_consistency_score: number
+          brand_id: string
+          campaign_performance: number
+          created_at: string
+          id: string
+          team_activity: number
+          updated_at: string
+        }
+        Insert: {
+          asset_library_usage?: number
+          brand_consistency_score?: number
+          brand_id: string
+          campaign_performance?: number
+          created_at?: string
+          id?: string
+          team_activity?: number
+          updated_at?: string
+        }
+        Update: {
+          asset_library_usage?: number
+          brand_consistency_score?: number
+          brand_id?: string
+          campaign_performance?: number
+          created_at?: string
+          id?: string
+          team_activity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_metrics_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: true
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_settings: {
         Row: {
           brand_id: string
