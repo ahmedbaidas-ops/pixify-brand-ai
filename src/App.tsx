@@ -21,6 +21,7 @@ import Marketing from "./pages/Marketing";
 import Competitors from "./pages/Competitors";
 import Generate from "./pages/Generate";
 import PlatformOptimizer from "./pages/PlatformOptimizer";
+import Template from "./pages/Template";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -160,6 +161,14 @@ const App = () => (
               element={
                 <ProtectedLayout>
                   <Generate />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/template"
+              element={
+                <ProtectedLayout>
+                  <Template />
                 </ProtectedLayout>
               }
             />

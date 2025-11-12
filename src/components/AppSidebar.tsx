@@ -1,4 +1,4 @@
-import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone, Zap, ChevronDown } from "lucide-react";
+import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone, Zap, ChevronDown, LayoutTemplate } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -41,6 +41,7 @@ const navigation: NavigationItem[] = [
   },
   { title: "Competitors", url: "/competitors", icon: Plane },
   { title: "Generate", url: "/generate", icon: Sparkles, badge: "5" },
+  { title: "Template", url: "/template", icon: LayoutTemplate },
   { title: "Mindmap View", url: "/mindmap", icon: Network },
   { title: "Guideline", url: "/guideline", icon: FileText },
   { title: "Library", url: "/library", icon: FolderOpen },
