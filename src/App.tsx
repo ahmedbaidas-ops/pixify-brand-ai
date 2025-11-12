@@ -20,6 +20,7 @@ import BrandHealth from "./pages/BrandHealth";
 import Marketing from "./pages/Marketing";
 import Competitors from "./pages/Competitors";
 import Generate from "./pages/Generate";
+import PlatformOptimizer from "./pages/PlatformOptimizer";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -135,6 +136,14 @@ const App = () => (
               element={
                 <ProtectedLayout>
                   <Marketing />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/marketing/optimizer"
+              element={
+                <ProtectedLayout>
+                  <PlatformOptimizer />
                 </ProtectedLayout>
               }
             />

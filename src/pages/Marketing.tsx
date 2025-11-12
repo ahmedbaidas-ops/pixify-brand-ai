@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Zap } from "lucide-react";
 import MarketingOverview from "@/components/marketing/MarketingOverview";
 import PersonasView from "@/components/marketing/PersonasView";
 import CampaignsView from "@/components/marketing/CampaignsView";
@@ -9,15 +12,28 @@ import ContentPillarsView from "@/components/marketing/ContentPillarsView";
 
 const Marketing = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="px-8 py-6">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Marketing Intelligence Suite</h1>
-          <p className="text-lg text-muted-foreground">
-            AI-powered marketing strategy, campaign planning, and brand alignment
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-foreground mb-2">Marketing Intelligence Suite</h1>
+              <p className="text-lg text-muted-foreground">
+                AI-powered marketing strategy, campaign planning, and brand alignment
+              </p>
+            </div>
+            <Button
+              onClick={() => navigate("/marketing/optimizer")}
+              className="gap-2"
+              size="lg"
+            >
+              <Zap className="h-5 w-5" />
+              Platform Optimizer
+            </Button>
+          </div>
         </div>
       </div>
 
