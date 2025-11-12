@@ -20,7 +20,8 @@ import {
   AlertCircle,
   CheckCircle,
   Image as ImageIcon,
-  Menu
+  Menu,
+  Play
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -28,12 +29,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ComponentPlayground } from "@/components/ComponentPlayground";
 
 type ViewMode = "grid" | "list";
+type ComponentType = "button" | "badge" | "input" | "progress" | "card";
 
 const DesignSystem = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [openSections, setOpenSections] = useState<string[]>(["overview"]);
+  const [playgroundComponent, setPlaygroundComponent] = useState<ComponentType | null>(null);
 
   const toggleSection = (section: string) => {
     setOpenSections(prev =>
@@ -48,19 +52,25 @@ const DesignSystem = () => {
       name: "Button",
       category: "Actions",
       icon: <div className="w-24 h-10 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">Click Me</div>,
-      description: "Primary action trigger for user interactions"
+      description: "Primary action trigger for user interactions",
+      hasPlayground: true,
+      playgroundType: "button" as ComponentType
     },
     {
       name: "Card",
       category: "Containers",
       icon: <div className="w-24 h-20 bg-card border-2 border-border rounded-2xl p-3 shadow-md"><div className="h-2 bg-muted rounded mb-2"></div><div className="h-2 bg-muted rounded w-3/4"></div></div>,
-      description: "Content container with elevation"
+      description: "Content container with elevation",
+      hasPlayground: true,
+      playgroundType: "card" as ComponentType
     },
     {
       name: "Badge",
       category: "Display",
       icon: <div className="flex gap-2"><Badge className="bg-primary">New</Badge><Badge variant="outline">Info</Badge></div>,
-      description: "Status indicators and labels"
+      description: "Status indicators and labels",
+      hasPlayground: true,
+      playgroundType: "badge" as ComponentType
     },
     {
       name: "Avatar",
@@ -72,7 +82,9 @@ const DesignSystem = () => {
       name: "Input",
       category: "Forms",
       icon: <Input placeholder="Enter text..." className="w-full" />,
-      description: "Text input field for user data"
+      description: "Text input field for user data",
+      hasPlayground: true,
+      playgroundType: "input" as ComponentType
     },
     {
       name: "Alert",
@@ -84,7 +96,9 @@ const DesignSystem = () => {
       name: "Progress",
       category: "Feedback",
       icon: <Progress value={65} className="w-24" />,
-      description: "Visual progress indicator"
+      description: "Visual progress indicator",
+      hasPlayground: true,
+      playgroundType: "progress" as ComponentType
     },
     {
       name: "Switch",
@@ -269,15 +283,38 @@ const DesignSystem = () => {
                       {component.category}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground mb-4">
                     {component.description}
                   </p>
+                  
+                  {component.hasPlayground && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-2 border-primary/50 hover:bg-primary/10 hover:border-primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPlaygroundComponent(component.playgroundType);
+                      }}
+                    >
+                      <Play className="w-4 h-4" />
+                      Try it out
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </main>
+
+      {/* Playground Modal */}
+      {playgroundComponent && (
+        <ComponentPlayground
+          componentType={playgroundComponent}
+          onClose={() => setPlaygroundComponent(null)}
+        />
+      )}
     </div>
   );
 };
