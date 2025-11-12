@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack } from "lucide-react";
+import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
@@ -49,45 +50,65 @@ const Dashboard = () => {
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                <FileStack className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">Generate Playbook</CardTitle>
-              <CardDescription>One-click brand playbook export</CardDescription>
-            </CardHeader>
-          </Card>
+          <Link to="/brand-health">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                  <Activity className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Brand Health Score</CardTitle>
+                <CardDescription>Monitor brand consistency metrics</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                <FileText className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">Open Guideline</CardTitle>
-              <CardDescription>View complete brand guidelines</CardDescription>
-            </CardHeader>
-          </Card>
+          <Link to="/playbook">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                  <FileStack className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Generate Playbook</CardTitle>
+                <CardDescription>One-click brand playbook export</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                <Sparkles className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">Request Asset</CardTitle>
-              <CardDescription>AI-powered design requests</CardDescription>
-            </CardHeader>
-          </Card>
+          <Link to="/guideline">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                  <FileText className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Open Guideline</CardTitle>
+                <CardDescription>View complete brand guidelines</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                <FolderOpen className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">Browse Library</CardTitle>
-              <CardDescription>All brand assets in one place</CardDescription>
-            </CardHeader>
-          </Card>
+          <Link to="/requests">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Request Asset</CardTitle>
+                <CardDescription>AI-powered design requests</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link to="/library">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                  <FolderOpen className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Browse Library</CardTitle>
+                <CardDescription>All brand assets in one place</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
 
         {/* Brand Snapshot */}
