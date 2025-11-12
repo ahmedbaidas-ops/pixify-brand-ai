@@ -47,9 +47,9 @@ const Mindmap = () => {
               onMouseEnter={() => setHoveredCard(1)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <Card className="aspect-square bg-gradient-to-br from-[#5C0A3A] via-[#8B1655] to-[#CBB59C] border-0 overflow-hidden relative group">
+              <Card className="aspect-square bg-gradient-to-br from-[#5C0632] via-[#7D0842] to-[#747F8A] border-0 overflow-hidden relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-4 left-4 text-white/80 text-sm">
+                <div className="absolute bottom-4 left-4 text-white/80 text-sm font-display">
                   Brand Essence
                 </div>
               </Card>
@@ -64,7 +64,7 @@ const Mindmap = () => {
               <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground mb-2">Primary Color</div>
-                  <div className="text-2xl font-bold text-[#5C0A3A]">#5C0A3A</div>
+                  <div className="text-2xl font-bold text-[#5C0632]">#5C0632</div>
                 </div>
                 <div className="text-xs text-muted-foreground">Qatar Maroon</div>
               </Card>
@@ -91,7 +91,7 @@ const Mindmap = () => {
                     cy="100"
                     r="80"
                     fill="none"
-                    stroke="#5C0A3A"
+                    stroke="#5C0632"
                     strokeWidth="12"
                     strokeDasharray={`${2 * Math.PI * 80 * 0.85} ${2 * Math.PI * 80}`}
                     strokeLinecap="round"
@@ -103,7 +103,7 @@ const Mindmap = () => {
                     textAnchor="middle"
                     dy="0.3em"
                     className="text-4xl font-bold"
-                    fill="#5C0A3A"
+                    fill="#5C0632"
                   >
                     85%
                   </text>
@@ -153,11 +153,11 @@ const Mindmap = () => {
               onMouseLeave={() => setHoveredCard(null)}
             >
               <Card className="aspect-[2/1] bg-white border-0 p-6 flex flex-col justify-center">
-                <div className="text-5xl font-serif mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+                <div className="text-5xl font-display mb-2">
                   Aa
                 </div>
                 <div className="text-sm text-muted-foreground">Cormorant Garamond</div>
-                <div className="text-xs text-muted-foreground mt-1">Display Typography</div>
+                <div className="text-xs text-muted-foreground mt-1">Display Typography (Official)</div>
               </Card>
             </div>
 
@@ -180,15 +180,15 @@ const Mindmap = () => {
               </Card>
             </div>
 
-            {/* Color Swatch - Sand */}
+            {/* Color Swatch - Slate Gray */}
             <div 
               className="col-span-6 md:col-span-2 transition-transform duration-300 hover:scale-105"
               onMouseEnter={() => setHoveredCard(7)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <Card className="aspect-square bg-[#CBB59C] border-0 p-6 flex flex-col justify-between">
-                <div className="text-white text-2xl font-bold">#CBB59C</div>
-                <div className="text-white/80 text-xs">Sand</div>
+              <Card className="aspect-square bg-[#747F8A] border-0 p-6 flex flex-col justify-between">
+                <div className="text-white text-2xl font-bold">#747F8A</div>
+                <div className="text-white/80 text-xs">Slate Gray</div>
               </Card>
             </div>
 
@@ -199,7 +199,7 @@ const Mindmap = () => {
               onMouseLeave={() => setHoveredCard(null)}
             >
               <Card className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 border-0 p-6 flex items-center justify-center">
-                <Sparkles className="w-24 h-24 text-[#5C0A3A]" />
+                <Sparkles className="w-24 h-24 text-[#5C0632]" />
               </Card>
             </div>
           </div>
@@ -215,7 +215,7 @@ const Mindmap = () => {
               <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground mb-2">Assets</div>
-                  <div className="text-3xl font-bold text-[#5C0A3A]">247</div>
+                  <div className="text-3xl font-bold text-[#5C0632]">247</div>
                 </div>
                 <div className="text-xs text-green-600">↑ 12% this month</div>
               </Card>
@@ -246,9 +246,9 @@ const Mindmap = () => {
                 </div>
                 <div className="relative w-32 h-32 mx-auto mb-4">
                   <svg viewBox="0 0 100 100" className="transform -rotate-90">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#5C0A3A" strokeWidth="20" strokeDasharray="100 150" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#CBB59C" strokeWidth="20" strokeDasharray="60 190" strokeDashoffset="-100" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#8B1655" strokeWidth="20" strokeDasharray="40 210" strokeDashoffset="-160" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#5C0632" strokeWidth="20" strokeDasharray="100 150" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#747F8A" strokeWidth="20" strokeDasharray="60 190" strokeDashoffset="-100" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#7D0842" strokeWidth="20" strokeDasharray="40 210" strokeDashoffset="-160" />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
@@ -259,15 +259,15 @@ const Mindmap = () => {
                 </div>
                 <div className="flex justify-between text-xs">
                   <div>
-                    <div className="font-medium text-[#5C0A3A]">10%</div>
+                    <div className="font-medium text-[#5C0632]">10%</div>
                     <div className="text-muted-foreground">Logos</div>
                   </div>
                   <div>
-                    <div className="font-medium text-[#8B1655]">10%</div>
+                    <div className="font-medium text-[#7D0842]">10%</div>
                     <div className="text-muted-foreground">Docs</div>
                   </div>
                   <div>
-                    <div className="font-medium text-[#CBB59C]">7%</div>
+                    <div className="font-medium text-[#747F8A]">7%</div>
                     <div className="text-muted-foreground">Video</div>
                   </div>
                 </div>
@@ -317,11 +317,11 @@ const Mindmap = () => {
               <Card className="aspect-square bg-white border-0 p-6 flex flex-col justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground mb-2">Downloads</div>
-                  <div className="text-3xl font-bold text-[#5C0A3A]">1,247</div>
+                  <div className="text-3xl font-bold text-[#5C0632]">1,247</div>
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full w-3/4 bg-[#5C0A3A] rounded-full" />
+                    <div className="h-full w-3/4 bg-[#5C0632] rounded-full" />
                   </div>
                 </div>
               </Card>
@@ -333,9 +333,9 @@ const Mindmap = () => {
               onMouseEnter={() => setHoveredCard(15)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <Card className="aspect-[2/1] bg-gradient-to-br from-[#5C0A3A] to-[#8B1655] border-0 p-8 flex items-center justify-center relative overflow-hidden">
+              <Card className="aspect-[2/1] bg-gradient-to-br from-[#5C0632] to-[#7D0842] border-0 p-8 flex items-center justify-center relative overflow-hidden">
                 <div className="text-white text-center relative z-10">
-                  <div className="text-4xl font-bold mb-2">Premium</div>
+                  <div className="text-4xl font-display font-bold mb-2">Premium</div>
                   <div className="text-white/80 text-sm">Brand Experience</div>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" />
@@ -349,8 +349,8 @@ const Mindmap = () => {
               onMouseLeave={() => setHoveredCard(null)}
             >
               <Card className="aspect-square bg-white border-0 p-6 flex flex-col items-center justify-center gap-3">
-                <Badge className="bg-[#5C0A3A] hover:bg-[#5C0A3A]">Premium</Badge>
-                <Badge variant="outline" className="border-[#5C0A3A] text-[#5C0A3A]">Trustworthy</Badge>
+                <Badge className="bg-[#5C0632] hover:bg-[#5C0632]">Premium</Badge>
+                <Badge variant="outline" className="border-[#5C0632] text-[#5C0632]">Trustworthy</Badge>
                 <Badge variant="secondary">Innovation</Badge>
               </Card>
             </div>

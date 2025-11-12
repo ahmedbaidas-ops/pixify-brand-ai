@@ -8,43 +8,43 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Qatar Airways Brand Colors - Cash App Aesthetic */
+    /* Official Qatar Airways Brand Colors */
     --background: 0 0% 100%;
-    --foreground: 330 88% 12%; /* Qatar maroon for text */
+    --foreground: 330 94% 18%; /* Qatar maroon #5C0632 */
 
     --card: 0 0% 100%;
-    --card-foreground: 330 88% 12%;
+    --card-foreground: 330 94% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 330 88% 12%;
+    --popover-foreground: 330 94% 18%;
 
-    /* Primary: Qatar Maroon #5C0A3A */
-    --primary: 330 88% 20%;
+    /* Primary: Official Qatar Maroon #5C0632 */
+    --primary: 330 94% 18%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 330 88% 16%;
+    --primary-hover: 330 94% 14%;
 
-    /* Secondary: Sand #CBB59C */
-    --secondary: 30 32% 70%;
-    --secondary-foreground: 330 88% 12%;
+    /* Secondary: Official Slate Gray #747F8A */
+    --secondary: 210 11% 51%;
+    --secondary-foreground: 0 0% 100%;
 
     /* Accent: Lighter maroon for highlights */
     --accent: 330 70% 96%;
-    --accent-foreground: 330 88% 20%;
+    --accent-foreground: 330 94% 18%;
 
     /* Muted: Soft neutrals */
-    --muted: 30 20% 95%;
-    --muted-foreground: 210 6% 46%;
+    --muted: 210 20% 95%;
+    --muted-foreground: 210 11% 51%;
 
-    /* Neutral dark: #0F1020 */
+    /* Neutral dark for backgrounds */
     --neutral: 240 37% 10%;
     --neutral-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 20% 90%;
-    --input: 30 20% 90%;
-    --ring: 330 88% 20%;
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 330 94% 18%;
 
     --radius: 0.75rem;
 
@@ -133,12 +133,14 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Typography - Cash App inspired */
+  /* Typography - Qatar Airways Official Style */
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
 
   h1 {
@@ -151,6 +153,11 @@ All colors MUST be HSL.
 
   h3 {
     @apply text-2xl md:text-3xl;
+  }
+
+  /* UI elements use Inter */
+  button, input, textarea, select, label {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   /* Smooth transitions */
