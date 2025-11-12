@@ -3,20 +3,31 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Upload, Grid, List, Image, FileText } from "lucide-react";
+import { Search, Upload, Grid, List, Image, FileText, Download } from "lucide-react";
 
 const Library = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Mock assets data
+  // Assets data with actual logo
   const assets = [
-    { id: 1, name: "Primary Logo", type: "logo", tags: ["logo", "primary"], views: 245, downloads: 89 },
+    { id: 1, name: "Primary Logo", type: "logo", tags: ["logo", "primary"], views: 245, downloads: 89, url: "/qatar-airways-logo.png" },
     { id: 2, name: "Hero Banner", type: "image", tags: ["banner", "hero"], views: 189, downloads: 45 },
     { id: 3, name: "Social Template", type: "template", tags: ["social", "template"], views: 156, downloads: 67 },
     { id: 4, name: "Brand Guidelines PDF", type: "document", tags: ["guidelines", "pdf"], views: 312, downloads: 124 },
     { id: 5, name: "Color Palette", type: "image", tags: ["color", "palette"], views: 198, downloads: 92 },
     { id: 6, name: "Typography Guide", type: "document", tags: ["typography", "guide"], views: 167, downloads: 54 },
   ];
+
+  const handleDownload = (asset: typeof assets[0]) => {
+    if (asset.url) {
+      const link = document.createElement('a');
+      link.href = asset.url;
+      link.download = `${asset.name}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -90,10 +101,16 @@ const Library = () => {
             {assets.map((asset) => (
               <Card
                 key={asset.id}
-                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
+                className="overflow-hidden hover:shadow-lg transition-shadow group"
               >
-                <div className="aspect-video bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center group-hover:from-primary/10 group-hover:to-primary/20 transition-colors">
-                  {asset.type === "logo" || asset.type === "image" ? (
+                <div className="aspect-video bg-white flex items-center justify-center p-8">
+                  {asset.url ? (
+                    <img 
+                      src={asset.url} 
+                      alt={asset.name}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  ) : asset.type === "logo" || asset.type === "image" ? (
                     <Image className="h-16 w-16 text-primary/40" />
                   ) : (
                     <FileText className="h-16 w-16 text-primary/40" />
@@ -108,9 +125,22 @@ const Library = () => {
                       </Badge>
                     ))}
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>{asset.views} views</span>
-                    <span>{asset.downloads} downloads</span>
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="text-muted-foreground space-x-3">
+                      <span>{asset.views} views</span>
+                      <span>{asset.downloads} downloads</span>
+                    </div>
+                    {asset.url && (
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleDownload(asset)}
+                        className="gap-2"
+                      >
+                        <Download className="h-3 w-3" />
+                        Download
+                      </Button>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -121,11 +151,17 @@ const Library = () => {
             {assets.map((asset) => (
               <Card
                 key={asset.id}
-                className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+                className="p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center gap-4">
-                  <div className="h-16 w-16 rounded bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center flex-shrink-0">
-                    {asset.type === "logo" || asset.type === "image" ? (
+                  <div className="h-16 w-16 rounded bg-white flex items-center justify-center flex-shrink-0 p-2">
+                    {asset.url ? (
+                      <img 
+                        src={asset.url} 
+                        alt={asset.name}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    ) : asset.type === "logo" || asset.type === "image" ? (
                       <Image className="h-8 w-8 text-primary/40" />
                     ) : (
                       <FileText className="h-8 w-8 text-primary/40" />
@@ -141,10 +177,21 @@ const Library = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="text-right text-sm text-muted-foreground">
+                  <div className="text-right text-sm text-muted-foreground mr-4">
                     <div>{asset.views} views</div>
                     <div>{asset.downloads} downloads</div>
                   </div>
+                  {asset.url && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleDownload(asset)}
+                      className="gap-2"
+                    >
+                      <Download className="h-3 w-3" />
+                      Download
+                    </Button>
+                  )}
                 </div>
               </Card>
             ))}

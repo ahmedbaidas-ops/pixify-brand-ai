@@ -93,13 +93,16 @@ const BrandView = () => {
             LOGO
           </div>
           <h2 className="text-4xl font-bold mb-4">Logo Usage</h2>
+          <p className="text-muted-foreground">The Oryx mark and Qatar Airways wordmark represent our brand identity</p>
         </div>
 
-        <Card className="p-12 bg-gradient-to-br from-neutral to-neutral/90 mb-6">
-          <div className="flex items-center justify-center h-32">
-            <div className="text-6xl font-bold text-primary-foreground">
-              QATAR AIRWAYS
-            </div>
+        <Card className="p-12 bg-white mb-6">
+          <div className="flex items-center justify-center min-h-[200px]">
+            <img 
+              src="/qatar-airways-logo.png" 
+              alt="Qatar Airways Logo"
+              className="max-h-[160px] w-auto object-contain"
+            />
           </div>
         </Card>
 
