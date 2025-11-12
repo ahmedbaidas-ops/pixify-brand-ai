@@ -10,8 +10,27 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+type ViewType = "overview" | "foundation" | "components" | "assets";
+type FilterType = "all" | "logo" | "colors" | "social-media";
+
 const Mindmap = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [activeView, setActiveView] = useState<ViewType>("overview");
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+
+  const views = [
+    { id: "overview" as ViewType, label: "Overview" },
+    { id: "foundation" as ViewType, label: "Foundation" },
+    { id: "components" as ViewType, label: "Components" },
+    { id: "assets" as ViewType, label: "Assets" },
+  ];
+
+  const filters = [
+    { id: "all" as FilterType, label: "All" },
+    { id: "logo" as FilterType, label: "Logo" },
+    { id: "colors" as FilterType, label: "Colors" },
+    { id: "social-media" as FilterType, label: "Social Media Template" },
+  ];
 
   return (
     <div className="min-h-screen bg-[#000000] overflow-hidden">
@@ -26,16 +45,21 @@ const Mindmap = () => {
                 </div>
                 <span className="text-white font-bold">Qatar Airways</span>
               </div>
-              <nav className="hidden md:flex items-center gap-6 text-sm">
-                <span className="text-white/80 hover:text-white transition-colors cursor-pointer">
-                  Brand Guidelines
-                </span>
-                <span className="text-white/60 hover:text-white transition-colors cursor-pointer">
-                  Design Foundations
-                </span>
-                <span className="text-white/60 hover:text-white transition-colors cursor-pointer">
-                  Resources
-                </span>
+              <nav className="hidden md:flex items-center gap-3">
+                {views.map((view) => (
+                  <Badge
+                    key={view.id}
+                    variant={activeView === view.id ? "default" : "outline"}
+                    className={`cursor-pointer transition-all ${
+                      activeView === view.id
+                        ? "bg-primary text-primary-foreground hover:bg-primary"
+                        : "border-white/20 text-white/60 hover:text-white hover:border-white/40"
+                    }`}
+                    onClick={() => setActiveView(view.id)}
+                  >
+                    {view.label}
+                  </Badge>
+                ))}
               </nav>
             </div>
           </div>
@@ -44,17 +68,37 @@ const Mindmap = () => {
 
       {/* AI Search Bar */}
       <div className="fixed top-20 left-1/2 -translate-x-1/2 z-40 w-full max-w-2xl px-6 pt-4">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            placeholder="Find items easily here"
-            className="pl-12 bg-card/95 backdrop-blur-sm border-border/50 shadow-premium h-12"
-          />
+        <div className="space-y-3">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input
+              placeholder="Find items easily here"
+              className="pl-12 bg-card/95 backdrop-blur-sm border-border/50 shadow-premium h-12"
+            />
+          </div>
+          
+          {/* Filter Chips */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {filters.map((filter) => (
+              <Badge
+                key={filter.id}
+                variant={activeFilter === filter.id ? "default" : "secondary"}
+                className={`cursor-pointer transition-all ${
+                  activeFilter === filter.id
+                    ? "bg-primary text-primary-foreground hover:bg-primary shadow-md"
+                    : "bg-card/95 backdrop-blur-sm hover:bg-card border-border/50"
+                }`}
+                onClick={() => setActiveFilter(filter.id)}
+              >
+                {filter.label}
+              </Badge>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Floating Cards Grid */}
-      <div className="pt-32 pb-12 px-6 min-h-screen">
+      <div className="pt-40 pb-12 px-6 min-h-screen">
         <div className="container mx-auto max-w-[1600px]">
           <TooltipProvider>
           {/* Row 1 */}
