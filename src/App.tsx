@@ -19,6 +19,7 @@ import DesignSystem from "./pages/DesignSystem";
 import BrandHealth from "./pages/BrandHealth";
 import Marketing from "./pages/Marketing";
 import Competitors from "./pages/Competitors";
+import Generate from "./pages/Generate";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -142,6 +143,14 @@ const App = () => (
               element={
                 <ProtectedLayout>
                   <Competitors />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/generate"
+              element={
+                <ProtectedLayout>
+                  <Generate />
                 </ProtectedLayout>
               }
             />

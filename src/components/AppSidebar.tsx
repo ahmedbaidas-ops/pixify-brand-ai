@@ -19,6 +19,7 @@ const navigation = [
   { title: "Brand Health", url: "/brand-health", icon: Activity },
   { title: "Marketing Suite", url: "/marketing", icon: Megaphone },
   { title: "Competitors", url: "/competitors", icon: Plane },
+  { title: "Generate", url: "/generate", icon: Sparkles },
   { title: "Mindmap View", url: "/mindmap", icon: Network },
   { title: "Guideline", url: "/guideline", icon: FileText },
   { title: "Library", url: "/library", icon: FolderOpen },
