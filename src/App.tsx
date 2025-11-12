@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import Guideline from "./pages/Guideline";
 import Library from "./pages/Library";
 import Mindmap from "./pages/Mindmap";
+import DesignSystem from "./pages/DesignSystem";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -114,12 +115,7 @@ const App = () => (
             <Route
               path="/design-system"
               element={
-                <ProtectedLayout>
-                  <div className="p-8">
-                    <h1 className="text-4xl font-bold">Design System</h1>
-                    <p className="text-muted-foreground mt-2">Coming soon</p>
-                  </div>
-                </ProtectedLayout>
+                <DesignSystem />
               }
             />
             <Route
