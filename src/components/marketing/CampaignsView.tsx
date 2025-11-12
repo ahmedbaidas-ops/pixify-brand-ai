@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import { campaigns, personas, contentPillars } from "@/data/marketing";
-import { Sparkles, Calendar, DollarSign, Target, TrendingUp, Edit } from "lucide-react";
+import { Sparkles, Calendar, DollarSign, Target, TrendingUp, Edit, GitCompare } from "lucide-react";
 import { motion } from "framer-motion";
 import { MarketBenchmarkCard } from "./MarketBenchmarkCard";
+import { CompareCampaigns } from "./CompareCampaigns";
 
 const CampaignsView = () => {
+  const [selectedCampaigns, setSelectedCampaigns] = useState<string[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
+
   const getPersonaName = (id: string) => {
     return personas.find(p => p.id === id)?.name || "Unknown";
   };
@@ -16,6 +22,14 @@ const CampaignsView = () => {
     return contentPillars.find(p => p.name === name)?.color || "#5C0A3A";
   };
 
+  const toggleCampaignSelection = (id: string) => {
+    setSelectedCampaigns(prev =>
+      prev.includes(id) ? prev.filter(cid => cid !== id) : [...prev, id]
+    );
+  };
+
+  const selectedCampaignData = campaigns.filter(c => selectedCampaigns.includes(c.id));
+
   return (
     <div className="space-y-6 max-w-[1400px] mx-auto">
       <div className="flex items-center justify-between">
@@ -23,10 +37,28 @@ const CampaignsView = () => {
           <h2 className="text-2xl font-bold">Campaign Management</h2>
           <p className="text-muted-foreground">AI-powered campaign planning and brand alignment</p>
         </div>
-        <Button className="gap-2 bg-gradient-primary">
-          <Sparkles className="h-4 w-4" />
-          Generate Campaign Brief
-        </Button>
+        <div className="flex items-center gap-3">
+          {selectedCampaigns.length >= 2 && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+            >
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => setShowCompare(true)}
+              >
+                <GitCompare className="h-4 w-4" />
+                Compare {selectedCampaigns.length} Campaigns
+              </Button>
+            </motion.div>
+          )}
+          <Button className="gap-2 bg-gradient-primary">
+            <Sparkles className="h-4 w-4" />
+            Generate Campaign Brief
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
@@ -47,17 +79,24 @@ const CampaignsView = () => {
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CardTitle className="text-2xl">{campaign.name}</CardTitle>
+                  <div className="flex items-center gap-3 flex-1">
+                    <Checkbox
+                      checked={selectedCampaigns.includes(campaign.id)}
+                      onCheckedChange={() => toggleCampaignSelection(campaign.id)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CardTitle className="text-2xl">{campaign.name}</CardTitle>
                       <Badge 
                         variant={campaign.status === "Active" ? "default" : campaign.status === "Completed" ? "secondary" : "outline"}
                         className="animate-pulse"
                       >
                         {campaign.status}
                       </Badge>
+                      </div>
+                      <CardDescription className="text-base">{campaign.goal}</CardDescription>
                     </div>
-                    <CardDescription className="text-base">{campaign.goal}</CardDescription>
                   </div>
                   <Button variant="outline" size="sm" className="gap-2">
                     <Edit className="h-4 w-4" />
@@ -177,6 +216,12 @@ const CampaignsView = () => {
           </motion.div>
         ))}
       </div>
+
+      <CompareCampaigns
+        open={showCompare}
+        onOpenChange={setShowCompare}
+        campaigns={selectedCampaignData}
+      />
     </div>
   );
 };
