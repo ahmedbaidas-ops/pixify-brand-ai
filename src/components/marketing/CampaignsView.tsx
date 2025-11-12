@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { campaigns, personas, contentPillars } from "@/data/marketing";
 import { Sparkles, Calendar, DollarSign, Target, TrendingUp, Edit } from "lucide-react";
 import { motion } from "framer-motion";
+import { MarketBenchmarkCard } from "./MarketBenchmarkCard";
 
 const CampaignsView = () => {
   const getPersonaName = (id: string) => {
@@ -161,6 +162,16 @@ const CampaignsView = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Market Benchmark */}
+                {campaign.marketScore && campaign.successRate && (
+                  <MarketBenchmarkCard
+                    marketScore={campaign.marketScore}
+                    successRate={campaign.successRate}
+                    competitor={campaign.closestCompetitor}
+                    reasons={campaign.similarityReasons}
+                  />
+                )}
               </CardContent>
             </Card>
           </motion.div>

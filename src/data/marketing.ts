@@ -38,6 +38,10 @@ export interface MarketingCampaign {
   status: "Planned" | "Active" | "Completed";
   headlines: string[];
   creatives: string[];
+  marketScore?: number;
+  successRate?: number;
+  closestCompetitor?: string;
+  similarityReasons?: string[];
 }
 
 export interface ContentPillar {
@@ -137,7 +141,15 @@ export const campaigns: MarketingCampaign[] = [
       "Cleaner Skies, Better Tomorrow",
       "Sustainable Journeys Start Here"
     ],
-    creatives: ["sustainability-hero.jpg", "green-aircraft.jpg", "eco-cabin.jpg"]
+    creatives: ["sustainability-hero.jpg", "green-aircraft.jpg", "eco-cabin.jpg"],
+    marketScore: 84,
+    successRate: 87,
+    closestCompetitor: "Emirates",
+    similarityReasons: [
+      "Tone similarity 85%",
+      "Sustainability pillar overlap",
+      "Premium digital channel mix"
+    ]
   },
   {
     id: "2",
@@ -160,7 +172,15 @@ export const campaigns: MarketingCampaign[] = [
       "Reunite with Loved Ones",
       "Journey Home This Holy Month"
     ],
-    creatives: ["ramadan-family.jpg", "iftar-service.jpg", "arabic-pattern.jpg"]
+    creatives: ["ramadan-family.jpg", "iftar-service.jpg", "arabic-pattern.jpg"],
+    marketScore: 86,
+    successRate: 89,
+    closestCompetitor: "Turkish Airlines",
+    similarityReasons: [
+      "Cultural connection focus 92%",
+      "Similar regional targeting",
+      "Family-oriented messaging"
+    ]
   },
   {
     id: "3",
@@ -183,7 +203,15 @@ export const campaigns: MarketingCampaign[] = [
       "Your Sky Suite Awaits",
       "Redefining Business Travel"
     ],
-    creatives: ["qsuite-interior.jpg", "dining-service.jpg", "privacy-door.jpg"]
+    creatives: ["qsuite-interior.jpg", "dining-service.jpg", "privacy-door.jpg"],
+    marketScore: 91,
+    successRate: 93,
+    closestCompetitor: "Singapore Airlines",
+    similarityReasons: [
+      "Premium cabin focus 88%",
+      "Luxury messaging alignment",
+      "Business traveler targeting"
+    ]
   },
   {
     id: "4",
@@ -206,7 +234,15 @@ export const campaigns: MarketingCampaign[] = [
       "Elevate Every Journey",
       "Your Loyalty, Our Privilege"
     ],
-    creatives: ["privilege-card.jpg", "lounge-access.jpg", "exclusive-perks.jpg"]
+    creatives: ["privilege-card.jpg", "lounge-access.jpg", "exclusive-perks.jpg"],
+    marketScore: 82,
+    successRate: 85,
+    closestCompetitor: "British Airways",
+    similarityReasons: [
+      "Loyalty program focus 90%",
+      "Similar benefit messaging",
+      "Digital channel strategy"
+    ]
   }
 ];
 
