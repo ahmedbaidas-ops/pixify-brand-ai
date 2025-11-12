@@ -17,6 +17,7 @@ import Library from "./pages/Library";
 import Mindmap from "./pages/Mindmap";
 import DesignSystem from "./pages/DesignSystem";
 import BrandHealth from "./pages/BrandHealth";
+import Marketing from "./pages/Marketing";
 import Competitors from "./pages/Competitors";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -125,6 +126,14 @@ const App = () => (
               element={
                 <ProtectedLayout>
                   <BrandHealth />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/marketing"
+              element={
+                <ProtectedLayout>
+                  <Marketing />
                 </ProtectedLayout>
               }
             />
