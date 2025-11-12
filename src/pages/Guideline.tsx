@@ -92,11 +92,12 @@ const BrandView = () => {
           <div className="inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
             LOGO
           </div>
-          <h2 className="text-4xl font-bold mb-4">Logo Usage</h2>
-          <p className="text-muted-foreground">The Oryx mark and Qatar Airways wordmark represent our brand identity</p>
+          <h2 className="text-4xl font-bold mb-4">Logo Usage & Guidelines</h2>
+          <p className="text-muted-foreground">The Oryx mark and Qatar Airways wordmark represent our brand identity. Proper usage ensures consistent brand recognition.</p>
         </div>
 
-        <Card className="p-12 bg-white mb-6">
+        {/* Primary Logo Display */}
+        <Card className="p-12 bg-white mb-8">
           <div className="flex items-center justify-center min-h-[200px]">
             <img 
               src="/qatar-airways-logo.png" 
@@ -106,34 +107,233 @@ const BrandView = () => {
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 border-2 border-green-500/20 bg-green-500/5">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xs">
-                ✓
+        {/* Clear Space Requirements */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold mb-4">Clear Space Requirements</h3>
+          <Card className="p-8">
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <span className="text-2xl font-bold text-primary">X</span>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-2">Minimum Clear Space</h4>
+                  <p className="text-muted-foreground">
+                    Maintain a clear space equal to the height of the letter "Q" in QATAR around all sides of the logo. 
+                    This ensures the logo maintains its visual impact and is not crowded by other elements.
+                  </p>
+                </div>
               </div>
-              <h3 className="font-bold">Do</h3>
-            </div>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Use on white or neutral backgrounds</li>
-              <li>• Maintain minimum clear space</li>
-              <li>• Scale proportionally</li>
-            </ul>
-          </Card>
-          <Card className="p-6 border-2 border-destructive/20 bg-destructive/5">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-6 w-6 rounded-full bg-destructive flex items-center justify-center text-white font-bold text-xs">
-                ✕
+              <div className="bg-muted/30 p-8 rounded-lg">
+                <div className="relative inline-block">
+                  <img 
+                    src="/qatar-airways-logo.png" 
+                    alt="Clear Space Example"
+                    className="h-20 w-auto"
+                  />
+                  <div className="absolute -inset-8 border-2 border-dashed border-primary/40"></div>
+                  <div className="absolute -top-10 left-0 text-xs text-primary font-mono">← X →</div>
+                  <div className="absolute -left-10 top-0 text-xs text-primary font-mono rotate-90">← X →</div>
+                </div>
               </div>
-              <h3 className="font-bold">Don't</h3>
             </div>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Distort or stretch the logo</li>
-              <li>• Use on busy backgrounds</li>
-              <li>• Alter colors or typography</li>
-            </ul>
           </Card>
         </div>
+
+        {/* Minimum Size */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold mb-4">Minimum Size</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-6">
+              <h4 className="font-bold mb-3">Digital / Screen</h4>
+              <div className="space-y-2 text-sm">
+                <p className="text-muted-foreground">Minimum width: <strong className="text-foreground">120px</strong></p>
+                <p className="text-muted-foreground">Minimum height: <strong className="text-foreground">40px</strong></p>
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-xs text-muted-foreground">Ensures legibility on screens and web applications</p>
+                </div>
+              </div>
+            </Card>
+            <Card className="p-6">
+              <h4 className="font-bold mb-3">Print</h4>
+              <div className="space-y-2 text-sm">
+                <p className="text-muted-foreground">Minimum width: <strong className="text-foreground">40mm</strong></p>
+                <p className="text-muted-foreground">Minimum height: <strong className="text-foreground">14mm</strong></p>
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-xs text-muted-foreground">Maintains quality and brand recognition in printed materials</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        {/* Background Usage */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold mb-4">Approved Backgrounds</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="p-6 bg-white">
+              <div className="aspect-square flex items-center justify-center mb-3">
+                <img 
+                  src="/qatar-airways-logo.png" 
+                  alt="Logo on white"
+                  className="h-16 w-auto"
+                />
+              </div>
+              <p className="text-xs text-center font-medium">White</p>
+            </Card>
+            <Card className="p-6 bg-[#0F1020]">
+              <div className="aspect-square flex items-center justify-center mb-3">
+                <img 
+                  src="/qatar-airways-logo.png" 
+                  alt="Logo on dark"
+                  className="h-16 w-auto"
+                  style={{ filter: "brightness(0) invert(1)" }}
+                />
+              </div>
+              <p className="text-xs text-center font-medium text-white">Dark Neutral</p>
+            </Card>
+            <Card className="p-6 bg-[#CBB59C]">
+              <div className="aspect-square flex items-center justify-center mb-3">
+                <img 
+                  src="/qatar-airways-logo.png" 
+                  alt="Logo on sand"
+                  className="h-16 w-auto"
+                />
+              </div>
+              <p className="text-xs text-center font-medium">Desert Sand</p>
+            </Card>
+            <Card className="p-6 bg-neutral-100">
+              <div className="aspect-square flex items-center justify-center mb-3">
+                <img 
+                  src="/qatar-airways-logo.png" 
+                  alt="Logo on light gray"
+                  className="h-16 w-auto"
+                />
+              </div>
+              <p className="text-xs text-center font-medium">Light Gray</p>
+            </Card>
+          </div>
+        </div>
+
+        {/* Do's and Don'ts */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold mb-6">Usage Guidelines</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* DO's */}
+            <Card className="p-6 border-2 border-green-500/20 bg-green-500/5">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                  ✓
+                </div>
+                <h3 className="text-xl font-bold">Do</h3>
+              </div>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <div>
+                    <p className="font-medium mb-1">Use approved color versions</p>
+                    <p className="text-sm text-muted-foreground">Full color, monochrome, or white versions only</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <div>
+                    <p className="font-medium mb-1">Maintain aspect ratio</p>
+                    <p className="text-sm text-muted-foreground">Always scale proportionally when resizing</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <div>
+                    <p className="font-medium mb-1">Use on clean backgrounds</p>
+                    <p className="text-sm text-muted-foreground">Ensure high contrast and visibility</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <div>
+                    <p className="font-medium mb-1">Respect clear space</p>
+                    <p className="text-sm text-muted-foreground">Keep minimum spacing around the logo</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 mt-0.5">✓</span>
+                  <div>
+                    <p className="font-medium mb-1">Use high-resolution files</p>
+                    <p className="text-sm text-muted-foreground">Vector formats for print, PNG for digital</p>
+                  </div>
+                </li>
+              </ul>
+            </Card>
+
+            {/* DON'Ts */}
+            <Card className="p-6 border-2 border-destructive/20 bg-destructive/5">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-8 w-8 rounded-full bg-destructive flex items-center justify-center text-white font-bold">
+                  ✕
+                </div>
+                <h3 className="text-xl font-bold">Don&apos;t</h3>
+              </div>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <span className="text-destructive mt-0.5">✕</span>
+                  <div>
+                    <p className="font-medium mb-1">Distort or stretch</p>
+                    <p className="text-sm text-muted-foreground">Never alter the width or height independently</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-destructive mt-0.5">✕</span>
+                  <div>
+                    <p className="font-medium mb-1">Change colors</p>
+                    <p className="text-sm text-muted-foreground">Never use unauthorized color variations</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-destructive mt-0.5">✕</span>
+                  <div>
+                    <p className="font-medium mb-1">Rotate or flip</p>
+                    <p className="text-sm text-muted-foreground">Always keep the logo in its original orientation</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-destructive mt-0.5">✕</span>
+                  <div>
+                    <p className="font-medium mb-1">Add effects or shadows</p>
+                    <p className="text-sm text-muted-foreground">No drop shadows, gradients, or special effects</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-destructive mt-0.5">✕</span>
+                  <div>
+                    <p className="font-medium mb-1">Place on busy backgrounds</p>
+                    <p className="text-sm text-muted-foreground">Avoid patterns, images, or low-contrast surfaces</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-destructive mt-0.5">✕</span>
+                  <div>
+                    <p className="font-medium mb-1">Recreate or redraw</p>
+                    <p className="text-sm text-muted-foreground">Always use official digital files</p>
+                  </div>
+                </li>
+              </ul>
+            </Card>
+          </div>
+        </div>
+
+        {/* Download Section */}
+        <Card className="p-8 bg-gradient-to-br from-primary/5 to-primary/10">
+          <div className="text-center">
+            <h3 className="text-xl font-bold mb-3">Need Logo Files?</h3>
+            <p className="text-muted-foreground mb-6">
+              Download approved logo assets in various formats from the Library
+            </p>
+            <Button className="bg-gradient-primary">
+              Go to Asset Library
+            </Button>
+          </div>
+        </Card>
       </section>
 
       {/* Color Section */}
