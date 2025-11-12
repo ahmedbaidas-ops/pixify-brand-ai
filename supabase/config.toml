@@ -1,1 +1,10 @@
 project_id = "coavxlhuurdxkaumjqfd"
+
+[functions.generate-brand-image]
+verify_jwt = false
+
+[functions.generate-brand-copy]
+verify_jwt = false
+
+[functions.optimize-platforms]
+verify_jwt = false

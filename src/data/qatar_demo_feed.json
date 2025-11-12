@@ -1,0 +1,48 @@
+{
+  "ig": [
+    {
+      "id": "1",
+      "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400",
+      "caption": "Embark on unforgettable journeys with Qatar Airways. Where luxury meets discovery. ✈️ #QatarAirways #LuxuryTravel",
+      "platform": "instagram",
+      "colors": ["#5C0A3A", "#CBB59C"],
+      "hashtags": ["#QatarAirways", "#LuxuryTravel"]
+    },
+    {
+      "id": "2",
+      "image": "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=400",
+      "caption": "Experience unparalleled comfort in our award-winning Business Class. Your journey begins the moment you step aboard. #QSuites #BusinessClass",
+      "platform": "instagram",
+      "colors": ["#5C0A3A", "#0F1020"],
+      "hashtags": ["#QSuites", "#BusinessClass"]
+    },
+    {
+      "id": "3",
+      "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400",
+      "caption": "Connecting the world with warmth and excellence. Discover new horizons with Qatar Airways. 🌍 #TravelGoals #ExploreTheWorld",
+      "platform": "instagram",
+      "colors": ["#CBB59C", "#0F1020"],
+      "hashtags": ["#TravelGoals", "#ExploreTheWorld"]
+    }
+  ],
+  "li": [
+    {
+      "id": "1",
+      "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400",
+      "caption": "Qatar Airways continues to set new standards in global aviation, connecting over 170 destinations worldwide with uncompromising service excellence.",
+      "platform": "linkedin",
+      "colors": ["#5C0A3A", "#CBB59C"],
+      "hashtags": ["#Aviation", "#Leadership"]
+    }
+  ],
+  "yt": [
+    {
+      "id": "1",
+      "image": "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=400",
+      "caption": "A Journey Beyond Expectations | Qatar Airways",
+      "platform": "youtube",
+      "colors": ["#5C0A3A", "#0F1020"],
+      "hashtags": []
+    }
+  ]
+}

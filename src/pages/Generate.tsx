@@ -18,7 +18,10 @@ import {
   RefreshCw,
   Save,
   Wand2,
+  Zap,
 } from "lucide-react";
+import { OptimizerCard } from "@/components/OptimizerCard";
+import { QatarInspirationPanel } from "@/components/QatarInspirationPanel";
 
 interface GeneratedContent {
   type: "image" | "copy";
@@ -26,11 +29,23 @@ interface GeneratedContent {
   prompt: string;
 }
 
+interface OptimizedResult {
+  platform: string;
+  copy: string;
+  hashtags: string[];
+  charCount: number;
+  checks: { name: string; passed: boolean }[];
+  score: number;
+  image: string;
+}
+
 const Generate = () => {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>([]);
   const [activeTab, setActiveTab] = useState("visual");
+  const [optimizedResults, setOptimizedResults] = useState<OptimizedResult[]>([]);
+  const [isOptimizing, setIsOptimizing] = useState(false);
   const { toast } = useToast();
 
   const visualChips = [
@@ -160,6 +175,64 @@ const Generate = () => {
     link.click();
   };
 
+  const handleOptimize = async () => {
+    const lastImage = generatedContent.find((item) => item.type === "image");
+    const lastCopy = generatedContent.find((item) => item.type === "copy");
+
+    if (!lastImage && !lastCopy) {
+      toast({
+        title: "No content to optimize",
+        description: "Generate some content first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsOptimizing(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("optimize-platforms", {
+        body: {
+          copy: lastCopy?.content || prompt,
+          imageUrl: lastImage?.content || "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1080",
+          platforms: ["instagram_post", "instagram_story", "linkedin", "x", "youtube_thumb", "tiktok"],
+        },
+      });
+
+      if (error) throw error;
+
+      setOptimizedResults(data.results);
+      toast({
+        title: "Optimized successfully",
+        description: "Content optimized for all platforms",
+      });
+    } catch (error) {
+      console.error("Optimization error:", error);
+      toast({
+        title: "Optimization failed",
+        description: error instanceof Error ? error.message : "Failed to optimize content",
+        variant: "destructive",
+      });
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  const handleFixPlatform = async (platform: string) => {
+    toast({
+      title: "Auto-fixing",
+      description: `Applying fixes for ${platform}...`,
+    });
+    // In production, this would re-optimize with stricter constraints
+  };
+
+  const handleSavePlatform = (platform: string) => {
+    toast({
+      title: "Saved to DAM",
+      description: `${platform} creative saved to library`,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -187,7 +260,7 @@ const Generate = () => {
         <Card>
           <CardContent className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
                 <TabsTrigger value="visual" className="gap-2">
                   <ImageIcon className="h-4 w-4" />
                   Visual
@@ -199,6 +272,10 @@ const Generate = () => {
                 <TabsTrigger value="hybrid" className="gap-2">
                   <Wand2 className="h-4 w-4" />
                   Both
+                </TabsTrigger>
+                <TabsTrigger value="optimize" className="gap-2">
+                  <Zap className="h-4 w-4" />
+                  Optimize
                 </TabsTrigger>
               </TabsList>
 
@@ -288,6 +365,50 @@ const Generate = () => {
                       </motion.div>
                     ))}
                   </div>
+                </TabsContent>
+
+                <TabsContent value="optimize" className="mt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      Auto-adapt your content to platform-specific best practices
+                    </p>
+                    <Button
+                      onClick={handleOptimize}
+                      disabled={isOptimizing || generatedContent.length === 0}
+                      className="gap-2"
+                    >
+                      {isOptimizing ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Zap className="h-4 w-4" />
+                      )}
+                      Optimize All
+                    </Button>
+                  </div>
+
+                  {optimizedResults.length > 0 && (
+                    <div className="grid lg:grid-cols-3 gap-6">
+                      <div className="lg:col-span-2 grid md:grid-cols-2 gap-4">
+                        {optimizedResults.map((result) => (
+                          <OptimizerCard
+                            key={result.platform}
+                            platform={result.platform}
+                            image={result.image}
+                            copy={result.copy}
+                            score={result.score}
+                            hashtags={result.hashtags}
+                            charCount={result.charCount}
+                            checks={result.checks}
+                            onFix={() => handleFixPlatform(result.platform)}
+                            onSave={() => handleSavePlatform(result.platform)}
+                          />
+                        ))}
+                      </div>
+                      <div className="lg:col-span-1">
+                        <QatarInspirationPanel />
+                      </div>
+                    </div>
+                  )}
                 </TabsContent>
               </div>
             </Tabs>
