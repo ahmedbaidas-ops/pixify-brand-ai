@@ -1111,6 +1111,434 @@ export type Database = {
           },
         ]
       }
+      roadmap_activity: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          id: string
+          payload: Json
+          roadmap_id: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          roadmap_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          roadmap_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_activity_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_approvals: {
+        Row: {
+          actor_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          roadmap_id: string
+          state_from: string
+          state_to: string
+        }
+        Insert: {
+          actor_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          roadmap_id: string
+          state_from: string
+          state_to: string
+        }
+        Update: {
+          actor_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          roadmap_id?: string
+          state_from?: string
+          state_to?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_approvals_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_dependencies: {
+        Row: {
+          created_at: string
+          from_id: string
+          from_type: string
+          id: string
+          lag_days: number | null
+          roadmap_id: string
+          to_id: string
+          to_type: string
+          type: Database["public"]["Enums"]["dependency_type"]
+        }
+        Insert: {
+          created_at?: string
+          from_id: string
+          from_type: string
+          id?: string
+          lag_days?: number | null
+          roadmap_id: string
+          to_id: string
+          to_type: string
+          type?: Database["public"]["Enums"]["dependency_type"]
+        }
+        Update: {
+          created_at?: string
+          from_id?: string
+          from_type?: string
+          id?: string
+          lag_days?: number | null
+          roadmap_id?: string
+          to_id?: string
+          to_type?: string
+          type?: Database["public"]["Enums"]["dependency_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_dependencies_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_members: {
+        Row: {
+          availability: number | null
+          capacity: number
+          created_at: string
+          id: string
+          roadmap_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          availability?: number | null
+          capacity?: number
+          created_at?: string
+          id?: string
+          roadmap_id: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          availability?: number | null
+          capacity?: number
+          created_at?: string
+          id?: string
+          roadmap_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_members_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_milestones: {
+        Row: {
+          created_at: string
+          description: string | null
+          effort_hours: number | null
+          end_date: string | null
+          id: string
+          name: string
+          owner_id: string | null
+          position_x: number | null
+          position_y: number | null
+          progress: number
+          roadmap_id: string
+          stage_id: string | null
+          start_date: string | null
+          status: Database["public"]["Enums"]["milestone_status"]
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          effort_hours?: number | null
+          end_date?: string | null
+          id?: string
+          name: string
+          owner_id?: string | null
+          position_x?: number | null
+          position_y?: number | null
+          progress?: number
+          roadmap_id: string
+          stage_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["milestone_status"]
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          effort_hours?: number | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          owner_id?: string | null
+          position_x?: number | null
+          position_y?: number | null
+          progress?: number
+          roadmap_id?: string
+          stage_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["milestone_status"]
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_milestones_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "roadmap_milestones_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "roadmap_stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_risks: {
+        Row: {
+          category: Database["public"]["Enums"]["risk_category"]
+          created_at: string
+          id: string
+          impact: number
+          mitigation: string | null
+          owner_id: string | null
+          position_x: number | null
+          position_y: number | null
+          probability: number
+          roadmap_id: string
+          status: Database["public"]["Enums"]["risk_status"]
+          title: string
+          triggers: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["risk_category"]
+          created_at?: string
+          id?: string
+          impact?: number
+          mitigation?: string | null
+          owner_id?: string | null
+          position_x?: number | null
+          position_y?: number | null
+          probability?: number
+          roadmap_id: string
+          status?: Database["public"]["Enums"]["risk_status"]
+          title: string
+          triggers?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["risk_category"]
+          created_at?: string
+          id?: string
+          impact?: number
+          mitigation?: string | null
+          owner_id?: string | null
+          position_x?: number | null
+          position_y?: number | null
+          probability?: number
+          roadmap_id?: string
+          status?: Database["public"]["Enums"]["risk_status"]
+          title?: string
+          triggers?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_risks_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_stages: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          order_index: number
+          roadmap_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          order_index?: number
+          roadmap_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          order_index?: number
+          roadmap_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_stages_roadmap_id_fkey"
+            columns: ["roadmap_id"]
+            isOneToOne: false
+            referencedRelation: "roadmaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmap_tasks: {
+        Row: {
+          assignee_id: string | null
+          created_at: string
+          due_date: string | null
+          estimate_hours: number | null
+          id: string
+          links: Json | null
+          milestone_id: string
+          name: string
+          status: Database["public"]["Enums"]["task_status"]
+          updated_at: string
+        }
+        Insert: {
+          assignee_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          estimate_hours?: number | null
+          id?: string
+          links?: Json | null
+          milestone_id: string
+          name: string
+          status?: Database["public"]["Enums"]["task_status"]
+          updated_at?: string
+        }
+        Update: {
+          assignee_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          estimate_hours?: number | null
+          id?: string
+          links?: Json | null
+          milestone_id?: string
+          name?: string
+          status?: Database["public"]["Enums"]["task_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_tasks_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "roadmap_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roadmaps: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          id: string
+          organization_id: string
+          owner_id: string
+          start_date: string | null
+          status: Database["public"]["Enums"]["roadmap_status"]
+          title: string
+          updated_at: string
+          view: Database["public"]["Enums"]["roadmap_view"]
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          organization_id: string
+          owner_id: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["roadmap_status"]
+          title: string
+          updated_at?: string
+          view?: Database["public"]["Enums"]["roadmap_view"]
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          organization_id?: string
+          owner_id?: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["roadmap_status"]
+          title?: string
+          updated_at?: string
+          view?: Database["public"]["Enums"]["roadmap_view"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmaps_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "roadmaps_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_abilities: {
         Row: {
           ability_id: string | null
@@ -1352,6 +1780,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "editor" | "viewer"
       asset_type: "logo" | "image" | "video" | "document" | "template" | "other"
+      dependency_type: "FS" | "SS" | "FF" | "SF"
       guideline_section_type:
         | "strategy"
         | "logo"
@@ -1361,8 +1790,20 @@ export type Database = {
         | "imagery"
         | "motion"
         | "downloads"
+      milestone_status: "PLANNED" | "IN_PROGRESS" | "BLOCKED" | "DONE"
       request_status: "new" | "in_progress" | "completed" | "cancelled"
       request_type: "design" | "copy" | "convert"
+      risk_category:
+        | "SCOPE"
+        | "TIMELINE"
+        | "QUALITY"
+        | "RESOURCING"
+        | "TECH"
+        | "CLIENT"
+      risk_status: "OPEN" | "MITIGATING" | "CLOSED"
+      roadmap_status: "DRAFT" | "REVIEW" | "ACTIVE" | "ARCHIVED"
+      roadmap_view: "CANVAS" | "GANTT" | "KANBAN" | "LIST"
+      task_status: "TODO" | "DOING" | "REVIEW" | "DONE"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1492,6 +1933,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "editor", "viewer"],
       asset_type: ["logo", "image", "video", "document", "template", "other"],
+      dependency_type: ["FS", "SS", "FF", "SF"],
       guideline_section_type: [
         "strategy",
         "logo",
@@ -1502,8 +1944,21 @@ export const Constants = {
         "motion",
         "downloads",
       ],
+      milestone_status: ["PLANNED", "IN_PROGRESS", "BLOCKED", "DONE"],
       request_status: ["new", "in_progress", "completed", "cancelled"],
       request_type: ["design", "copy", "convert"],
+      risk_category: [
+        "SCOPE",
+        "TIMELINE",
+        "QUALITY",
+        "RESOURCING",
+        "TECH",
+        "CLIENT",
+      ],
+      risk_status: ["OPEN", "MITIGATING", "CLOSED"],
+      roadmap_status: ["DRAFT", "REVIEW", "ACTIVE", "ARCHIVED"],
+      roadmap_view: ["CANVAS", "GANTT", "KANBAN", "LIST"],
+      task_status: ["TODO", "DOING", "REVIEW", "DONE"],
     },
   },
 } as const
