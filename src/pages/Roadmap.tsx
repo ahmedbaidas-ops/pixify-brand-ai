@@ -12,7 +12,7 @@ import { RoadmapActivity } from "@/components/roadmap/RoadmapActivity";
 export default function Roadmap() {
   const { id } = useParams<{ id: string }>();
 
-  const { data: roadmap, isLoading } = useQuery({
+  const { data: roadmap, isLoading, error } = useQuery({
     queryKey: ["roadmap", id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -27,9 +27,12 @@ export default function Roadmap() {
           dependencies:roadmap_dependencies(*)
         `)
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Roadmap query error:", error);
+        throw error;
+      }
       return data;
     },
     enabled: !!id,
@@ -39,6 +42,17 @@ export default function Roadmap() {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Loading roadmap...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-center space-y-2">
+          <div className="text-destructive">Error loading roadmap</div>
+          <div className="text-sm text-muted-foreground">{error.message}</div>
+        </div>
       </div>
     );
   }
