@@ -23,6 +23,8 @@ import Generate from "./pages/Generate";
 import PlatformOptimizer from "./pages/PlatformOptimizer";
 import Template from "./pages/Template";
 import Admin from "./pages/Admin";
+import Roadmaps from "./pages/Roadmaps";
+import Roadmap from "./pages/Roadmap";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -200,6 +202,22 @@ const App = () => (
               element={
                 <ProtectedLayout>
                   <Admin />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/roadmaps"
+              element={
+                <ProtectedLayout>
+                  <Roadmaps />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/roadmaps/:id"
+              element={
+                <ProtectedLayout>
+                  <Roadmap />
                 </ProtectedLayout>
               }
             />
