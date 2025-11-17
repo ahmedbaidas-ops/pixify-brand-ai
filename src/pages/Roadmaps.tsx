@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Calendar, Users, Target, AlertTriangle } from "lucide-react";
+import { Plus, Calendar, Users, Target, AlertTriangle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,10 +7,12 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { RoadmapTemplateDialog } from "@/components/roadmap/RoadmapTemplateDialog";
 
 export default function Roadmaps() {
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const { data: roadmaps, isLoading } = useQuery({
     queryKey: ["roadmaps"],
@@ -105,11 +107,22 @@ export default function Roadmaps() {
             Manage project workflows, milestones, and risks
           </p>
         </div>
-        <Button onClick={handleCreateRoadmap} disabled={isCreating}>
-          <Plus className="w-4 h-4 mr-2" />
-          New Roadmap
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setShowTemplates(true)}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            Use Template
+          </Button>
+          <Button onClick={handleCreateRoadmap} disabled={isCreating}>
+            <Plus className="w-4 h-4 mr-2" />
+            New Roadmap
+          </Button>
+        </div>
       </div>
+
+      <RoadmapTemplateDialog open={showTemplates} onOpenChange={setShowTemplates} />
 
       {roadmaps && roadmaps.length === 0 ? (
         <Card className="p-12 text-center">
@@ -121,10 +134,19 @@ export default function Roadmaps() {
             <p className="text-muted-foreground">
               Create your first roadmap to start planning workflows, milestones, and managing risks
             </p>
-            <Button onClick={handleCreateRoadmap} disabled={isCreating}>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Your First Roadmap
-            </Button>
+            <div className="flex items-center gap-2 justify-center">
+              <Button
+                variant="outline"
+                onClick={() => setShowTemplates(true)}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Use Template
+              </Button>
+              <Button onClick={handleCreateRoadmap} disabled={isCreating}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Your First Roadmap
+              </Button>
+            </div>
           </div>
         </Card>
       ) : (
