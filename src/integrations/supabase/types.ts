@@ -739,6 +739,275 @@ export type Database = {
           },
         ]
       }
+      prompt_ab_tests: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          organization_id: string
+          start_date: string | null
+          status: string
+          success_metric: string | null
+          template_id: string
+          traffic_split: number | null
+          updated_at: string | null
+          variant_a_id: string
+          variant_b_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          start_date?: string | null
+          status?: string
+          success_metric?: string | null
+          template_id: string
+          traffic_split?: number | null
+          updated_at?: string | null
+          variant_a_id: string
+          variant_b_id: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          start_date?: string | null
+          status?: string
+          success_metric?: string | null
+          template_id?: string
+          traffic_split?: number | null
+          updated_at?: string | null
+          variant_a_id?: string
+          variant_b_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_ab_tests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_ab_tests_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_ab_tests_variant_a_id_fkey"
+            columns: ["variant_a_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_ab_tests_variant_b_id_fkey"
+            columns: ["variant_b_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_analytics: {
+        Row: {
+          ab_test_id: string | null
+          created_at: string | null
+          error_message: string | null
+          execution_time_ms: number | null
+          id: string
+          organization_id: string
+          result_metadata: Json | null
+          success: boolean | null
+          template_id: string
+          tokens_used: number | null
+          user_feedback: string | null
+          user_id: string | null
+          user_rating: number | null
+          version_id: string | null
+        }
+        Insert: {
+          ab_test_id?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          organization_id: string
+          result_metadata?: Json | null
+          success?: boolean | null
+          template_id: string
+          tokens_used?: number | null
+          user_feedback?: string | null
+          user_id?: string | null
+          user_rating?: number | null
+          version_id?: string | null
+        }
+        Update: {
+          ab_test_id?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          organization_id?: string
+          result_metadata?: Json | null
+          success?: boolean | null
+          template_id?: string
+          tokens_used?: number | null
+          user_feedback?: string | null
+          user_id?: string | null
+          user_rating?: number | null
+          version_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_analytics_ab_test_id_fkey"
+            columns: ["ab_test_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_ab_tests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_analytics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_analytics_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_analytics_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_templates: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          is_default: boolean | null
+          metadata: Json | null
+          name: string
+          organization_id: string
+          status: string
+          tags: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          name: string
+          organization_id: string
+          status?: string
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          name?: string
+          organization_id?: string
+          status?: string
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompt_versions: {
+        Row: {
+          content: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          parameters: Json | null
+          system_prompt: string | null
+          template_id: string
+          version_number: number
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          parameters?: Json | null
+          system_prompt?: string | null
+          template_id: string
+          version_number: number
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          parameters?: Json | null
+          system_prompt?: string | null
+          template_id?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_versions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quotas: {
         Row: {
           created_at: string | null
@@ -1066,6 +1335,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      activate_prompt_version: {
+        Args: { p_version_id: string }
+        Returns: undefined
+      }
       get_user_org: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {

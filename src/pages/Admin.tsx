@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, Users, Flag, Gauge, Key, Webhook, Shield, Activity } from "lucide-react";
+import { Settings, Users, Flag, Gauge, Key, Webhook, Shield, Activity, FileText } from "lucide-react";
 import { AdminOverview } from "@/components/admin/AdminOverview";
 import { AdminUsers } from "@/components/admin/AdminUsers";
 import { AdminFeatureFlags } from "@/components/admin/AdminFeatureFlags";
@@ -9,6 +9,7 @@ import { AdminSecrets } from "@/components/admin/AdminSecrets";
 import { AdminWebhooks } from "@/components/admin/AdminWebhooks";
 import { AdminRoles } from "@/components/admin/AdminRoles";
 import { AdminAudit } from "@/components/admin/AdminAudit";
+import { AdminPrompts } from "@/components/admin/AdminPrompts";
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -24,7 +25,7 @@ export default function Admin() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 lg:grid-cols-8 w-full">
+          <TabsList className="grid grid-cols-3 lg:grid-cols-9 w-full">
             <TabsTrigger value="overview" className="gap-2">
               <Activity className="h-4 w-4" />
               <span className="hidden sm:inline">Overview</span>
@@ -40,6 +41,10 @@ export default function Admin() {
             <TabsTrigger value="features" className="gap-2">
               <Flag className="h-4 w-4" />
               <span className="hidden sm:inline">Features</span>
+            </TabsTrigger>
+            <TabsTrigger value="prompts" className="gap-2">
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Prompts</span>
             </TabsTrigger>
             <TabsTrigger value="quotas" className="gap-2">
               <Gauge className="h-4 w-4" />
@@ -73,6 +78,10 @@ export default function Admin() {
 
           <TabsContent value="features">
             <AdminFeatureFlags />
+          </TabsContent>
+
+          <TabsContent value="prompts">
+            <AdminPrompts />
           </TabsContent>
 
           <TabsContent value="quotas">
