@@ -22,6 +22,7 @@ import Competitors from "./pages/Competitors";
 import Generate from "./pages/Generate";
 import PlatformOptimizer from "./pages/PlatformOptimizer";
 import Template from "./pages/Template";
+import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -198,10 +199,7 @@ const App = () => (
               path="/admin"
               element={
                 <ProtectedLayout>
-                  <div className="p-8">
-                    <h1 className="text-4xl font-bold">Admin</h1>
-                    <p className="text-muted-foreground mt-2">Coming soon</p>
-                  </div>
+                  <Admin />
                 </ProtectedLayout>
               }
             />

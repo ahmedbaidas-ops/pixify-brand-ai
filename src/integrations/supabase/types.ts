@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      abilities: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       assets: {
         Row: {
           brand_id: string
@@ -88,6 +112,56 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          changes: Json | null
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          organization_id: string
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          changes?: Json | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          organization_id: string
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          changes?: Json | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          organization_id?: string
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -172,6 +246,7 @@ export type Database = {
         Row: {
           archetype: string | null
           audience: string | null
+          compliance_config: Json | null
           created_at: string
           id: string
           name: string
@@ -184,6 +259,7 @@ export type Database = {
         Insert: {
           archetype?: string | null
           audience?: string | null
+          compliance_config?: Json | null
           created_at?: string
           id?: string
           name: string
@@ -196,6 +272,7 @@ export type Database = {
         Update: {
           archetype?: string | null
           audience?: string | null
+          compliance_config?: Json | null
           created_at?: string
           id?: string
           name?: string
@@ -331,6 +408,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "event_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_flags: {
+        Row: {
+          created_at: string | null
+          enabled: boolean | null
+          id: string
+          key: string
+          metadata: Json | null
+          organization_id: string
+          plan_gate: string | null
+          rollout_percentage: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          key: string
+          metadata?: Json | null
+          organization_id: string
+          plan_gate?: string | null
+          rollout_percentage?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          key?: string
+          metadata?: Json | null
+          organization_id?: string
+          plan_gate?: string | null
+          rollout_percentage?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_flags_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -476,19 +597,69 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          plan_id: string | null
+          stripe_customer_id: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
+          plan_id?: string | null
+          stripe_customer_id?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
+          plan_id?: string | null
+          stripe_customer_id?: string | null
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plans: {
+        Row: {
+          created_at: string | null
+          entitlements: Json
+          id: string
+          is_active: boolean | null
+          name: string
+          price_monthly: number | null
+          slug: string
+          stripe_price_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          entitlements?: Json
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price_monthly?: number | null
+          slug: string
+          stripe_price_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          entitlements?: Json
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price_monthly?: number | null
+          slug?: string
+          stripe_price_id?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -568,6 +739,53 @@ export type Database = {
           },
         ]
       }
+      quotas: {
+        Row: {
+          created_at: string | null
+          current_usage: number | null
+          id: string
+          is_override: boolean | null
+          key: string
+          last_reset_at: string | null
+          limit_value: number
+          organization_id: string
+          reset_period: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_usage?: number | null
+          id?: string
+          is_override?: boolean | null
+          key: string
+          last_reset_at?: string | null
+          limit_value: number
+          organization_id: string
+          reset_period?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_usage?: number | null
+          id?: string
+          is_override?: boolean | null
+          key?: string
+          last_reset_at?: string | null
+          limit_value?: number
+          organization_id?: string
+          reset_period?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotas_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       requests: {
         Row: {
           assigned_to: string | null
@@ -620,6 +838,108 @@ export type Database = {
             columns: ["brand_id"]
             isOneToOne: false
             referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_abilities: {
+        Row: {
+          ability_id: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          ability_id?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          ability_id?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_abilities_ability_id_fkey"
+            columns: ["ability_id"]
+            isOneToOne: false
+            referencedRelation: "abilities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      secret_vault: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          key: string
+          last_rotated_at: string | null
+          organization_id: string
+          updated_at: string | null
+          value_encrypted: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key: string
+          last_rotated_at?: string | null
+          organization_id: string
+          updated_at?: string | null
+          value_encrypted: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key?: string
+          last_rotated_at?: string | null
+          organization_id?: string
+          updated_at?: string | null
+          value_encrypted?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "secret_vault_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_metrics: {
+        Row: {
+          created_at: string | null
+          id: string
+          key: string
+          metadata: Json | null
+          organization_id: string | null
+          value: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          key: string
+          metadata?: Json | null
+          organization_id?: string | null
+          value: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          key?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -690,6 +1010,53 @@ export type Database = {
             columns: ["brand_id"]
             isOneToOne: false
             referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_endpoints: {
+        Row: {
+          created_at: string | null
+          events: string[] | null
+          failure_count: number | null
+          id: string
+          is_active: boolean | null
+          last_triggered_at: string | null
+          organization_id: string
+          secret: string
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          events?: string[] | null
+          failure_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          organization_id: string
+          secret: string
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          events?: string[] | null
+          failure_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          organization_id?: string
+          secret?: string
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_endpoints_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
