@@ -1264,6 +1264,13 @@ export type Database = {
             referencedRelation: "roadmaps"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "roadmap_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       roadmap_milestones: {
