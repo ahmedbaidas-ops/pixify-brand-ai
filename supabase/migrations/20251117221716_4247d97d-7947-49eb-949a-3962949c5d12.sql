@@ -1,0 +1,6 @@
+-- Add foreign key constraint from roadmap_members.user_id to profiles.id
+ALTER TABLE public.roadmap_members
+ADD CONSTRAINT roadmap_members_user_id_fkey 
+FOREIGN KEY (user_id) 
+REFERENCES public.profiles(id) 
+ON DELETE CASCADE;
