@@ -43,7 +43,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <CustomCursor />
       {/* Noura-style Header */}
       <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6">
@@ -58,19 +58,19 @@ const Index = () => {
           </Link>
 
           {/* Right side nav pill */}
-          <nav className="hidden md:flex items-center bg-muted/80 backdrop-blur-md rounded-full px-2 py-2 border border-border/50">
-            <a href="#features" className="px-4 py-2 text-sm font-medium hover:text-foreground/70 transition-colors">
+          <nav className="hidden md:flex items-center bg-white/10 backdrop-blur-md rounded-full px-2 py-2 border border-white/20">
+            <a href="#features" className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors">
               Features
             </a>
-            <a href="#how-it-works" className="px-4 py-2 text-sm font-medium hover:text-foreground/70 transition-colors">
+            <a href="#how-it-works" className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors">
               About
             </a>
-            <a href="#cta" className="px-4 py-2 text-sm font-medium hover:text-foreground/70 transition-colors">
+            <a href="#cta" className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors">
               Works
             </a>
             <Link 
               to="/auth" 
-              className="ml-2 px-5 py-2 text-sm font-medium bg-foreground text-background rounded-full hover:bg-foreground/90 transition-colors"
+              className="ml-2 px-5 py-2 text-sm font-medium bg-white text-black rounded-full hover:bg-white/90 transition-colors"
             >
               Contact
             </Link>
@@ -81,7 +81,7 @@ const Index = () => {
             <ThemeToggle />
             <button 
               onClick={() => setMenuOpen(!menuOpen)}
-              className="w-10 h-10 flex items-center justify-center bg-muted/80 backdrop-blur-md rounded-full border border-border/50"
+              className="w-10 h-10 flex items-center justify-center bg-white/10 backdrop-blur-md rounded-full border border-white/20"
             >
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -99,18 +99,18 @@ const Index = () => {
           animate={{ height: menuOpen ? "auto" : 0, opacity: menuOpen ? 1 : 0 }}
           className="md:hidden overflow-hidden mt-4"
         >
-          <nav className="bg-muted/95 backdrop-blur-md rounded-2xl p-6 flex flex-col gap-3 border border-border/50">
-            <a href="#features" className="text-lg font-medium hover:text-foreground/70 transition-colors" onClick={() => setMenuOpen(false)}>
+          <nav className="bg-black/95 backdrop-blur-md rounded-2xl p-6 flex flex-col gap-3 border border-white/20">
+            <a href="#features" className="text-lg font-medium text-white/80 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>
               Features
             </a>
-            <a href="#how-it-works" className="text-lg font-medium hover:text-foreground/70 transition-colors" onClick={() => setMenuOpen(false)}>
+            <a href="#how-it-works" className="text-lg font-medium text-white/80 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>
               About
             </a>
-            <a href="#cta" className="text-lg font-medium hover:text-foreground/70 transition-colors" onClick={() => setMenuOpen(false)}>
+            <a href="#cta" className="text-lg font-medium text-white/80 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>
               Works
             </a>
             <Link to="/auth" className="mt-2">
-              <Button className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-full">
+              <Button className="w-full bg-white text-black hover:bg-white/90 rounded-full">
                 Contact
               </Button>
             </Link>
@@ -128,7 +128,7 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center text-sm md:text-base tracking-[0.3em] uppercase text-muted-foreground mb-4"
+        className="text-center text-sm md:text-base tracking-[0.3em] uppercase text-white/60 mb-4"
         >
           AI-Powered Brand Management
         </motion.p>
@@ -143,7 +143,7 @@ const Index = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16 max-w-2xl mx-auto text-center"
         >
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+          <p className="text-lg md:text-xl text-white/60 leading-relaxed">
             Manage, organize, and distribute your creative assets with intelligence. 
             Pixify transforms how teams work with digital assets.
           </p>
@@ -158,7 +158,7 @@ const Index = () => {
         >
           <MagneticButton strength={0.35}>
             <Link to="/auth">
-              <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-foreground text-background hover:bg-foreground/90">
+              <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-white text-black hover:bg-white/90">
                 Get started
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -168,7 +168,7 @@ const Index = () => {
       </section>
 
       {/* Horizontal Scrolling Marquee with Floating Chips */}
-      <section className="py-12 overflow-hidden border-y border-border">
+      <section className="py-12 overflow-hidden border-y border-white/10">
         <div className="flex animate-marquee">
           {[...marketingWords, ...marketingWords, ...marketingWords].map((word, idx) => (
             <motion.div 
@@ -207,7 +207,7 @@ const Index = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">About us</p>
+              <p className="text-sm tracking-[0.3em] uppercase text-white/60 mb-6">About us</p>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8">
                 Where ideas meet
                 <br />
@@ -221,7 +221,7 @@ const Index = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              <p className="text-lg md:text-xl text-white/60 leading-relaxed">
                 Founded on integrity and excellence, Pixify has always believed that success comes from 
                 consistency and dedication. We craft bold digital solutions through strategy, design, 
                 and AI—helping brands move faster, connect deeper, and stand out.
@@ -232,7 +232,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-32 px-6 md:px-12 bg-muted/30">
+      <section id="features" className="py-32 px-6 md:px-12 bg-white/5">
         <div className="max-w-[1800px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -241,7 +241,7 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="mb-20"
           >
-            <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">Services</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-white/60 mb-6">Services</p>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-3xl leading-[1.1]">
               We craft bold digital solutions through strategy, design, and AI
             </h2>
@@ -260,7 +260,7 @@ const Index = () => {
                   ease: [0.25, 0.46, 0.45, 0.94]
                 }}
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                className="group relative p-8 rounded-3xl bg-background border border-border hover:border-primary/50 transition-colors duration-500 hover:shadow-xl cursor-pointer"
+                className="group relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-primary/50 transition-colors duration-500 hover:shadow-xl cursor-pointer"
               >
                 <motion.div 
                   className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
@@ -269,7 +269,7 @@ const Index = () => {
                   <feature.icon className="w-6 h-6" />
                 </motion.div>
                 <h3 className="text-xl font-semibold mb-3 tracking-tight">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                <p className="text-white/60 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -286,7 +286,7 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-20"
           >
-            <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">How it works</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-white/60 mb-6">How it works</p>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Simple, powerful workflow
             </h2>
@@ -320,7 +320,7 @@ const Index = () => {
               >
                 <div className="text-8xl md:text-9xl font-bold text-primary/10 mb-4 leading-none">{item.step}</div>
                 <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight">{item.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-lg">{item.description}</p>
+                <p className="text-white/60 leading-relaxed text-lg">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -328,7 +328,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section id="cta" className="py-32 px-6 md:px-12 bg-foreground text-background">
+      <section id="cta" className="py-32 px-6 md:px-12 bg-white text-black">
         <div className="max-w-[1800px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -348,14 +348,14 @@ const Index = () => {
               <div className="flex flex-wrap gap-4">
                 <MagneticButton strength={0.35}>
                   <Link to="/auth">
-                    <Button size="lg" className="text-base px-8 h-14 rounded-full group bg-background text-foreground hover:bg-background/90">
+                     <Button size="lg" className="text-base px-8 h-14 rounded-full group bg-black text-white hover:bg-black/90">
                       Get started for free
                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
                 </MagneticButton>
                 <MagneticButton strength={0.35}>
-                  <Button size="lg" variant="outline" className="text-base px-8 h-14 rounded-full border-background/30 text-background hover:bg-background/10">
+                  <Button size="lg" variant="outline" className="text-base px-8 h-14 rounded-full border-black/30 text-black hover:bg-black/10">
                     Talk to sales
                   </Button>
                 </MagneticButton>
@@ -377,7 +377,7 @@ const Index = () => {
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                   className="flex items-center gap-4"
                 >
-                  <div className="w-6 h-6 rounded-full bg-background/20 flex items-center justify-center">
+                  <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
                     <Check className="w-4 h-4" />
                   </div>
                   <span className="text-lg">{item}</span>
@@ -389,27 +389,27 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 md:px-12 border-t border-border">
+      <footer className="py-12 px-6 md:px-12 border-t border-white/10">
         <div className="max-w-[1800px] mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <img src="/qatar-airways-logo.png" alt="Pixify Logo" className="h-8 w-auto" />
+              <img src={pixifyLogo} alt="Pixify Logo" className="h-8 w-auto invert" />
               <span className="font-bold tracking-tight">PIXIFY</span>
             </div>
             
             <nav className="flex items-center gap-8">
-              <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">
                 Features
               </a>
-              <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#how-it-works" className="text-sm text-white/60 hover:text-white transition-colors">
                 How it works
               </a>
-              <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/auth" className="text-sm text-white/60 hover:text-white transition-colors">
                 Sign In
               </Link>
             </nav>
             
-            <span className="text-sm text-muted-foreground">© 2024 Pixify. All rights reserved.</span>
+            <span className="text-sm text-white/60">© 2024 Pixify. All rights reserved.</span>
           </div>
         </div>
       </footer>
