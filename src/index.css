@@ -802,7 +802,7 @@ All colors MUST be HSL.
 }
 
 .glitch-text:hover {
-  animation: glitch-fragment 0.4s infinite;
+  animation: glitch-fragment 1.5s infinite;
 }
 
 .glitch-letter {
@@ -811,11 +811,11 @@ All colors MUST be HSL.
 }
 
 .glitch-letter:hover {
-  animation: glitch-fragment 0.3s infinite;
+  animation: glitch-fragment 1.2s infinite;
 }
 
 .glitch-text:hover .glitch-letter {
-  animation: glitch-fragment 0.3s infinite;
+  animation: glitch-fragment 1.2s infinite;
 }
 
 .glitch-letter:nth-child(odd) {
