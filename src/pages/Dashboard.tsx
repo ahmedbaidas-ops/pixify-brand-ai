@@ -8,8 +8,9 @@ import {
   FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, 
   Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart, Search,
   ChevronRight, TrendingUp, Clock, Wand2, ShieldCheck, Lightbulb, MessageSquare,
-  HelpCircle
+  HelpCircle, ChevronDown
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -84,6 +85,7 @@ const Dashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [aiQuery, setAiQuery] = useState("");
+  const [showAIHelp, setShowAIHelp] = useState(false);
   const [sections, setSections] = useState<DashboardSection[]>(() => {
     const saved = localStorage.getItem("dashboard-sections");
     return saved ? JSON.parse(saved) : defaultSections;
@@ -246,36 +248,63 @@ const Dashboard = () => {
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-5">
-                      {/* AI Capabilities Guide */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {aiCapabilities.map((cap) => (
-                          <div 
-                            key={cap.category}
-                            className="rounded-xl border border-border/50 bg-background/50 p-3 space-y-2"
+                      {/* AI Help Toggle Button */}
+                      <Collapsible open={showAIHelp} onOpenChange={setShowAIHelp}>
+                        <CollapsibleTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full justify-between h-9 rounded-lg border-dashed hover:border-primary/50 hover:bg-primary/5"
                           >
-                            <div className="flex items-center gap-2">
-                              <div className={`h-7 w-7 rounded-lg flex items-center justify-center ${cap.color}`}>
-                                <cap.icon className="h-3.5 w-3.5" />
+                            <span className="flex items-center gap-2">
+                              <HelpCircle className="h-4 w-4 text-primary" />
+                              <span className="text-sm">AI Help — What can I ask?</span>
+                            </span>
+                            <motion.div
+                              animate={{ rotate: showAIHelp ? 180 : 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                            </motion.div>
+                          </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3"
+                          >
+                            {aiCapabilities.map((cap) => (
+                              <div 
+                                key={cap.category}
+                                className="rounded-xl border border-border/50 bg-background/50 p-3 space-y-2"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <div className={`h-7 w-7 rounded-lg flex items-center justify-center ${cap.color}`}>
+                                    <cap.icon className="h-3.5 w-3.5" />
+                                  </div>
+                                  <span className="text-sm font-medium">{cap.category}</span>
+                                </div>
+                                <div className="space-y-1">
+                                  {cap.examples.map((example, idx) => (
+                                    <button
+                                      key={idx}
+                                      onClick={() => handleChipClick(example)}
+                                      disabled={aiLoading}
+                                      className="w-full text-left text-xs text-muted-foreground hover:text-foreground 
+                                               hover:bg-muted/50 rounded-md px-2 py-1.5 transition-colors truncate
+                                               disabled:opacity-50"
+                                    >
+                                      "{example}"
+                                    </button>
+                                  ))}
+                                </div>
                               </div>
-                              <span className="text-sm font-medium">{cap.category}</span>
-                            </div>
-                            <div className="space-y-1">
-                              {cap.examples.map((example, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => handleChipClick(example)}
-                                  disabled={aiLoading}
-                                  className="w-full text-left text-xs text-muted-foreground hover:text-foreground 
-                                           hover:bg-muted/50 rounded-md px-2 py-1.5 transition-colors truncate
-                                           disabled:opacity-50"
-                                >
-                                  "{example}"
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                            ))}
+                          </motion.div>
+                        </CollapsibleContent>
+                      </Collapsible>
 
                       {/* Quick Action Chips */}
                       <div className="flex flex-wrap gap-2">
