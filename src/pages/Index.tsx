@@ -167,16 +167,16 @@ const Index = () => {
         <GrainOverlay />
         
         {/* Hero Content Overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-12">
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-16 md:pb-24 px-6 md:px-12">
           {/* Hero Description */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-3xl text-center flex flex-col items-center"
+            className="max-w-4xl text-center flex flex-col items-center"
           >
             <motion.h1 
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-black mb-6 tracking-tight text-center w-full"
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-6 tracking-tight text-center whitespace-nowrap"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
