@@ -74,7 +74,7 @@ const Index = () => {
     <div className="min-h-screen bg-white text-black overflow-x-hidden">
       <CustomCursor />
       {/* Noura-style Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 ${isOverDark ? 'text-white bg-black/80 backdrop-blur-md' : 'text-black bg-white/80 backdrop-blur-md'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 border-b ${isOverDark ? 'text-white bg-black/40 backdrop-blur-xl border-white/10' : 'text-black bg-white/40 backdrop-blur-xl border-black/5'}`}>
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
