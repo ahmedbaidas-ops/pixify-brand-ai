@@ -116,28 +116,17 @@ export function ThemeToggle() {
         <DropdownMenuTrigger asChild>
           <button
             ref={buttonRef}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted/50 border border-border 
-                       hover:bg-muted transition-all duration-200 group w-full justify-between"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-black/5 border border-black/10 
+                       hover:bg-black/10 transition-all duration-200 group"
           >
-            <div className="flex items-center gap-2">
-              <motion.div
-                key={theme}
-                initial={{ rotate: -180, scale: 0 }}
-                animate={{ rotate: 0, scale: 1 }}
-                transition={{ duration: 0.3, type: "spring", stiffness: 200 }}
-              >
-                <IconComponent className="w-4 h-4 text-primary" />
-              </motion.div>
-              <span className="text-sm font-medium">Theme</span>
-            </div>
-            <motion.span 
-              key={currentTheme.label}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-xs text-muted-foreground bg-background/50 px-2 py-0.5 rounded-md"
+            <motion.div
+              key={theme}
+              initial={{ rotate: -180, scale: 0 }}
+              animate={{ rotate: 0, scale: 1 }}
+              transition={{ duration: 0.3, type: "spring", stiffness: 200 }}
             >
-              {currentTheme.label}
-            </motion.span>
+              <IconComponent className="w-5 h-5" />
+            </motion.div>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
