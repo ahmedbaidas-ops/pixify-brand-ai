@@ -1,4 +1,4 @@
-import { Moon, Sun, Sparkles } from "lucide-react";
+import { Moon, Sun, Sparkles, Gamepad2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,7 @@ const themes = [
   { value: "light", label: "Light", icon: Sun, color: "hsl(45, 100%, 60%)" },
   { value: "dark", label: "Dark", icon: Moon, color: "hsl(235, 70%, 50%)" },
   { value: "modern", label: "Modern", icon: Sparkles, color: "hsl(210, 25%, 92%)" },
+  { value: "retro", label: "Retro", icon: Gamepad2, color: "hsl(120, 100%, 40%)" },
 ] as const;
 
 interface RippleState {

@@ -190,6 +190,76 @@ All colors MUST be HSL.
     --sidebar-border: 210 20% 88%;
     --sidebar-ring: 220 45% 25%;
   }
+
+  /* Retro Pixel Game Theme - 8-bit Nostalgia */
+  .retro {
+    /* Dark CRT-style background */
+    --background: 240 20% 8%;
+    --foreground: 120 100% 50%;
+
+    /* Pixelated card surfaces */
+    --card: 240 15% 12%;
+    --card-foreground: 120 100% 50%;
+
+    --popover: 240 20% 10%;
+    --popover-foreground: 120 100% 50%;
+
+    /* Primary - neon green (classic terminal) */
+    --primary: 120 100% 45%;
+    --primary-foreground: 240 20% 8%;
+    --primary-glow: 120 100% 60%;
+
+    /* Secondary - electric blue */
+    --secondary: 200 100% 50%;
+    --secondary-foreground: 240 20% 8%;
+
+    /* Accent - hot pink/magenta */
+    --accent: 320 100% 60%;
+    --accent-foreground: 240 20% 8%;
+
+    /* Muted - darker green tint */
+    --muted: 240 15% 15%;
+    --muted-foreground: 120 60% 45%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 120 80% 30%;
+    --input: 240 15% 15%;
+    --ring: 120 100% 45%;
+
+    --radius: 0px;
+
+    /* 8-bit style gradients */
+    --gradient-primary: linear-gradient(180deg, hsl(120 100% 45%), hsl(120 100% 35%));
+    --gradient-accent: linear-gradient(180deg, hsl(320 100% 60%), hsl(280 100% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(240 20% 8%), hsl(240 25% 5%));
+    --gradient-crt: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(0 0% 0% / 0.1) 2px,
+      hsl(0 0% 0% / 0.1) 4px
+    );
+
+    /* Pixel-perfect shadows */
+    --shadow-sm: 2px 2px 0 hsl(0 0% 0%);
+    --shadow-md: 4px 4px 0 hsl(0 0% 0%);
+    --shadow-lg: 6px 6px 0 hsl(0 0% 0%);
+    --shadow-xl: 8px 8px 0 hsl(0 0% 0%);
+    --shadow-premium: 4px 4px 0 hsl(120 100% 30%), 8px 8px 0 hsl(0 0% 0%);
+    --shadow-glow: 0 0 10px hsl(120 100% 50%), 0 0 20px hsl(120 100% 40%), 0 0 30px hsl(120 100% 30%);
+
+    /* Retro sidebar */
+    --sidebar-background: 240 20% 10%;
+    --sidebar-foreground: 120 100% 50%;
+    --sidebar-primary: 120 100% 45%;
+    --sidebar-primary-foreground: 240 20% 8%;
+    --sidebar-accent: 240 15% 18%;
+    --sidebar-accent-foreground: 120 100% 50%;
+    --sidebar-border: 120 80% 30%;
+    --sidebar-ring: 120 100% 45%;
+  }
 }
 
 @layer base {
@@ -364,5 +434,235 @@ All colors MUST be HSL.
   .modern [data-state="open"],
   .modern [data-state="closed"] {
     background: linear-gradient(145deg, hsl(0 0% 100% / 0.85), hsl(210 25% 96% / 0.65));
+  }
+}
+
+/* ============================================
+   RETRO PIXEL GAME THEME STYLES
+   ============================================ */
+@layer components {
+  /* Retro theme uses pixel fonts */
+  .retro body {
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    image-rendering: pixelated;
+  }
+
+  .retro h1, .retro h2, .retro h3, .retro h4, .retro h5, .retro h6 {
+    font-family: 'Press Start 2P', cursive;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .retro h1 { font-size: 1.5rem; }
+  .retro h2 { font-size: 1.25rem; }
+  .retro h3 { font-size: 1rem; }
+
+  /* CRT scanline overlay */
+  .retro body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(0 0% 0% / 0.03) 2px,
+      hsl(0 0% 0% / 0.03) 4px
+    );
+  }
+
+  /* CRT glow effect */
+  .retro body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      hsl(0 0% 0% / 0.2) 100%
+    );
+  }
+
+  /* Pixel-perfect borders - no border-radius */
+  .retro *,
+  .retro [data-slot="card"],
+  .retro .card,
+  .retro [class*="Card"],
+  .retro button,
+  .retro input,
+  .retro select,
+  .retro textarea {
+    border-radius: 0 !important;
+  }
+
+  /* Retro cards - sharp edges, pixel shadows */
+  .retro [data-slot="card"],
+  .retro .card,
+  .retro [class*="Card"] {
+    background: hsl(240 15% 12%);
+    border: 3px solid hsl(120 100% 45%);
+    box-shadow: 
+      4px 4px 0 hsl(0 0% 0%),
+      inset 0 0 20px hsl(120 100% 45% / 0.1);
+  }
+
+  /* Retro sidebar */
+  .retro [data-sidebar="sidebar"] {
+    background: hsl(240 20% 10%);
+    border-right: 3px solid hsl(120 100% 45%);
+    box-shadow: 4px 0 0 hsl(0 0% 0%);
+  }
+
+  /* Retro buttons - arcade style */
+  .retro button {
+    border: 3px solid hsl(120 100% 45%);
+    background: hsl(240 15% 15%);
+    box-shadow: 4px 4px 0 hsl(0 0% 0%);
+    text-transform: uppercase;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    transition: all 0.1s ease;
+  }
+
+  .retro button:hover {
+    background: hsl(120 100% 45%);
+    color: hsl(240 20% 8%);
+    box-shadow: 2px 2px 0 hsl(0 0% 0%);
+    transform: translate(2px, 2px);
+  }
+
+  .retro button:active {
+    box-shadow: 0 0 0 hsl(0 0% 0%);
+    transform: translate(4px, 4px);
+  }
+
+  /* Primary button variant */
+  .retro button[data-variant="default"],
+  .retro .btn-primary {
+    background: hsl(120 100% 45%);
+    color: hsl(240 20% 8%);
+    border-color: hsl(120 100% 35%);
+    text-shadow: none;
+  }
+
+  /* Retro inputs - terminal style */
+  .retro input,
+  .retro textarea,
+  .retro select {
+    background: hsl(240 20% 8%);
+    border: 2px solid hsl(120 80% 30%);
+    color: hsl(120 100% 50%);
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    caret-color: hsl(120 100% 50%);
+  }
+
+  .retro input::placeholder,
+  .retro textarea::placeholder {
+    color: hsl(120 60% 30%);
+  }
+
+  .retro input:focus,
+  .retro textarea:focus,
+  .retro select:focus {
+    border-color: hsl(120 100% 50%);
+    box-shadow: 
+      0 0 10px hsl(120 100% 50% / 0.5),
+      inset 0 0 10px hsl(120 100% 50% / 0.1);
+    outline: none;
+  }
+
+  /* Retro badges - pixel style */
+  .retro [class*="Badge"],
+  .retro [class*="badge"] {
+    background: hsl(320 100% 60%);
+    color: hsl(0 0% 100%);
+    border: 2px solid hsl(320 100% 40%);
+    box-shadow: 2px 2px 0 hsl(0 0% 0%);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Progress bars - segmented pixel style */
+  .retro [class*="Progress"] {
+    background: hsl(240 15% 15%);
+    border: 2px solid hsl(120 80% 30%);
+    box-shadow: inset 2px 2px 0 hsl(0 0% 0% / 0.5);
+  }
+
+  .retro [class*="Progress"] > div {
+    background: repeating-linear-gradient(
+      90deg,
+      hsl(120 100% 45%) 0px,
+      hsl(120 100% 45%) 8px,
+      hsl(120 100% 35%) 8px,
+      hsl(120 100% 35%) 10px
+    );
+  }
+
+  /* Scrollbar styling for retro */
+  .retro ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .retro ::-webkit-scrollbar-track {
+    background: hsl(240 20% 8%);
+    border: 2px solid hsl(120 80% 30%);
+  }
+
+  .retro ::-webkit-scrollbar-thumb {
+    background: hsl(120 100% 45%);
+    border: 2px solid hsl(120 100% 35%);
+  }
+
+  .retro ::-webkit-scrollbar-thumb:hover {
+    background: hsl(120 100% 55%);
+  }
+
+  /* Glowing text effect for headings */
+  .retro h1, .retro h2, .retro h3 {
+    text-shadow: 
+      0 0 5px hsl(120 100% 50%),
+      0 0 10px hsl(120 100% 40%),
+      0 0 15px hsl(120 100% 30%);
+  }
+
+  /* Blink animation for certain elements */
+  @keyframes pixel-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .retro .animate-pulse {
+    animation: pixel-blink 1s step-end infinite;
+  }
+
+  /* 8-bit style separator */
+  .retro hr,
+  .retro [data-orientation="horizontal"] {
+    border: none;
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      hsl(120 100% 45%) 0px,
+      hsl(120 100% 45%) 4px,
+      transparent 4px,
+      transparent 8px
+    );
   }
 }
