@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AnimatedRoutes } from "@/components/AnimatedRoutes";
+import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AnimatedRoutes />
+          <FloatingAIAssistant />
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>
