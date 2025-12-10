@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, Users, Target, Zap, Loader2, Image, X } from "lucide-react";
+import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -184,17 +184,18 @@ const Dashboard = () => {
                   >
                     <div className="bg-muted/50 rounded-lg p-4 border">
                       <div className="flex items-start justify-between mb-3">
-                        <p className="text-sm text-foreground font-medium">{aiResponse.message}</p>
+                        <p className="text-sm text-foreground font-medium whitespace-pre-line">{aiResponse.message}</p>
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-6 w-6 -mt-1 -mr-1"
+                          className="h-6 w-6 -mt-1 -mr-1 shrink-0"
                           onClick={clearResponse}
                         >
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
                       
+                      {/* Assets Response */}
                       {aiResponse.type === "assets" && aiResponse.assets && aiResponse.assets.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           {aiResponse.assets.map((asset) => (
@@ -238,6 +239,110 @@ const Dashboard = () => {
                             </motion.div>
                           ))}
                         </div>
+                      )}
+
+                      {/* Colors Response */}
+                      {aiResponse.type === "colors" && aiResponse.colors && (
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          {aiResponse.colors.map((color, idx) => (
+                            <motion.div
+                              key={idx}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.1 }}
+                              className="bg-background rounded-lg border p-3"
+                            >
+                              <div 
+                                className="h-16 rounded-md mb-2 shadow-inner border"
+                                style={{ backgroundColor: color.value }}
+                              />
+                              <p className="text-sm font-medium">{color.name}</p>
+                              <p className="text-xs font-mono text-muted-foreground">{color.value}</p>
+                              {color.description && (
+                                <p className="text-xs text-muted-foreground mt-1">{color.description}</p>
+                              )}
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Typography Response */}
+                      {aiResponse.type === "typography" && aiResponse.typography && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {aiResponse.typography.map((font, idx) => (
+                            <motion.div
+                              key={idx}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.1 }}
+                              className="bg-background rounded-lg border p-4"
+                            >
+                              <div className="flex items-center gap-2 mb-2">
+                                <Type className="h-4 w-4 text-primary" />
+                                <p className="text-sm font-medium">{font.name}</p>
+                              </div>
+                              <p 
+                                className="text-2xl mb-1"
+                                style={{ fontFamily: font.value }}
+                              >
+                                {font.value}
+                              </p>
+                              <p className="text-xs text-muted-foreground">Aa Bb Cc Dd Ee 123</p>
+                              {font.description && (
+                                <p className="text-xs text-muted-foreground mt-2">{font.description}</p>
+                              )}
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Brand Strategy Response */}
+                      {aiResponse.type === "brand" && aiResponse.brand && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="bg-background rounded-lg border p-4 space-y-4"
+                        >
+                          {aiResponse.brand.archetype && (
+                            <div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <Heart className="h-4 w-4 text-primary" />
+                                <p className="text-xs font-medium text-muted-foreground">Archetype</p>
+                              </div>
+                              <p className="text-sm font-medium">{aiResponse.brand.archetype}</p>
+                            </div>
+                          )}
+                          {aiResponse.brand.tone && (
+                            <div>
+                              <p className="text-xs font-medium text-muted-foreground mb-1">Tone of Voice</p>
+                              <p className="text-sm">{aiResponse.brand.tone}</p>
+                            </div>
+                          )}
+                          {aiResponse.brand.purpose && (
+                            <div>
+                              <p className="text-xs font-medium text-muted-foreground mb-1">Purpose</p>
+                              <p className="text-sm">{aiResponse.brand.purpose}</p>
+                            </div>
+                          )}
+                          {aiResponse.brand.audience && (
+                            <div>
+                              <p className="text-xs font-medium text-muted-foreground mb-1">Target Audience</p>
+                              <p className="text-sm">{aiResponse.brand.audience}</p>
+                            </div>
+                          )}
+                          {aiResponse.brand.values && aiResponse.brand.values.length > 0 && (
+                            <div>
+                              <p className="text-xs font-medium text-muted-foreground mb-2">Brand Values</p>
+                              <div className="flex flex-wrap gap-2">
+                                {aiResponse.brand.values.map((value, idx) => (
+                                  <span key={idx} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                                    {value}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </motion.div>
                       )}
                     </div>
                   </motion.div>
