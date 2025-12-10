@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -11,6 +11,35 @@ import pixifyLogo from "@/assets/pixify-logo-hero.png";
 
 const Index = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isOverDark, setIsOverDark] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.querySelector('header');
+      if (!header) return;
+      
+      const headerRect = header.getBoundingClientRect();
+      const headerMiddle = headerRect.top + headerRect.height / 2;
+      
+      // Check all dark sections
+      const darkSections = document.querySelectorAll('[data-dark-section]');
+      let overDark = false;
+      
+      darkSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (headerMiddle >= rect.top && headerMiddle <= rect.bottom) {
+          overDark = true;
+        }
+      });
+      
+      setIsOverDark(overDark);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const features = [
     {
@@ -45,22 +74,30 @@ const Index = () => {
     <div className="min-h-screen bg-white text-black overflow-x-hidden">
       <CustomCursor />
       {/* Noura-style Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6">
+      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-colors duration-300 ${isOverDark ? 'text-white' : 'text-black'}`}>
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <img 
               src={pixifyLogo} 
               alt="Pixify" 
-              className="h-8 w-auto dark:invert"
+              className={`h-8 w-auto transition-all duration-300 ${isOverDark ? 'invert' : ''}`}
             />
           </Link>
 
           {/* Right side nav pill */}
-          <nav className="hidden md:flex items-center bg-black/5 backdrop-blur-md rounded-full px-2 py-2 border border-black/10">
+          <nav className={`hidden md:flex items-center backdrop-blur-md rounded-full px-2 py-2 border transition-colors duration-300 ${
+            isOverDark 
+              ? 'bg-white/10 border-white/20' 
+              : 'bg-black/5 border-black/10'
+          }`}>
             <motion.a 
               href="#features" 
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors rounded-full hover:bg-black/5"
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-full ${
+                isOverDark 
+                  ? 'text-white/70 hover:text-white hover:bg-white/10' 
+                  : 'text-black/70 hover:text-black hover:bg-black/5'
+              }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -69,7 +106,11 @@ const Index = () => {
             </motion.a>
             <motion.a 
               href="#how-it-works" 
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors rounded-full hover:bg-black/5"
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-full ${
+                isOverDark 
+                  ? 'text-white/70 hover:text-white hover:bg-white/10' 
+                  : 'text-black/70 hover:text-black hover:bg-black/5'
+              }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -78,7 +119,11 @@ const Index = () => {
             </motion.a>
             <motion.a 
               href="#cta" 
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors rounded-full hover:bg-black/5"
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-full ${
+                isOverDark 
+                  ? 'text-white/70 hover:text-white hover:bg-white/10' 
+                  : 'text-black/70 hover:text-black hover:bg-black/5'
+              }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -91,7 +136,11 @@ const Index = () => {
             >
               <Link 
                 to="/auth" 
-                className="ml-2 px-5 py-2 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-colors"
+                className={`ml-2 px-5 py-2 text-sm font-medium rounded-full transition-colors ${
+                  isOverDark 
+                    ? 'bg-white text-black hover:bg-white/90' 
+                    : 'bg-black text-white hover:bg-black/90'
+                }`}
               >
                 Contact
               </Link>
@@ -103,7 +152,11 @@ const Index = () => {
             <ThemeToggle />
             <button 
               onClick={() => setMenuOpen(!menuOpen)}
-              className="w-10 h-10 flex items-center justify-center bg-black/5 backdrop-blur-md rounded-full border border-black/10"
+              className={`w-10 h-10 flex items-center justify-center backdrop-blur-md rounded-full border transition-colors duration-300 ${
+                isOverDark 
+                  ? 'bg-white/10 border-white/20' 
+                  : 'bg-black/5 border-black/10'
+              }`}
             >
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -114,7 +167,11 @@ const Index = () => {
             <ThemeToggle />
             <Link 
               to="/auth"
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap"
+              className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all hover:scale-105 shadow-lg whitespace-nowrap ${
+                isOverDark 
+                  ? 'bg-white text-black hover:bg-white/90' 
+                  : 'bg-black text-white hover:bg-black/90'
+              }`}
             >
               <Play className="w-4 h-4" />
               Get Started
@@ -294,7 +351,7 @@ const Index = () => {
       </section>
 
       {/* Features Section - Creative Layout */}
-      <section id="features" className="py-32 px-6 md:px-12 bg-black text-white overflow-hidden">
+      <section id="features" data-dark-section className="py-32 px-6 md:px-12 bg-black text-white overflow-hidden">
         <div className="max-w-[1800px] mx-auto">
           <motion.div
             initial={{ opacity: 0 }}
