@@ -563,7 +563,7 @@ const Dashboard = () => {
         )}
 
         {/* Customize View Floating Button */}
-        <CustomizeView sections={sections} onSectionsChange={setSections} />
+        <CustomizeView sections={sections} defaultSections={defaultSections} onSectionsChange={setSections} />
       </div>
     </div>
   );

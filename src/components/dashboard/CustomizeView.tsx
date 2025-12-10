@@ -34,6 +34,7 @@ export interface DashboardSection {
 
 interface CustomizeViewProps {
   sections: DashboardSection[];
+  defaultSections: DashboardSection[];
   onSectionsChange: (sections: DashboardSection[]) => void;
 }
 
@@ -88,7 +89,7 @@ const SortableItem = ({ section, onToggleVisibility }: SortableItemProps) => {
   );
 };
 
-export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps) => {
+export const CustomizeView = ({ sections, defaultSections, onSectionsChange }: CustomizeViewProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const sensors = useSensors(
@@ -162,6 +163,14 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
         </div>
         
         <div className="p-3 border-t border-border space-y-2">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="w-full text-xs"
+            onClick={() => onSectionsChange([...defaultSections])}
+          >
+            Reset to Default
+          </Button>
           <Button 
             variant="outline" 
             size="sm" 
