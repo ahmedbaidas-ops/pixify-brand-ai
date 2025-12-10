@@ -79,21 +79,6 @@ const Index = () => {
             </Link>
           </nav>
 
-          {/* Get Started Floating Chip */}
-          <motion.div
-            className="hidden md:flex"
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <Link 
-              to="/auth"
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-all hover:scale-105 shadow-lg"
-            >
-              <Play className="w-4 h-4" />
-              Get Started
-            </Link>
-          </motion.div>
-
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center gap-3">
             <ThemeToggle />
@@ -105,9 +90,21 @@ const Index = () => {
             </button>
           </div>
 
-          {/* Desktop theme toggle */}
-          <div className="hidden md:block">
+          {/* Desktop theme toggle + Get Started */}
+          <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Link 
+                to="/auth"
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-all hover:scale-105 shadow-lg"
+              >
+                <Play className="w-4 h-4" />
+                Get Started
+              </Link>
+            </motion.div>
           </div>
         </div>
 
