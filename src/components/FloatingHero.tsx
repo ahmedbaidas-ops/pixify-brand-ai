@@ -147,6 +147,7 @@ export const FloatingHero = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [animationPhase, setAnimationPhase] = useState<"heart" | "floating" | "circle">("heart");
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const floatingImages = [
@@ -160,26 +161,35 @@ export const FloatingHero = () => {
     "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&h=400&fit=crop",
   ];
 
-  // Animation cycle: heart (20s) -> floating (10s) -> circle (10s) -> floating (10s) -> repeat
+  // Animation cycle with transition states
   useEffect(() => {
+    const triggerTransition = () => {
+      setIsTransitioning(true);
+      setTimeout(() => setIsTransitioning(false), 1500);
+    };
+
     const cycleAnimation = () => {
       // Start with heart shape
       setAnimationPhase("heart");
       
       setTimeout(() => {
         // After 20s, switch to floating
+        triggerTransition();
         setAnimationPhase("floating");
         
         setTimeout(() => {
           // After 10s of floating, switch to circle
+          triggerTransition();
           setAnimationPhase("circle");
           
           setTimeout(() => {
             // After 10s of circle, switch back to floating
+            triggerTransition();
             setAnimationPhase("floating");
             
             setTimeout(() => {
               // After 10s of floating, restart cycle
+              triggerTransition();
               cycleAnimation();
             }, 10000);
           }, 10000);
@@ -222,21 +232,81 @@ export const FloatingHero = () => {
         />
       ))}
 
-      {/* Center Pixify Logo - Always visible */}
+      {/* Center Pixify Logo - Always visible with glow effect */}
       <motion.div
         className="relative z-20"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.3, type: "spring", stiffness: 100 }}
       >
+        {/* Glow layers */}
+        <motion.div
+          className="absolute inset-0 blur-3xl rounded-full"
+          style={{ 
+            background: "radial-gradient(circle, hsl(var(--primary) / 0.4) 0%, transparent 70%)",
+            transform: "scale(1.5)",
+          }}
+          animate={{
+            opacity: [0.3, 0.6, 0.3],
+            scale: [1.3, 1.6, 1.3],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Intense glow during transitions */}
+        <motion.div
+          className="absolute inset-0 blur-2xl rounded-full"
+          style={{ 
+            background: "radial-gradient(circle, hsl(var(--foreground) / 0.3) 0%, transparent 60%)",
+            transform: "scale(1.8)",
+          }}
+          animate={{
+            opacity: isTransitioning ? [0.5, 1, 0.5] : [0.1, 0.2, 0.1],
+            scale: isTransitioning ? [1.5, 2.2, 1.5] : [1.3, 1.5, 1.3],
+          }}
+          transition={{
+            duration: isTransitioning ? 0.8 : 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Secondary color ring pulse */}
+        <motion.div
+          className="absolute inset-0 rounded-full border-2 border-primary/20"
+          style={{ transform: "scale(2)" }}
+          animate={{
+            opacity: [0.2, 0.5, 0.2],
+            scale: [1.8, 2.3, 1.8],
+            borderWidth: isTransitioning ? ["4px", "2px", "4px"] : ["2px", "1px", "2px"],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
         <motion.img 
           src={pixifyLogo} 
           alt="Pixify" 
-          className="w-[200px] md:w-[300px] lg:w-[350px] h-auto dark:invert"
+          className="w-[200px] md:w-[300px] lg:w-[350px] h-auto dark:invert relative z-10"
           animate={{ 
             scale: isHovering ? 1.05 : 1,
+            filter: isTransitioning 
+              ? ["drop-shadow(0 0 20px hsl(var(--primary) / 0.5))", "drop-shadow(0 0 40px hsl(var(--primary) / 0.8))", "drop-shadow(0 0 20px hsl(var(--primary) / 0.5))"]
+              : "drop-shadow(0 0 10px hsl(var(--primary) / 0.2))",
           }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 300, 
+            damping: 20,
+            filter: { duration: 0.6, repeat: isTransitioning ? Infinity : 0 }
+          }}
         />
       </motion.div>
 
