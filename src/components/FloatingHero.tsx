@@ -1,4 +1,4 @@
-import { motion, useAnimationControls } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import pixifyLogo from "@/assets/pixify-logo-hero.png";
 
@@ -6,49 +6,39 @@ interface FloatingImageProps {
   src: string;
   index: number;
   totalImages: number;
-  animationPhase: "heart" | "floating" | "circle";
   isHovering: boolean;
   mouseX: number;
   mouseY: number;
   containerRect: DOMRect | null;
+  orbitOffset: number;
+  hasEntered: boolean;
 }
 
-// Heart shape parametric equation - larger scale to avoid logo
-const getHeartPosition = (index: number, total: number, scale: number = 280) => {
-  const t = (index / total) * Math.PI * 2;
-  const x = scale * 16 * Math.pow(Math.sin(t), 3) / 16;
-  const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) / 16;
-  return { x, y };
-};
-
-// Circle positions - larger radius to avoid logo
-const getCirclePosition = (index: number, total: number, radius: number = 320, offset: number = 0) => {
+// Get orbit position - always around the logo, never behind
+const getOrbitPosition = (index: number, total: number, radius: number, offset: number) => {
   const angle = ((index / total) * Math.PI * 2) + offset;
   return {
     x: Math.cos(angle) * radius,
-    y: Math.sin(angle) * radius
+    y: Math.sin(angle) * radius,
   };
 };
 
-// Floating positions (scattered far from center)
-const floatingPositions = [
-  { x: -420, y: -220 },
-  { x: 380, y: -240 },
-  { x: -480, y: 100 },
-  { x: 450, y: 150 },
-  { x: -280, y: 280 },
-  { x: 280, y: 300 },
-  { x: -520, y: -80 },
-  { x: 500, y: -60 },
-];
-
-// Far away positions for hover effect (flying away dramatically)
-const getFlyAwayPosition = (index: number) => {
-  const angle = (index / 8) * Math.PI * 2 + Math.PI / 4;
-  const distance = 800 + Math.random() * 400;
+// Entry position - half from left, half from right
+const getEntryPosition = (index: number) => {
+  const isLeftSide = index % 2 === 0;
   return {
-    x: Math.cos(angle) * distance,
-    y: Math.sin(angle) * distance,
+    x: isLeftSide ? -600 : 600,
+    y: 100 + (index * 30),
+  };
+};
+
+// Random floating offset for organic movement
+const getRandomFloat = (index: number, time: number) => {
+  const speed = 0.5 + (index % 3) * 0.2;
+  const amplitude = 15 + (index % 4) * 5;
+  return {
+    x: Math.sin(time * speed + index * 1.5) * amplitude,
+    y: Math.cos(time * speed * 0.8 + index * 2) * amplitude,
   };
 };
 
@@ -56,81 +46,41 @@ const FloatingImage = ({
   src, 
   index,
   totalImages,
-  animationPhase,
   isHovering,
   mouseX,
   mouseY,
-  containerRect
+  containerRect,
+  orbitOffset,
+  hasEntered,
 }: FloatingImageProps) => {
-  const [circleOffset, setCircleOffset] = useState(0);
   const [isImageHovered, setIsImageHovered] = useState(false);
-  const [flyAwayPos] = useState(() => getFlyAwayPosition(index));
-  const controls = useAnimationControls();
+  const [floatTime, setFloatTime] = useState(0);
   
-  // Animate circle rotation
+  // Animate floating effect
   useEffect(() => {
-    if (animationPhase === "circle") {
-      const interval = setInterval(() => {
-        setCircleOffset(prev => prev + 0.02);
-      }, 16);
-      return () => clearInterval(interval);
-    }
-  }, [animationPhase]);
+    const interval = setInterval(() => {
+      setFloatTime(prev => prev + 0.05);
+    }, 16);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Handle fly away and return animation
-  useEffect(() => {
-    if (isImageHovered) {
-      // Fly away dramatically
-      controls.start({
-        x: `calc(-50% + ${flyAwayPos.x}px)`,
-        y: `calc(-50% + ${flyAwayPos.y}px)`,
-        scale: 0.3,
-        opacity: 0.4,
-        rotate: 180 + Math.random() * 180,
-        transition: {
-          type: "spring",
-          stiffness: 80,
-          damping: 15,
-          duration: 0.8,
-        }
-      });
-    } else {
-      // Return to position
-      const position = getPositionForPhase();
-      controls.start({
-        x: `calc(-50% + ${position.x}px)`,
-        y: `calc(-50% + ${position.y}px)`,
-        scale: 1,
-        opacity: 1,
-        rotate: animationPhase === "circle" ? circleOffset * 30 : 0,
-        transition: {
-          type: "spring",
-          stiffness: 120,
-          damping: 20,
-          delay: 0.1 + index * 0.05, // Staggered return
-        }
-      });
-    }
-  }, [isImageHovered]);
-
-  // Calculate position based on animation phase
-  const getPositionForPhase = () => {
-    switch (animationPhase) {
-      case "heart":
-        return getHeartPosition(index, totalImages, 180);
-      case "circle":
-        return getCirclePosition(index, totalImages, 220, circleOffset);
-      case "floating":
-      default:
-        return floatingPositions[index] || { x: 0, y: 0 };
-    }
-  };
-
-  const position = getPositionForPhase();
+  // Orbit radius - keep images around logo
+  const orbitRadius = 220 + (index % 3) * 40;
+  const orbitPosition = getOrbitPosition(index, totalImages, orbitRadius, orbitOffset);
+  const entryPosition = getEntryPosition(index);
+  const floatOffset = getRandomFloat(index, floatTime);
   
-  // Calculate repulsion from mouse - images flee from cursor
+  // Calculate final position
+  const position = hasEntered 
+    ? { 
+        x: orbitPosition.x + floatOffset.x, 
+        y: orbitPosition.y + floatOffset.y 
+      }
+    : entryPosition;
+  
+  // Calculate repulsion from mouse
   const getRepulsion = () => {
-    if (!isHovering || !containerRect || isImageHovered) return { x: 0, y: 0 };
+    if (!isHovering || !containerRect || isImageHovered || !hasEntered) return { x: 0, y: 0 };
     
     const centerX = containerRect.width / 2 + position.x;
     const centerY = containerRect.height / 2 + position.y;
@@ -139,15 +89,13 @@ const FloatingImage = ({
     const dy = centerY - mouseY;
     const distance = Math.sqrt(dx * dx + dy * dy);
     
-    // Strong repulsion that makes images flee dramatically
-    const maxDistance = 250;
+    const maxDistance = 200;
     const minDistance = 50;
     
     if (distance > maxDistance) return { x: 0, y: 0 };
     
-    // Exponential falloff for more dramatic effect
     const normalizedDistance = Math.max(distance, minDistance);
-    const strength = Math.pow((maxDistance - normalizedDistance) / maxDistance, 1.5) * 180;
+    const strength = Math.pow((maxDistance - normalizedDistance) / maxDistance, 1.5) * 120;
     
     const angle = Math.atan2(dy, dx);
     return {
@@ -157,7 +105,11 @@ const FloatingImage = ({
   };
 
   const repulsion = getRepulsion();
-  const size = 90 + (index % 3) * 20;
+  const size = 80 + (index % 3) * 25;
+  
+  // Fly away position when hovered
+  const flyAwayAngle = (index / totalImages) * Math.PI * 2;
+  const flyAwayDistance = 500;
 
   return (
     <motion.div
@@ -167,44 +119,50 @@ const FloatingImage = ({
         height: size,
         left: "50%",
         top: "50%",
-        zIndex: isImageHovered ? 50 : 10,
+        zIndex: isImageHovered ? 50 : 10 + index,
       }}
-      initial={{ opacity: 0, scale: 0, x: "-50%", y: "-50%" }}
-      animate={isImageHovered ? undefined : { 
+      initial={{ 
+        opacity: 0, 
+        scale: 0.5, 
+        x: `calc(-50% + ${entryPosition.x}px)`,
+        y: `calc(-50% + ${entryPosition.y}px)`,
+        rotate: entryPosition.x < 0 ? -30 : 30,
+      }}
+      animate={isImageHovered ? {
+        x: `calc(-50% + ${Math.cos(flyAwayAngle) * flyAwayDistance}px)`,
+        y: `calc(-50% + ${Math.sin(flyAwayAngle) * flyAwayDistance}px)`,
+        scale: 0.3,
+        opacity: 0.4,
+        rotate: 180,
+      } : { 
         opacity: 1, 
         scale: 1,
         x: `calc(-50% + ${position.x + repulsion.x}px)`,
         y: `calc(-50% + ${position.y + repulsion.y}px)`,
-        rotate: animationPhase === "circle" ? circleOffset * 30 : 0,
+        rotate: orbitOffset * 15 + index * 5,
       }}
-      transition={{ 
-        opacity: { duration: 0.6, delay: index * 0.1 },
-        scale: { duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 200 },
-        x: { type: "spring", stiffness: 100, damping: 20 },
-        y: { type: "spring", stiffness: 100, damping: 20 },
-        rotate: { duration: 0.3 },
+      transition={isImageHovered ? {
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+      } : { 
+        opacity: { duration: 0.8, delay: index * 0.1 },
+        scale: { duration: 0.8, delay: index * 0.1, type: "spring", stiffness: 150 },
+        x: { type: "spring", stiffness: 60, damping: 20, delay: hasEntered ? 0 : index * 0.1 },
+        y: { type: "spring", stiffness: 60, damping: 20, delay: hasEntered ? 0 : index * 0.1 },
+        rotate: { type: "spring", stiffness: 50, damping: 15 },
       }}
       onHoverStart={() => setIsImageHovered(true)}
       onHoverEnd={() => setIsImageHovered(false)}
     >
+      <img src={src} alt="" className="w-full h-full object-cover" />
+      {/* Glow effect on hover */}
       <motion.div
-        className="w-full h-full relative"
-        animate={animationPhase === "floating" && !isImageHovered ? { y: [0, -8, 0] } : {}}
-        transition={{ 
-          duration: 2.5 + Math.random() * 1.5, 
-          repeat: Infinity, 
-          ease: "easeInOut",
-        }}
-      >
-        <img src={src} alt="" className="w-full h-full object-cover" />
-        {/* Glow effect on hover */}
-        <motion.div
-          className="absolute inset-0 bg-primary/20 pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isImageHovered ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-        />
-      </motion.div>
+        className="absolute inset-0 bg-primary/30 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isImageHovered ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+      />
     </motion.div>
   );
 };
@@ -212,8 +170,8 @@ const FloatingImage = ({
 export const FloatingHero = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [animationPhase, setAnimationPhase] = useState<"heart" | "floating" | "circle">("heart");
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [orbitOffset, setOrbitOffset] = useState(0);
+  const [hasEntered, setHasEntered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const floatingImages = [
@@ -227,43 +185,22 @@ export const FloatingHero = () => {
     "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&h=400&fit=crop",
   ];
 
-  // Animation cycle with transition states
+  // Trigger entry animation and continuous orbit
   useEffect(() => {
-    const triggerTransition = () => {
-      setIsTransitioning(true);
-      setTimeout(() => setIsTransitioning(false), 1500);
-    };
+    // Start entry after a brief delay
+    const entryTimer = setTimeout(() => {
+      setHasEntered(true);
+    }, 500);
 
-    const cycleAnimation = () => {
-      // Start with heart shape
-      setAnimationPhase("heart");
-      
-      setTimeout(() => {
-        // After 20s, switch to floating
-        triggerTransition();
-        setAnimationPhase("floating");
-        
-        setTimeout(() => {
-          // After 10s of floating, switch to circle
-          triggerTransition();
-          setAnimationPhase("circle");
-          
-          setTimeout(() => {
-            // After 10s of circle, switch back to floating
-            triggerTransition();
-            setAnimationPhase("floating");
-            
-            setTimeout(() => {
-              // After 10s of floating, restart cycle
-              triggerTransition();
-              cycleAnimation();
-            }, 10000);
-          }, 10000);
-        }, 10000);
-      }, 20000);
-    };
+    // Continuous slow orbit rotation
+    const orbitInterval = setInterval(() => {
+      setOrbitOffset(prev => prev + 0.008);
+    }, 16);
 
-    cycleAnimation();
+    return () => {
+      clearTimeout(entryTimer);
+      clearInterval(orbitInterval);
+    };
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -283,27 +220,28 @@ export const FloatingHero = () => {
       onMouseLeave={() => setIsHovering(false)}
       onMouseMove={handleMouseMove}
     >
-      {/* Floating images */}
+      {/* Floating images - always around the logo */}
       {floatingImages.map((src, idx) => (
         <FloatingImage
           key={idx}
           src={src}
           index={idx}
           totalImages={floatingImages.length}
-          animationPhase={animationPhase}
           isHovering={isHovering}
           mouseX={mousePos.x}
           mouseY={mousePos.y}
           containerRect={containerRef.current?.getBoundingClientRect() || null}
+          orbitOffset={orbitOffset}
+          hasEntered={hasEntered}
         />
       ))}
 
-      {/* Center Pixify Logo - Always visible with glow effect */}
+      {/* Center Pixify Logo - Always on top */}
       <motion.div
-        className="relative z-20"
+        className="relative z-30"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.3, type: "spring", stiffness: 100 }}
+        transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
       >
         <motion.img 
           src={pixifyLogo} 
@@ -311,19 +249,15 @@ export const FloatingHero = () => {
           className="w-[200px] md:w-[300px] lg:w-[350px] h-auto dark:invert relative z-10"
           animate={{ 
             scale: isHovering ? 1.05 : 1,
-            filter: isTransitioning 
-              ? ["drop-shadow(0 0 20px hsl(var(--primary) / 0.5))", "drop-shadow(0 0 40px hsl(var(--primary) / 0.8))", "drop-shadow(0 0 20px hsl(var(--primary) / 0.5))"]
-              : "drop-shadow(0 0 10px hsl(var(--primary) / 0.2))",
+            filter: "drop-shadow(0 0 20px hsl(var(--primary) / 0.3))",
           }}
           transition={{ 
             type: "spring", 
             stiffness: 300, 
             damping: 20,
-            filter: { duration: 0.6, repeat: isTransitioning ? Infinity : 0 }
           }}
         />
       </motion.div>
-
     </div>
   );
 };
