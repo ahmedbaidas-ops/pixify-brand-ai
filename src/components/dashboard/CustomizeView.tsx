@@ -160,7 +160,7 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
           </DndContext>
         </div>
         
-        <div className="p-3 border-t border-border">
+        <div className="p-3 border-t border-border space-y-2">
           <Button 
             variant="outline" 
             size="sm" 
@@ -170,6 +170,13 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
             }}
           >
             Show All Sections
+          </Button>
+          <Button 
+            size="sm" 
+            className="w-full text-xs"
+            onClick={() => setIsOpen(false)}
+          >
+            Confirm
           </Button>
         </div>
       </PopoverContent>
