@@ -1,25 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { FloatingHero } from "@/components/FloatingHero";
+import pixifyLogo from "@/assets/pixify-logo-hero.png";
 
 const Index = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const features = [
     {
@@ -56,32 +48,51 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <CustomCursor />
-      {/* Minimal Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-background/95 backdrop-blur-md' : 'bg-transparent'
-      }`}>
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 py-6">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 group">
-              <img 
-                src="/qatar-airways-logo.png" 
-                alt="Pixify Logo" 
-                className="h-8 w-auto"
-              />
-              <span className="text-xl font-bold tracking-tight">
-                PIXIFY
-              </span>
-            </Link>
+      {/* Noura-style Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6">
+        <div className="max-w-[1800px] mx-auto flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <img 
+              src={pixifyLogo} 
+              alt="Pixify" 
+              className="h-8 w-auto dark:invert"
+            />
+          </Link>
 
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
-              <button 
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="w-10 h-10 flex items-center justify-center hover:bg-muted rounded-full transition-colors"
-              >
-                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+          {/* Right side nav pill */}
+          <nav className="hidden md:flex items-center bg-muted/80 backdrop-blur-md rounded-full px-2 py-2 border border-border/50">
+            <a href="#features" className="px-4 py-2 text-sm font-medium hover:text-foreground/70 transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="px-4 py-2 text-sm font-medium hover:text-foreground/70 transition-colors">
+              About
+            </a>
+            <a href="#cta" className="px-4 py-2 text-sm font-medium hover:text-foreground/70 transition-colors">
+              Works
+            </a>
+            <Link 
+              to="/auth" 
+              className="ml-2 px-5 py-2 text-sm font-medium bg-foreground text-background rounded-full hover:bg-foreground/90 transition-colors"
+            >
+              Contact
+            </Link>
+          </nav>
+
+          {/* Mobile menu button */}
+          <div className="flex md:hidden items-center gap-3">
+            <ThemeToggle />
+            <button 
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="w-10 h-10 flex items-center justify-center bg-muted/80 backdrop-blur-md rounded-full border border-border/50"
+            >
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+
+          {/* Desktop theme toggle */}
+          <div className="hidden md:block">
+            <ThemeToggle />
           </div>
         </div>
 
@@ -89,21 +100,21 @@ const Index = () => {
         <motion.div 
           initial={false}
           animate={{ height: menuOpen ? "auto" : 0, opacity: menuOpen ? 1 : 0 }}
-          className="overflow-hidden bg-background border-b border-border"
+          className="md:hidden overflow-hidden mt-4"
         >
-          <nav className="max-w-[1800px] mx-auto px-6 md:px-12 py-8 flex flex-col gap-4">
-            <a href="#features" className="text-2xl font-medium hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>
+          <nav className="bg-muted/95 backdrop-blur-md rounded-2xl p-6 flex flex-col gap-3 border border-border/50">
+            <a href="#features" className="text-lg font-medium hover:text-foreground/70 transition-colors" onClick={() => setMenuOpen(false)}>
               Features
             </a>
-            <a href="#how-it-works" className="text-2xl font-medium hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>
-              How it works
+            <a href="#how-it-works" className="text-lg font-medium hover:text-foreground/70 transition-colors" onClick={() => setMenuOpen(false)}>
+              About
             </a>
-            <a href="#cta" className="text-2xl font-medium hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>
-              Get Started
+            <a href="#cta" className="text-lg font-medium hover:text-foreground/70 transition-colors" onClick={() => setMenuOpen(false)}>
+              Works
             </a>
-            <Link to="/auth" className="mt-4">
-              <Button size="lg" className="w-full">
-                Sign In
+            <Link to="/auth" className="mt-2">
+              <Button className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-full">
+                Contact
               </Button>
             </Link>
           </nav>
@@ -150,7 +161,7 @@ const Index = () => {
         >
           <MagneticButton strength={0.35}>
             <Link to="/auth">
-              <Button size="lg" className="text-base px-8 h-14 group rounded-full">
+              <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-foreground text-background hover:bg-foreground/90">
                 Get started
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -328,7 +339,7 @@ const Index = () => {
               <div className="flex flex-wrap gap-4">
                 <MagneticButton strength={0.35}>
                   <Link to="/auth">
-                    <Button size="lg" variant="secondary" className="text-base px-8 h-14 rounded-full group">
+                    <Button size="lg" className="text-base px-8 h-14 rounded-full group bg-background text-foreground hover:bg-background/90">
                       Get started for free
                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
