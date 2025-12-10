@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { MagneticButton } from "@/components/MagneticButton";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -241,12 +242,14 @@ const Index = () => {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-12 flex items-center justify-center gap-4"
         >
-          <Link to="/auth">
-            <Button size="lg" className="text-base px-8 h-14 group rounded-full">
-              Get started
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          <MagneticButton strength={0.35}>
+            <Link to="/auth">
+              <Button size="lg" className="text-base px-8 h-14 group rounded-full">
+                Get started
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </MagneticButton>
         </motion.div>
       </section>
 
@@ -409,15 +412,19 @@ const Index = () => {
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <Link to="/auth">
-                  <Button size="lg" variant="secondary" className="text-base px-8 h-14 rounded-full group">
-                    Get started for free
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <MagneticButton strength={0.35}>
+                  <Link to="/auth">
+                    <Button size="lg" variant="secondary" className="text-base px-8 h-14 rounded-full group">
+                      Get started for free
+                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </MagneticButton>
+                <MagneticButton strength={0.35}>
+                  <Button size="lg" variant="outline" className="text-base px-8 h-14 rounded-full border-background/30 text-background hover:bg-background/10">
+                    Talk to sales
                   </Button>
-                </Link>
-                <Button size="lg" variant="outline" className="text-base px-8 h-14 rounded-full border-background/30 text-background hover:bg-background/10">
-                  Talk to sales
-                </Button>
+                </MagneticButton>
               </div>
             </div>
 
