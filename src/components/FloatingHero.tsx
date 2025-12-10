@@ -1,14 +1,6 @@
-import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import pixifyLogo from "@/assets/pixify-logo-hero.png";
-
-interface TrailParticle {
-  id: number;
-  x: number;
-  y: number;
-  scale: number;
-  rotation: number;
-}
 
 interface FloatingImageProps {
   src: string;
@@ -73,9 +65,7 @@ const FloatingImage = ({
   const [circleOffset, setCircleOffset] = useState(0);
   const [isImageHovered, setIsImageHovered] = useState(false);
   const [flyAwayPos] = useState(() => getFlyAwayPosition(index));
-  const [trailParticles, setTrailParticles] = useState<TrailParticle[]>([]);
   const controls = useAnimationControls();
-  const trailIdRef = useRef(0);
   
   // Animate circle rotation
   useEffect(() => {
@@ -86,37 +76,6 @@ const FloatingImage = ({
       return () => clearInterval(interval);
     }
   }, [animationPhase]);
-
-  // Generate trail particles when flying away
-  useEffect(() => {
-    if (isImageHovered) {
-      const position = getPositionForPhase();
-      const steps = 12;
-      const newParticles: TrailParticle[] = [];
-      
-      for (let i = 0; i < steps; i++) {
-        const progress = i / steps;
-        newParticles.push({
-          id: trailIdRef.current++,
-          x: position.x + (flyAwayPos.x - position.x) * progress * 0.7,
-          y: position.y + (flyAwayPos.y - position.y) * progress * 0.7,
-          scale: 1 - progress * 0.6,
-          rotation: progress * 90,
-        });
-      }
-      
-      setTrailParticles(newParticles);
-      
-      // Clear trail after animation
-      const timeout = setTimeout(() => {
-        setTrailParticles([]);
-      }, 800);
-      
-      return () => clearTimeout(timeout);
-    } else {
-      setTrailParticles([]);
-    }
-  }, [isImageHovered]);
 
   // Handle fly away and return animation
   useEffect(() => {
@@ -194,51 +153,6 @@ const FloatingImage = ({
   const size = 90 + (index % 3) * 20;
 
   return (
-    <>
-      {/* Trail particles */}
-      <AnimatePresence>
-        {trailParticles.map((particle, i) => (
-          <motion.div
-            key={particle.id}
-            className="absolute rounded-2xl overflow-hidden pointer-events-none"
-            style={{
-              width: size * particle.scale,
-              height: size * particle.scale,
-              left: "50%",
-              top: "50%",
-              zIndex: 5,
-            }}
-            initial={{ 
-              opacity: 0.8,
-              x: `calc(-50% + ${particle.x}px)`,
-              y: `calc(-50% + ${particle.y}px)`,
-              scale: particle.scale,
-              rotate: particle.rotation,
-            }}
-            animate={{ 
-              opacity: 0,
-              scale: particle.scale * 0.5,
-              rotate: particle.rotation + 45,
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ 
-              duration: 0.6,
-              delay: i * 0.04,
-              ease: "easeOut",
-            }}
-          >
-            <img 
-              src={src} 
-              alt="" 
-              className="w-full h-full object-cover"
-              style={{ filter: "blur(2px) brightness(1.2)" }}
-            />
-            <div className="absolute inset-0 bg-primary/40" />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-
-      {/* Main image */}
     <motion.div
       className="absolute rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
       style={{
@@ -285,7 +199,6 @@ const FloatingImage = ({
         />
       </motion.div>
     </motion.div>
-    </>
   );
 };
 
