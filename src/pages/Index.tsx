@@ -36,13 +36,10 @@ const Index = () => {
     },
   ];
 
-  const marqueeImages = [
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1633409361618-c73427e4e206?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?w=400&h=400&fit=crop",
+  const marketingWords = [
+    "Brand Assets", "AI-Powered", "Collaboration", "Templates", "Guidelines",
+    "Auto-Tagging", "Version Control", "Smart Search", "Analytics", "Compliance",
+    "Motion Design", "Brand Health", "Workflows", "Distribution", "Marketing Suite",
   ];
 
   return (
@@ -170,20 +167,32 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Horizontal Scrolling Marquee */}
+      {/* Horizontal Scrolling Marquee with Floating Chips */}
       <section className="py-12 overflow-hidden border-y border-border">
         <div className="flex animate-marquee">
-          {[...marqueeImages, ...marqueeImages, ...marqueeImages].map((img, idx) => (
-            <div 
+          {[...marketingWords, ...marketingWords, ...marketingWords].map((word, idx) => (
+            <motion.div 
               key={idx} 
-              className="flex-shrink-0 w-[200px] md:w-[280px] h-[200px] md:h-[280px] mx-3 rounded-2xl overflow-hidden"
+              className="flex-shrink-0 mx-3"
+              animate={{ 
+                y: [0, -8, 0],
+              }}
+              transition={{
+                duration: 2 + (idx % 5) * 0.3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: idx * 0.1,
+              }}
+              whileHover={{ 
+                scale: 1.15, 
+                y: -20,
+                transition: { type: "spring", stiffness: 400, damping: 15 }
+              }}
             >
-              <img 
-                src={img} 
-                alt="" 
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-              />
-            </div>
+              <span className="inline-block px-6 py-3 md:px-8 md:py-4 rounded-full bg-primary/10 text-primary font-medium text-sm md:text-base border border-primary/20 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors duration-300 cursor-default whitespace-nowrap shadow-sm hover:shadow-lg hover:shadow-primary/20">
+                {word}
+              </span>
+            </motion.div>
           ))}
         </div>
       </section>
