@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 const themes = [
   { value: "light", label: "Light", icon: Sun, color: "hsl(45, 100%, 60%)" },
   { value: "dark", label: "Dark", icon: Moon, color: "hsl(235, 70%, 50%)" },
-  { value: "modern", label: "Modern", icon: Sparkles, color: "hsl(280, 70%, 60%)" },
+  { value: "modern", label: "Modern", icon: Sparkles, color: "hsl(210, 25%, 92%)" },
 ] as const;
 
 interface RippleState {
