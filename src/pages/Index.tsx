@@ -1,13 +1,23 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Download } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useToast } from "@/hooks/use-toast";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
-  const { toast } = useToast();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const imageY1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const imageY2 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const imageY3 = useTransform(scrollYProgress, [0, 1], [0, -30]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,31 +27,6 @@ const Index = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleDownloadLogo = async () => {
-    try {
-      const response = await fetch("/qatar-airways-logo.png");
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "pixify-logo.png";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      
-      toast({
-        title: "Logo downloaded",
-        description: "The logo has been saved to your downloads folder.",
-      });
-    } catch (error) {
-      toast({
-        title: "Download failed",
-        description: "There was an error downloading the logo.",
-        variant: "destructive",
-      });
-    }
-  };
   const features = [
     {
       icon: Sparkles,
@@ -65,172 +50,267 @@ const Index = () => {
     },
   ];
 
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Modern Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/80 backdrop-blur-xl border-b border-border' : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/" className="flex items-center gap-3 group">
-                <img 
-                  src="/qatar-airways-logo.png" 
-                  alt="Pixify Logo" 
-                  className="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
-                />
-                <span className="text-xl font-bold bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
-                  Pixify
-                </span>
-              </Link>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDownloadLogo}
-                className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground"
-              >
-                <Download className="w-4 h-4" />
-                <span className="text-xs">Download Logo</span>
-              </Button>
-            </div>
+  const marqueeImages = [
+    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1633409361618-c73427e4e206?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?w=400&h=400&fit=crop",
+  ];
 
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-                Features
-              </a>
-              <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-                How it works
-              </a>
-              <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-                Pricing
-              </a>
-              
+  return (
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {/* Minimal Header */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled ? 'bg-background/95 backdrop-blur-md' : 'bg-transparent'
+      }`}>
+        <div className="max-w-[1800px] mx-auto px-6 md:px-12 py-6">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="flex items-center gap-3 group">
+              <img 
+                src="/qatar-airways-logo.png" 
+                alt="Pixify Logo" 
+                className="h-8 w-auto"
+              />
+              <span className="text-xl font-bold tracking-tight">
+                PIXIFY
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-4">
               <ThemeToggle />
-              
-              <Link to="/auth">
-                <Button size="sm" className="bg-primary hover:bg-primary/90">
-                  Get Started
-                </Button>
-              </Link>
-            </nav>
+              <button 
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="w-10 h-10 flex items-center justify-center hover:bg-muted rounded-full transition-colors"
+              >
+                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        <motion.div 
+          initial={false}
+          animate={{ height: menuOpen ? "auto" : 0, opacity: menuOpen ? 1 : 0 }}
+          className="overflow-hidden bg-background border-b border-border"
+        >
+          <nav className="max-w-[1800px] mx-auto px-6 md:px-12 py-8 flex flex-col gap-4">
+            <a href="#features" className="text-2xl font-medium hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>
+              Features
+            </a>
+            <a href="#how-it-works" className="text-2xl font-medium hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>
+              How it works
+            </a>
+            <a href="#cta" className="text-2xl font-medium hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>
+              Get Started
+            </a>
+            <Link to="/auth" className="mt-4">
+              <Button size="lg" className="w-full">
+                Sign In
+              </Button>
+            </Link>
+          </nav>
+        </motion.div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(154,51,166,0.15),transparent_50%)]" />
-        
-        <div className="max-w-7xl mx-auto relative">
-          <div className="text-center space-y-8 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-4">
-              <Sparkles className="w-4 h-4" />
-              AI-Powered Brand Management
+      {/* Hero Section - Cattleya Style */}
+      <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-12">
+        {/* Subtitle */}
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center text-sm md:text-base tracking-[0.3em] uppercase text-muted-foreground mb-8"
+        >
+          AI-Powered Brand Management
+        </motion.p>
+
+        {/* Large Hero Text with Overlapping Images */}
+        <div className="relative max-w-[1800px] mx-auto w-full">
+          <motion.h1 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-[12vw] md:text-[10vw] lg:text-[9vw] font-bold tracking-tighter leading-[0.85] text-center"
+          >
+            <span className="relative inline-block">
+              P
+              <motion.div 
+                style={{ y: imageY1 }}
+                className="absolute -top-[20%] -left-[10%] w-[80px] md:w-[120px] lg:w-[160px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[-8deg] z-10"
+              >
+                <img src={marqueeImages[0]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+            </span>
+            <span>I</span>
+            <span className="relative inline-block">
+              X
+              <motion.div 
+                style={{ y: imageY2 }}
+                className="absolute top-[10%] -right-[30%] w-[70px] md:w-[100px] lg:w-[140px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[6deg] z-10"
+              >
+                <img src={marqueeImages[1]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+            </span>
+            <span>I</span>
+            <span className="relative inline-block">
+              F
+              <motion.div 
+                style={{ y: imageY3 }}
+                className="absolute -bottom-[40%] left-[20%] w-[60px] md:w-[90px] lg:w-[120px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[-4deg] z-10"
+              >
+                <img src={marqueeImages[2]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+            </span>
+            <span className="relative inline-block">
+              Y
+              <motion.div 
+                style={{ y: imageY1 }}
+                className="absolute top-[30%] -right-[40%] w-[65px] md:w-[95px] lg:w-[130px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[10deg] z-10"
+              >
+                <img src={marqueeImages[3]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+            </span>
+          </motion.h1>
+        </div>
+
+        {/* Hero Description */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-16 max-w-2xl mx-auto text-center"
+        >
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            Manage, organize, and distribute your creative assets with intelligence. 
+            Pixify transforms how teams work with digital assets.
+          </p>
+        </motion.div>
+
+        {/* CTA Buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-12 flex items-center justify-center gap-4"
+        >
+          <Link to="/auth">
+            <Button size="lg" className="text-base px-8 h-14 group rounded-full">
+              Get started
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* Horizontal Scrolling Marquee */}
+      <section className="py-12 overflow-hidden border-y border-border">
+        <div className="flex animate-marquee">
+          {[...marqueeImages, ...marqueeImages, ...marqueeImages].map((img, idx) => (
+            <div 
+              key={idx} 
+              className="flex-shrink-0 w-[200px] md:w-[280px] h-[200px] md:h-[280px] mx-3 rounded-2xl overflow-hidden"
+            >
+              <img 
+                src={img} 
+                alt="" 
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+              />
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section className="py-32 px-6 md:px-12">
+        <div className="max-w-[1800px] mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">About us</p>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8">
+                Where ideas meet
+                <br />
+                <span className="text-primary">impact</span>
+              </h2>
+            </motion.div>
             
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight max-w-5xl mx-auto leading-[1.1]">
-              Your brand assets,
-              <span className="block bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
-                powered by AI
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Manage, organize, and distribute your creative assets with intelligence. 
-              Pixify transforms how teams work with digital assets.
-            </p>
-
-            <div className="flex items-center justify-center gap-4 pt-4">
-              <Link to="/auth">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8 h-14 group">
-                  Start for free
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Button size="lg" variant="outline" className="text-lg px-8 h-14">
-                Watch demo
-              </Button>
-            </div>
-
-            <div className="pt-8 text-sm text-muted-foreground">
-              <div className="flex items-center justify-center gap-6 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>No credit card required</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>14-day free trial</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Cancel anytime</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Hero Image/Visual */}
-          <div className="mt-20 relative animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl bg-card">
-              <div className="aspect-video bg-gradient-to-br from-primary/20 via-background to-background p-12">
-                <div className="grid grid-cols-3 gap-4 h-full">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div
-                      key={i}
-                      className="rounded-lg bg-muted/50 backdrop-blur-sm border border-border/50 hover:scale-105 transition-transform duration-300"
-                      style={{ animationDelay: `${i * 100}ms` }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-[#E639C4]/20 blur-3xl -z-10 opacity-50" />
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                Founded on integrity and excellence, Pixify has always believed that success comes from 
+                consistency and dedication. We craft bold digital solutions through strategy, design, 
+                and AI—helping brands move faster, connect deeper, and stand out.
+              </p>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-32 px-6 bg-muted/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-4 mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold">Everything you need</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Powerful features that transform how your team manages creative assets
-            </p>
-          </div>
+      <section id="features" className="py-32 px-6 md:px-12 bg-muted/30">
+        <div className="max-w-[1800px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-20"
+          >
+            <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">Services</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-3xl leading-[1.1]">
+              We craft bold digital solutions through strategy, design, and AI
+            </h2>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, idx) => (
-              <div
+              <motion.div
                 key={idx}
-                className="group relative p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 cursor-pointer"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                className="group relative p-8 rounded-3xl bg-background border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-xl cursor-pointer"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                  <feature.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-semibold mb-3 tracking-tight">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-4 mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold">Simple, powerful workflow</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get started in minutes, not days
-            </p>
-          </div>
+      <section id="how-it-works" className="py-32 px-6 md:px-12">
+        <div className="max-w-[1800px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-20"
+          >
+            <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">How it works</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              Simple, powerful workflow
+            </h2>
+          </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-16">
             {[
               {
                 step: "01",
@@ -248,68 +328,102 @@ const Index = () => {
                 description: "Deliver the right assets to the right channels at the right time.",
               },
             ].map((item, idx) => (
-              <div key={idx} className="relative">
-                <div className="text-6xl font-bold text-primary/10 mb-4">{item.step}</div>
-                <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-                {idx < 2 && (
-                  <div className="hidden md:block absolute top-12 -right-6 w-12 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
-                )}
-              </div>
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.15 }}
+                className="relative text-center md:text-left"
+              >
+                <div className="text-8xl md:text-9xl font-bold text-primary/10 mb-4 leading-none">{item.step}</div>
+                <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight">{item.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-lg">{item.description}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section id="pricing" className="py-32 px-6 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(230,57,196,0.15),transparent_50%)]" />
-        
-        <div className="max-w-4xl mx-auto text-center relative">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Ready to transform your
-            <span className="block bg-gradient-to-r from-primary via-[#E639C4] to-[#FF8451] bg-clip-text text-transparent">
-              creative workflow?
-            </span>
-          </h2>
-          
-          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Join thousands of teams already using Pixify to manage their brand assets.
-          </p>
+      <section id="cta" className="py-32 px-6 md:px-12 bg-foreground text-background">
+        <div className="max-w-[1800px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="grid lg:grid-cols-2 gap-16 items-center"
+          >
+            <div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8">
+                Ready to transform your creative workflow?
+              </h2>
+              <p className="text-lg md:text-xl opacity-70 mb-12">
+                Join thousands of teams already using Pixify to manage their brand assets.
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <Link to="/auth">
+                  <Button size="lg" variant="secondary" className="text-base px-8 h-14 rounded-full group">
+                    Get started for free
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Button size="lg" variant="outline" className="text-base px-8 h-14 rounded-full border-background/30 text-background hover:bg-background/10">
+                  Talk to sales
+                </Button>
+              </div>
+            </div>
 
-          <div className="flex items-center justify-center gap-4">
-            <Link to="/auth">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8 h-14 group">
-                Get started for free
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8 h-14">
-              Talk to sales
-            </Button>
-          </div>
+            <div className="space-y-6">
+              {[
+                "No credit card required",
+                "14-day free trial",
+                "Cancel anytime",
+                "Enterprise-grade security"
+              ].map((item, idx) => (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className="flex items-center gap-4"
+                >
+                  <div className="w-6 h-6 rounded-full bg-background/20 flex items-center justify-center">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-lg">{item}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="py-12 px-6 md:px-12 border-t border-border">
+        <div className="max-w-[1800px] mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
               <img src="/qatar-airways-logo.png" alt="Pixify Logo" className="h-8 w-auto" />
-              <span className="text-sm text-muted-foreground">© 2024 Pixify. All rights reserved.</span>
+              <span className="font-bold tracking-tight">PIXIFY</span>
             </div>
-            <nav className="flex items-center gap-6">
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Privacy
+            
+            <nav className="flex items-center gap-8">
+              <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Features
               </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Terms
+              <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                How it works
               </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Contact
-              </a>
+              <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Sign In
+              </Link>
             </nav>
+            
+            <span className="text-sm text-muted-foreground">© 2024 Pixify. All rights reserved.</span>
           </div>
         </div>
       </footer>
