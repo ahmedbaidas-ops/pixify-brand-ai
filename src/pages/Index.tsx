@@ -293,45 +293,141 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-32 px-6 md:px-12 bg-black/5">
+      {/* Features Section - Creative Layout */}
+      <section id="features" className="py-32 px-6 md:px-12 bg-black text-white overflow-hidden">
         <div className="max-w-[1800px] mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-20"
+            transition={{ duration: 1 }}
+            className="mb-20 relative"
           >
-            <p className="text-sm tracking-[0.3em] uppercase text-black/60 mb-6">Services</p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-3xl leading-[1.1]">
-              We craft bold digital solutions through strategy, design, and AI
-            </h2>
+            <motion.p 
+              className="text-sm tracking-[0.3em] uppercase text-white/40 mb-6"
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Services
+            </motion.p>
+            <motion.h2 
+              className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl leading-[1.1]"
+              initial={{ y: 100, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              We craft bold digital solutions through{" "}
+              <motion.span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/60 to-white"
+                animate={{ 
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                style={{ backgroundSize: "200% 200%" }}
+              >
+                strategy, design, and AI
+              </motion.span>
+            </motion.h2>
+            
+            {/* Floating accent elements */}
+            <motion.div 
+              className="absolute -right-20 top-0 w-40 h-40 rounded-full bg-white/5 blur-3xl"
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{ duration: 4, repeat: Infinity }}
+            />
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 60, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
+                initial={{ opacity: 0, y: 100, rotateX: -15 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
                 transition={{ 
-                  duration: 0.5, 
-                  delay: idx * 0.15,
-                  ease: [0.25, 0.46, 0.45, 0.94]
+                  duration: 0.8, 
+                  delay: idx * 0.2,
+                  ease: [0.25, 0.1, 0.25, 1]
                 }}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                className="group relative p-8 rounded-3xl bg-white border border-black/10 hover:border-black/30 transition-colors duration-500 hover:shadow-xl cursor-pointer"
+                whileHover={{ 
+                  scale: 1.02,
+                  transition: { duration: 0.4 } 
+                }}
+                className="group relative p-8 md:p-12 rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all duration-700 cursor-pointer overflow-hidden"
               >
+                {/* Animated background gradient on hover */}
                 <motion.div 
-                  className="w-14 h-14 rounded-2xl bg-black/10 flex items-center justify-center mb-6 group-hover:bg-black group-hover:text-white transition-all duration-300"
-                  whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 0.5 } }}
+                  className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                />
+                
+                {/* Floating number */}
+                <motion.span 
+                  className="absolute -right-4 -top-8 text-[120px] md:text-[180px] font-bold text-white/[0.03] select-none"
+                  initial={{ x: 50, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: idx * 0.2 + 0.5 }}
                 >
-                  <feature.icon className="w-6 h-6" />
-                </motion.div>
-                <h3 className="text-xl font-semibold mb-3 tracking-tight">{feature.title}</h3>
-                <p className="text-black/60 leading-relaxed">{feature.description}</p>
+                  0{idx + 1}
+                </motion.span>
+                
+                <div className="relative z-10">
+                  {/* Icon with creative animation */}
+                  <motion.div 
+                    className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-8 group-hover:bg-white group-hover:text-black transition-all duration-500"
+                    whileHover={{ 
+                      rotate: 360,
+                      scale: 1.1,
+                      transition: { duration: 0.8, ease: "easeInOut" }
+                    }}
+                  >
+                    <feature.icon className="w-7 h-7" />
+                  </motion.div>
+                  
+                  {/* Title with underline animation */}
+                  <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight relative inline-block">
+                    {feature.title}
+                    <motion.span 
+                      className="absolute -bottom-2 left-0 h-[2px] bg-white/50"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: "100%" }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: idx * 0.2 + 0.6 }}
+                    />
+                  </h3>
+                  
+                  {/* Description with stagger reveal */}
+                  <motion.p 
+                    className="text-white/60 leading-relaxed text-lg max-w-md"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: idx * 0.2 + 0.4 }}
+                  >
+                    {feature.description}
+                  </motion.p>
+                  
+                  {/* Arrow indicator */}
+                  <motion.div 
+                    className="mt-8 flex items-center gap-2 text-white/40 group-hover:text-white transition-colors duration-500"
+                    initial={{ x: -10, opacity: 0 }}
+                    whileHover={{ x: 10 }}
+                  >
+                    <span className="text-sm font-medium">Learn more</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
+                  </motion.div>
+                </div>
+                
+                {/* Corner accent */}
+                <motion.div 
+                  className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-white/5 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                />
               </motion.div>
             ))}
           </div>
