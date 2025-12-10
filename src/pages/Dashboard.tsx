@@ -16,6 +16,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
 import { toast } from "sonner";
 import { CustomizeView, DashboardSection } from "@/components/dashboard/CustomizeView";
+import { 
+  AIAssistantSkeleton, 
+  MetricsSkeleton, 
+  QuickActionsSkeleton, 
+  BrandOverviewSkeleton 
+} from "@/components/dashboard/DashboardSkeleton";
 
 const defaultSections: DashboardSection[] = [
   { id: "ai-assistant", label: "AI Assistant", visible: true },
@@ -173,6 +179,7 @@ const Dashboard = () => {
         {sections.filter(s => s.visible).map((section, idx) => {
           switch (section.id) {
             case "ai-assistant":
+              if (isLoading) return <AIAssistantSkeleton key={section.id} />;
               return (
                 <motion.div
                   key={section.id}
@@ -422,6 +429,7 @@ const Dashboard = () => {
               );
 
             case "metrics":
+              if (isLoading) return <MetricsSkeleton key={section.id} />;
               return (
                 <motion.div
                   key={section.id}
@@ -467,6 +475,7 @@ const Dashboard = () => {
               );
 
             case "quick-actions":
+              if (isLoading) return <QuickActionsSkeleton key={section.id} />;
               return (
                 <motion.div
                   key={section.id}
@@ -509,6 +518,7 @@ const Dashboard = () => {
               );
 
             case "brand-overview":
+              if (isLoading) return <BrandOverviewSkeleton key={section.id} />;
               return (
                 <motion.div
                   key={section.id}
