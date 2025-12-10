@@ -31,8 +31,8 @@ export function ThemeToggle() {
     );
   }
 
-  const currentTheme = themes.find(t => t.value === theme) || themes[0];
-  const CurrentIcon = currentTheme.icon;
+  const currentTheme = themes.find(t => t.value === theme) ?? themes[1]; // default to dark
+  const IconComponent = currentTheme.icon;
 
   return (
     <DropdownMenu>
@@ -42,7 +42,7 @@ export function ThemeToggle() {
                      hover:bg-muted transition-all duration-200 group w-full justify-between"
         >
           <div className="flex items-center gap-2">
-            <CurrentIcon className="w-4 h-4 text-primary" />
+            <IconComponent className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium">Theme</span>
           </div>
           <span className="text-xs text-muted-foreground bg-background/50 px-2 py-0.5 rounded-md">
@@ -60,7 +60,10 @@ export function ThemeToggle() {
               theme === t.value && "bg-primary/10 text-primary"
             )}
           >
-            <t.icon className="w-4 h-4" />
+            {(() => {
+              const Icon = t.icon;
+              return <Icon className="w-4 h-4" />;
+            })()}
             <span>{t.label}</span>
             {t.value === "modern" && (
               <span className="ml-auto text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">
