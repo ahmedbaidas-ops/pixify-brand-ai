@@ -24,6 +24,7 @@ import {
   BrandOverviewSkeleton 
 } from "@/components/dashboard/DashboardSkeleton";
 import AIShowcaseSection from "@/components/dashboard/AIShowcaseSection";
+import { AnimatedAIExamples } from "@/components/ai/TypewriterText";
 
 const defaultSections: DashboardSection[] = [
   { id: "ai-assistant", label: "AI Assistant", visible: true },
@@ -292,6 +293,12 @@ const Dashboard = () => {
                           </Button>
                         ))}
                       </div>
+
+                      {/* Animated Example Suggestion */}
+                      <AnimatedAIExamples onExampleClick={(text) => {
+                        setAiQuery(text);
+                        processQuery(text);
+                      }} />
 
                       {/* Search Input */}
                       <form 
