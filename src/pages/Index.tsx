@@ -176,7 +176,8 @@ const Index = () => {
             className="max-w-4xl text-center flex flex-col items-center"
           >
             <motion.h1 
-              className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-6 tracking-tight text-center whitespace-nowrap"
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-6 tracking-tight text-center whitespace-nowrap glitch-text"
+              data-text="Unlock Your Brand Potential"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -191,7 +192,7 @@ const Index = () => {
                     delay: 0.3 + index * 0.03,
                     ease: [0.25, 0.46, 0.45, 0.94]
                   }}
-                  className="inline-block"
+                  className="inline-block glitch-letter"
                 >
                   {char === " " ? "\u00A0" : char}
                 </motion.span>
