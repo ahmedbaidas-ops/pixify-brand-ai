@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
+import { CustomCursor } from "@/components/CustomCursor";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -83,6 +84,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <CustomCursor />
       {/* Minimal Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? 'bg-background/95 backdrop-blur-md' : 'bg-transparent'
