@@ -140,12 +140,13 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
-        {/* Header */}
+      {/* Increased vertical padding for better breathing room - Aesthetic-Usability Effect */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 max-w-7xl">
+        {/* Header - Clear visual hierarchy with proper spacing */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12"
         >
           <div className="flex items-center gap-4">
             <img 
@@ -160,7 +161,8 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-          <Button className="bg-primary hover:bg-primary/90 shadow-md">
+          {/* Fitts's Law - Larger touch target for primary CTA */}
+          <Button className="bg-primary hover:bg-primary/90 shadow-md h-11 px-6">
             <Download className="mr-2 h-4 w-4" />
             Download Kit
           </Button>
@@ -183,7 +185,8 @@ const Dashboard = () => {
                     opacity: { duration: 0.2 }
                   }}
                 >
-                  <Card className="mb-8 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
+                  {/* Law of Common Region - Cards create visual grouping */}
+                  <Card className="mb-12 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
                     <CardHeader className="pb-4">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -430,7 +433,7 @@ const Dashboard = () => {
                     layout: { type: "spring", stiffness: 300, damping: 30 },
                     opacity: { duration: 0.2 }
                   }}
-                  className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+                  className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12"
                 >
                   {[
                     { label: "Brand Consistency", value: progressValues.brandConsistency, icon: Target, color: "text-primary" },
@@ -444,17 +447,18 @@ const Dashboard = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2 + metricIdx * 0.1 }}
                     >
+                      {/* Fitts's Law - Adequate card padding for touch targets */}
                       <Card className="h-full border-0 shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="pt-5 pb-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                        <CardContent className="pt-6 pb-5 px-5">
+                          <div className="flex items-center justify-between mb-4">
+                            <metric.icon className={`h-5 w-5 ${metric.color}`} />
                             <Badge variant="outline" className="text-[10px] h-5">Live</Badge>
                           </div>
-                          <div className="text-3xl font-bold mb-1">
+                          <div className="text-3xl font-bold mb-2 tracking-tight">
                             {metric.value}<span className="text-base text-muted-foreground">%</span>
                           </div>
-                          <p className="text-xs text-muted-foreground mb-2">{metric.label}</p>
-                          <Progress value={metric.value} className="h-1" />
+                          <p className="text-xs text-muted-foreground mb-3">{metric.label}</p>
+                          <Progress value={metric.value} className="h-1.5" />
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -474,10 +478,12 @@ const Dashboard = () => {
                     layout: { type: "spring", stiffness: 300, damping: 30 },
                     opacity: { duration: 0.2 }
                   }}
-                  className="mb-8"
+                  className="mb-12"
                 >
-                  <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {/* Visual Hierarchy - Consistent section headers */}
+                  <h2 className="text-lg font-semibold mb-5 tracking-tight">Quick Actions</h2>
+                  {/* Miller's Law - 5 items is optimal for cognitive load */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {[
                       { title: "Brand Health", icon: Activity, href: "/brand-health" },
                       { title: "Playbook", icon: FileStack, href: "/playbook" },
@@ -486,10 +492,11 @@ const Dashboard = () => {
                       { title: "Generate", icon: Sparkles, href: "/generate" },
                     ].map((action) => (
                       <Link key={action.title} to={action.href}>
+                        {/* Fitts's Law - Larger touch targets with adequate padding */}
                         <Card className="h-full border-0 shadow-sm hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
-                          <CardContent className="flex items-center gap-3 p-4">
-                            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                              <action.icon className="h-4 w-4 text-primary" />
+                          <CardContent className="flex items-center gap-4 p-5">
+                            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                              <action.icon className="h-5 w-5 text-primary" />
                             </div>
                             <span className="text-sm font-medium">{action.title}</span>
                             <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -514,8 +521,10 @@ const Dashboard = () => {
                     opacity: { duration: 0.2 }
                   }}
                 >
-                  <h2 className="text-lg font-semibold mb-4">Brand Overview</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Visual Hierarchy - Consistent section headers */}
+                  <h2 className="text-lg font-semibold mb-5 tracking-tight">Brand Overview</h2>
+                  {/* Law of Proximity - Proper gap between related cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {/* Strategy Card */}
                     <Card className="border-0 shadow-sm">
                       <CardHeader className="pb-3">
