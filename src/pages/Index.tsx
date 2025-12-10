@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -59,13 +59,16 @@ const Index = () => {
 
           {/* Right side nav pill */}
           <nav className="hidden md:flex items-center bg-black/5 backdrop-blur-md rounded-full px-2 py-2 border border-black/10">
-            <a href="#features" className="px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+            <a href="#features" className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+              <Layers className="w-4 h-4" />
               Features
             </a>
-            <a href="#how-it-works" className="px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+            <a href="#how-it-works" className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+              <Info className="w-4 h-4" />
               About
             </a>
-            <a href="#cta" className="px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+            <a href="#cta" className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+              <Briefcase className="w-4 h-4" />
               Works
             </a>
             <Link 
@@ -75,6 +78,21 @@ const Index = () => {
               Contact
             </Link>
           </nav>
+
+          {/* Get Started Floating Chip */}
+          <motion.div
+            className="hidden md:flex"
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Link 
+              to="/auth"
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-all hover:scale-105 shadow-lg"
+            >
+              <Play className="w-4 h-4" />
+              Get Started
+            </Link>
+          </motion.div>
 
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center gap-3">
