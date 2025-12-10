@@ -42,6 +42,16 @@ const floatingPositions = [
   { x: 500, y: -60 },
 ];
 
+// Far away positions for hover effect (flying away dramatically)
+const getFlyAwayPosition = (index: number) => {
+  const angle = (index / 8) * Math.PI * 2 + Math.PI / 4;
+  const distance = 800 + Math.random() * 400;
+  return {
+    x: Math.cos(angle) * distance,
+    y: Math.sin(angle) * distance,
+  };
+};
+
 const FloatingImage = ({ 
   src, 
   index,
@@ -53,6 +63,9 @@ const FloatingImage = ({
   containerRect
 }: FloatingImageProps) => {
   const [circleOffset, setCircleOffset] = useState(0);
+  const [isImageHovered, setIsImageHovered] = useState(false);
+  const [flyAwayPos] = useState(() => getFlyAwayPosition(index));
+  const controls = useAnimationControls();
   
   // Animate circle rotation
   useEffect(() => {
@@ -64,8 +77,44 @@ const FloatingImage = ({
     }
   }, [animationPhase]);
 
+  // Handle fly away and return animation
+  useEffect(() => {
+    if (isImageHovered) {
+      // Fly away dramatically
+      controls.start({
+        x: `calc(-50% + ${flyAwayPos.x}px)`,
+        y: `calc(-50% + ${flyAwayPos.y}px)`,
+        scale: 0.3,
+        opacity: 0.4,
+        rotate: 180 + Math.random() * 180,
+        transition: {
+          type: "spring",
+          stiffness: 80,
+          damping: 15,
+          duration: 0.8,
+        }
+      });
+    } else {
+      // Return to position
+      const position = getPositionForPhase();
+      controls.start({
+        x: `calc(-50% + ${position.x}px)`,
+        y: `calc(-50% + ${position.y}px)`,
+        scale: 1,
+        opacity: 1,
+        rotate: animationPhase === "circle" ? circleOffset * 30 : 0,
+        transition: {
+          type: "spring",
+          stiffness: 120,
+          damping: 20,
+          delay: 0.1 + index * 0.05, // Staggered return
+        }
+      });
+    }
+  }, [isImageHovered]);
+
   // Calculate position based on animation phase
-  const getPosition = () => {
+  const getPositionForPhase = () => {
     switch (animationPhase) {
       case "heart":
         return getHeartPosition(index, totalImages, 180);
@@ -77,11 +126,11 @@ const FloatingImage = ({
     }
   };
 
-  const position = getPosition();
+  const position = getPositionForPhase();
   
-  // Calculate repulsion from mouse (only in floating phase)
+  // Calculate repulsion from mouse (only in floating phase and not individually hovered)
   const getRepulsion = () => {
-    if (!isHovering || !containerRect || animationPhase !== "floating") return { x: 0, y: 0 };
+    if (!isHovering || !containerRect || animationPhase !== "floating" || isImageHovered) return { x: 0, y: 0 };
     
     const centerX = containerRect.width / 2 + position.x;
     const centerY = containerRect.height / 2 + position.y;
@@ -105,15 +154,16 @@ const FloatingImage = ({
 
   return (
     <motion.div
-      className="absolute rounded-2xl overflow-hidden shadow-2xl"
+      className="absolute rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
       style={{
         width: size,
         height: size,
         left: "50%",
         top: "50%",
+        zIndex: isImageHovered ? 50 : 10,
       }}
       initial={{ opacity: 0, scale: 0, x: "-50%", y: "-50%" }}
-      animate={{ 
+      animate={isImageHovered ? undefined : { 
         opacity: 1, 
         scale: 1,
         x: `calc(-50% + ${position.x + repulsion.x}px)`,
@@ -127,10 +177,12 @@ const FloatingImage = ({
         y: { type: "spring", stiffness: 100, damping: 20 },
         rotate: { duration: 0.3 },
       }}
+      onHoverStart={() => setIsImageHovered(true)}
+      onHoverEnd={() => setIsImageHovered(false)}
     >
       <motion.div
-        className="w-full h-full"
-        animate={animationPhase === "floating" ? { y: [0, -8, 0] } : {}}
+        className="w-full h-full relative"
+        animate={animationPhase === "floating" && !isImageHovered ? { y: [0, -8, 0] } : {}}
         transition={{ 
           duration: 2.5 + Math.random() * 1.5, 
           repeat: Infinity, 
@@ -138,6 +190,13 @@ const FloatingImage = ({
         }}
       >
         <img src={src} alt="" className="w-full h-full object-cover" />
+        {/* Glow effect on hover */}
+        <motion.div
+          className="absolute inset-0 bg-primary/20 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isImageHovered ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+        />
       </motion.div>
     </motion.div>
   );
