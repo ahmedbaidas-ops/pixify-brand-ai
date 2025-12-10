@@ -3,13 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { 
+  FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, 
+  Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart, Search,
+  ChevronRight, TrendingUp, Clock
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
 import { toast } from "sonner";
+
+const quickChips = [
+  { label: "Brand Colors", query: "What are our brand colors?", icon: Palette },
+  { label: "Typography", query: "What fonts do we use?", icon: Type },
+  { label: "Find Logo", query: "Pull the logo PNG", icon: Image },
+  { label: "Brand Strategy", query: "What's our brand archetype?", icon: Heart },
+];
 
 const Dashboard = () => {
   const [progressValues, setProgressValues] = useState({
@@ -23,10 +35,8 @@ const Dashboard = () => {
   const { isLoading: aiLoading, response: aiResponse, processQuery, clearResponse } = useAIAssistant();
 
   useEffect(() => {
-    // Fetch brand metrics from database
     const fetchMetrics = async () => {
       try {
-        // First get the Qatar Airways brand
         const { data: brands, error: brandsError } = await supabase
           .from('brands')
           .select('id')
@@ -36,7 +46,6 @@ const Dashboard = () => {
         if (brandsError) throw brandsError;
 
         if (brands) {
-          // Fetch metrics for this brand
           const { data: metrics, error: metricsError } = await supabase
             .from('brand_metrics')
             .select('*')
@@ -46,7 +55,6 @@ const Dashboard = () => {
           if (metricsError) throw metricsError;
 
           if (metrics) {
-            // Animate to the actual values
             setTimeout(() => {
               setProgressValues({
                 brandConsistency: metrics.brand_consistency_score,
@@ -60,7 +68,6 @@ const Dashboard = () => {
         }
       } catch (error) {
         console.error('Error fetching brand metrics:', error);
-        // Fallback to default values
         setTimeout(() => {
           setProgressValues({
             brandConsistency: 87,
@@ -75,18 +82,12 @@ const Dashboard = () => {
 
     fetchMetrics();
 
-    // Set up real-time subscription
     const channel = supabase
       .channel('brand-metrics-changes')
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'brand_metrics'
-        },
+        { event: '*', schema: 'public', table: 'brand_metrics' },
         (payload) => {
-          console.log('Brand metrics updated:', payload);
           if (payload.new && typeof payload.new === 'object' && 'brand_consistency_score' in payload.new) {
             const newMetrics = payload.new as {
               brand_consistency_score: number;
@@ -109,66 +110,107 @@ const Dashboard = () => {
       supabase.removeChannel(channel);
     };
   }, []);
+
+  const handleChipClick = (query: string) => {
+    setAiQuery(query);
+    processQuery(query);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-hero">
-      <div className="container mx-auto px-6 py-8">
-        {/* Hero Section */}
-        <div className="mb-12">
-          <div className="flex items-start justify-between mb-6">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
+        >
+          <div className="flex items-center gap-4">
+            <img 
+              src="/qatar-airways-logo.png" 
+              alt="Qatar Airways" 
+              className="h-16 sm:h-20"
+            />
             <div>
-              <img 
-                src="/qatar-airways-logo.png" 
-                alt="Qatar Airways" 
-                className="h-48 mb-3"
-              />
-              <p className="text-xl text-muted-foreground">
-                Premium airline brand guidelines & digital asset management
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Brand Hub</h1>
+              <p className="text-muted-foreground text-sm">
+                Digital asset management & brand guidelines
               </p>
             </div>
-            <Button size="lg" className="bg-gradient-primary hover:opacity-90">
-              <Download className="mr-2 h-5 w-5" />
-              Download Brand Kit
-            </Button>
           </div>
+          <Button className="bg-primary hover:bg-primary/90 shadow-md">
+            <Download className="mr-2 h-4 w-4" />
+            Download Kit
+          </Button>
+        </motion.div>
 
-          {/* AI Prompt Card */}
-          <Card className="shadow-lg border-2 border-primary/10 mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-primary" />
-                Ask Pixify about your brand
-              </CardTitle>
-              <CardDescription>
-                Get instant answers about brand guidelines, find assets, generate copy
-              </CardDescription>
+        {/* AI Assistant Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="mb-8 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Ask Pixify</CardTitle>
+                  <CardDescription className="text-sm">
+                    Find assets, explore guidelines, get answers instantly
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Quick Action Chips */}
+              <div className="flex flex-wrap gap-2">
+                {quickChips.map((chip) => (
+                  <Button
+                    key={chip.label}
+                    variant="outline"
+                    size="sm"
+                    className="h-8 rounded-full text-xs font-medium hover:bg-primary/5 hover:border-primary/30 transition-all"
+                    onClick={() => handleChipClick(chip.query)}
+                    disabled={aiLoading}
+                  >
+                    <chip.icon className="h-3.5 w-3.5 mr-1.5" />
+                    {chip.label}
+                  </Button>
+                ))}
+              </div>
+
+              {/* Search Input */}
               <form 
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (aiQuery.trim()) {
-                    processQuery(aiQuery);
-                  }
+                  if (aiQuery.trim()) processQuery(aiQuery);
                 }}
-                className="flex gap-2"
+                className="relative"
               >
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="e.g., 'Pull the SVG and PNG for Qatar Airways' or 'Find logo'"
-                  className="flex-1 h-12 text-base"
+                  placeholder="Ask anything about your brand..."
+                  className="pl-11 pr-24 h-12 text-sm rounded-xl border-muted-foreground/20 bg-background focus-visible:ring-primary/30"
                   value={aiQuery}
                   onChange={(e) => setAiQuery(e.target.value)}
                   disabled={aiLoading}
                 />
                 <Button 
                   type="submit" 
-                  size="lg" 
-                  className="bg-gradient-primary hover:opacity-90"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 rounded-lg"
                   disabled={aiLoading || !aiQuery.trim()}
                 >
                   {aiLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <>Ask <ArrowRight className="ml-2 h-5 w-5" /></>
+                    <>
+                      Ask
+                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                    </>
                   )}
                 </Button>
               </form>
@@ -182,16 +224,16 @@ const Dashboard = () => {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-muted/50 rounded-lg p-4 border">
+                    <div className="rounded-xl bg-muted/50 p-4 border border-border/50">
                       <div className="flex items-start justify-between mb-3">
                         <p className="text-sm text-foreground font-medium whitespace-pre-line">{aiResponse.message}</p>
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-6 w-6 -mt-1 -mr-1 shrink-0"
+                          className="h-6 w-6 -mt-1 -mr-1 shrink-0 hover:bg-destructive/10"
                           onClick={clearResponse}
                         >
-                          <X className="h-4 w-4" />
+                          <X className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                       
@@ -201,11 +243,11 @@ const Dashboard = () => {
                           {aiResponse.assets.map((asset) => (
                             <motion.div
                               key={asset.id}
-                              initial={{ opacity: 0, scale: 0.9 }}
+                              initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
-                              className="bg-background rounded-lg border p-3 flex flex-col"
+                              className="bg-background rounded-xl border p-3 flex flex-col hover:shadow-md transition-shadow"
                             >
-                              <div className="aspect-video bg-muted rounded-md mb-2 flex items-center justify-center overflow-hidden">
+                              <div className="aspect-video bg-muted rounded-lg mb-2 flex items-center justify-center overflow-hidden">
                                 <img 
                                   src={asset.storage_url} 
                                   alt={asset.name}
@@ -217,14 +259,12 @@ const Dashboard = () => {
                                 />
                                 <Image className="h-8 w-8 text-muted-foreground hidden" />
                               </div>
-                              <div className="flex-1">
-                                <p className="text-sm font-medium truncate">{asset.name}</p>
-                                <p className="text-xs text-muted-foreground">{asset.mime_type || asset.type}</p>
-                              </div>
+                              <p className="text-sm font-medium truncate">{asset.name}</p>
+                              <p className="text-xs text-muted-foreground mb-2">{asset.mime_type || asset.type}</p>
                               <Button 
                                 size="sm" 
-                                variant="outline" 
-                                className="mt-2 w-full"
+                                variant="secondary"
+                                className="w-full h-8 text-xs"
                                 onClick={() => {
                                   const link = document.createElement('a');
                                   link.href = asset.storage_url;
@@ -249,18 +289,19 @@ const Dashboard = () => {
                               key={idx}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: idx * 0.1 }}
-                              className="bg-background rounded-lg border p-3"
+                              transition={{ delay: idx * 0.05 }}
+                              className="bg-background rounded-xl border p-3 hover:shadow-md transition-shadow cursor-pointer"
+                              onClick={() => {
+                                navigator.clipboard.writeText(color.value);
+                                toast.success(`Copied ${color.value}`);
+                              }}
                             >
                               <div 
-                                className="h-16 rounded-md mb-2 shadow-inner border"
+                                className="h-14 rounded-lg mb-2 shadow-inner"
                                 style={{ backgroundColor: color.value }}
                               />
                               <p className="text-sm font-medium">{color.name}</p>
                               <p className="text-xs font-mono text-muted-foreground">{color.value}</p>
-                              {color.description && (
-                                <p className="text-xs text-muted-foreground mt-1">{color.description}</p>
-                              )}
                             </motion.div>
                           ))}
                         </div>
@@ -274,23 +315,19 @@ const Dashboard = () => {
                               key={idx}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: idx * 0.1 }}
-                              className="bg-background rounded-lg border p-4"
+                              transition={{ delay: idx * 0.05 }}
+                              className="bg-background rounded-xl border p-4 hover:shadow-md transition-shadow"
                             >
                               <div className="flex items-center gap-2 mb-2">
                                 <Type className="h-4 w-4 text-primary" />
-                                <p className="text-sm font-medium">{font.name}</p>
+                                <p className="text-xs font-medium text-muted-foreground">{font.name}</p>
                               </div>
-                              <p 
-                                className="text-2xl mb-1"
-                                style={{ fontFamily: font.value }}
-                              >
+                              <p className="text-xl font-medium mb-1" style={{ fontFamily: font.value }}>
                                 {font.value}
                               </p>
-                              <p className="text-xs text-muted-foreground">Aa Bb Cc Dd Ee 123</p>
-                              {font.description && (
-                                <p className="text-xs text-muted-foreground mt-2">{font.description}</p>
-                              )}
+                              <p className="text-sm text-muted-foreground" style={{ fontFamily: font.value }}>
+                                Aa Bb Cc Dd Ee 123
+                              </p>
                             </motion.div>
                           ))}
                         </div>
@@ -301,43 +338,30 @@ const Dashboard = () => {
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-background rounded-lg border p-4 space-y-4"
+                          className="bg-background rounded-xl border p-4 space-y-3"
                         >
-                          {aiResponse.brand.archetype && (
-                            <div>
-                              <div className="flex items-center gap-2 mb-1">
-                                <Heart className="h-4 w-4 text-primary" />
-                                <p className="text-xs font-medium text-muted-foreground">Archetype</p>
+                          <div className="grid grid-cols-2 gap-4">
+                            {aiResponse.brand.archetype && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Archetype</p>
+                                <p className="text-sm font-medium">{aiResponse.brand.archetype}</p>
                               </div>
-                              <p className="text-sm font-medium">{aiResponse.brand.archetype}</p>
-                            </div>
-                          )}
-                          {aiResponse.brand.tone && (
-                            <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-1">Tone of Voice</p>
-                              <p className="text-sm">{aiResponse.brand.tone}</p>
-                            </div>
-                          )}
-                          {aiResponse.brand.purpose && (
-                            <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-1">Purpose</p>
-                              <p className="text-sm">{aiResponse.brand.purpose}</p>
-                            </div>
-                          )}
-                          {aiResponse.brand.audience && (
-                            <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-1">Target Audience</p>
-                              <p className="text-sm">{aiResponse.brand.audience}</p>
-                            </div>
-                          )}
+                            )}
+                            {aiResponse.brand.tone && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Tone</p>
+                                <p className="text-sm">{aiResponse.brand.tone}</p>
+                              </div>
+                            )}
+                          </div>
                           {aiResponse.brand.values && aiResponse.brand.values.length > 0 && (
                             <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-2">Brand Values</p>
-                              <div className="flex flex-wrap gap-2">
+                              <p className="text-xs font-medium text-muted-foreground mb-2">Values</p>
+                              <div className="flex flex-wrap gap-1.5">
                                 {aiResponse.brand.values.map((value, idx) => (
-                                  <span key={idx} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                                  <Badge key={idx} variant="secondary" className="text-xs">
                                     {value}
-                                  </span>
+                                  </Badge>
                                 ))}
                               </div>
                             </div>
@@ -350,290 +374,163 @@ const Dashboard = () => {
               </AnimatePresence>
             </CardContent>
           </Card>
+        </motion.div>
 
-          {/* Key Metrics with Modern Card Design */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {/* Brand Consistency Score */}
+        {/* Metrics Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+        >
+          {[
+            { label: "Brand Consistency", value: progressValues.brandConsistency, icon: Target, color: "text-primary" },
+            { label: "Asset Usage", value: progressValues.assetLibrary, icon: FolderOpen, color: "text-primary" },
+            { label: "Campaign Score", value: progressValues.campaignPerformance, icon: TrendingUp, color: "text-primary" },
+            { label: "Team Activity", value: progressValues.teamActivity, icon: Users, color: "text-primary" },
+          ].map((metric, idx) => (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              key={metric.label}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
+              transition={{ delay: 0.3 + idx * 0.1 }}
             >
-              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <Target className="h-5 w-5 text-primary" />
-                    <Badge variant="secondary" className="text-xs">Live</Badge>
+              <Card className="h-full border-0 shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="pt-5 pb-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                    <Badge variant="outline" className="text-[10px] h-5">Live</Badge>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.6, stiffness: 200 }}
-                    className="text-4xl font-bold mb-1"
-                  >
-                    {progressValues.brandConsistency}
-                    <span className="text-lg text-muted-foreground ml-1">%</span>
-                  </motion.div>
-                  <p className="text-sm font-medium mb-3">Brand Consistency</p>
-                  <Progress value={progressValues.brandConsistency} className="h-1.5" />
-                  <p className="text-xs text-muted-foreground mt-2">Excellent alignment</p>
+                  <div className="text-3xl font-bold mb-1">
+                    {metric.value}<span className="text-base text-muted-foreground">%</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-2">{metric.label}</p>
+                  <Progress value={metric.value} className="h-1" />
                 </CardContent>
               </Card>
             </motion.div>
+          ))}
+        </motion.div>
 
-            {/* Asset Library Usage */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-            >
-              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <FolderOpen className="h-5 w-5 text-primary" />
-                    <Badge variant="secondary" className="text-xs">Live</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.7, stiffness: 200 }}
-                    className="text-4xl font-bold mb-1"
-                  >
-                    {progressValues.assetLibrary}
-                    <span className="text-lg text-muted-foreground ml-1">%</span>
-                  </motion.div>
-                  <p className="text-sm font-medium mb-3">Asset Library Usage</p>
-                  <Progress value={progressValues.assetLibrary} className="h-1.5" />
-                  <p className="text-xs text-muted-foreground mt-2">High adoption rate</p>
-                </CardContent>
-              </Card>
-            </motion.div>
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8"
+        >
+          <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {[
+              { title: "Brand Health", icon: Activity, href: "/brand-health" },
+              { title: "Playbook", icon: FileStack, href: "/playbook" },
+              { title: "Guidelines", icon: FileText, href: "/guideline" },
+              { title: "Asset Library", icon: FolderOpen, href: "/library" },
+              { title: "Generate", icon: Sparkles, href: "/generate" },
+            ].map((action) => (
+              <Link key={action.title} to={action.href}>
+                <Card className="h-full border-0 shadow-sm hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
+                  <CardContent className="flex items-center gap-3 p-4">
+                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <action.icon className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm font-medium">{action.title}</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
 
-            {/* Campaign Performance */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-            >
-              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <Zap className="h-5 w-5 text-primary" />
-                    <Badge variant="secondary" className="text-xs">Live</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.8, stiffness: 200 }}
-                    className="text-4xl font-bold mb-1"
-                  >
-                    {progressValues.campaignPerformance}
-                    <span className="text-lg text-muted-foreground ml-1">%</span>
-                  </motion.div>
-                  <p className="text-sm font-medium mb-3">Campaign Performance</p>
-                  <Progress value={progressValues.campaignPerformance} className="h-1.5" />
-                  <p className="text-xs text-muted-foreground mt-2">Strong engagement</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Team Activity */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.6 }}
-            >
-              <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <Users className="h-5 w-5 text-primary" />
-                    <Badge variant="secondary" className="text-xs">Live</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.9, stiffness: 200 }}
-                    className="text-4xl font-bold mb-1"
-                  >
-                    {progressValues.teamActivity}
-                    <span className="text-lg text-muted-foreground ml-1">%</span>
-                  </motion.div>
-                  <p className="text-sm font-medium mb-3">Team Activity</p>
-                  <Progress value={progressValues.teamActivity} className="h-1.5" />
-                  <p className="text-xs text-muted-foreground mt-2">Active collaboration</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Quick Actions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Link to="/brand-health">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                  <Activity className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Brand Health Score</CardTitle>
-                <CardDescription>Monitor brand consistency metrics</CardDescription>
+        {/* Brand Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <h2 className="text-lg font-semibold mb-4">Brand Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Strategy Card */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-primary" />
+                  Strategy
+                </CardTitle>
               </CardHeader>
-            </Card>
-          </Link>
-
-          <Link to="/playbook">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                  <FileStack className="h-6 w-6 text-primary" />
+              <CardContent className="space-y-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">Archetype</p>
+                  <p className="text-sm font-medium">Caregiver / Explorer</p>
                 </div>
-                <CardTitle className="text-lg">Generate Playbook</CardTitle>
-                <CardDescription>One-click brand playbook export</CardDescription>
+                <Separator />
+                <div>
+                  <p className="text-xs text-muted-foreground">Tone</p>
+                  <p className="text-sm font-medium">Warm, Premium, Trustworthy</p>
+                </div>
+                <Separator />
+                <div className="flex flex-wrap gap-1.5">
+                  {["Excellence", "Innovation", "Care"].map((value) => (
+                    <Badge key={value} variant="secondary" className="text-xs">{value}</Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Colors Card */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Palette className="h-4 w-4 text-primary" />
+                  Colors
+                </CardTitle>
               </CardHeader>
-            </Card>
-          </Link>
-
-          <Link to="/guideline">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                  <FileText className="h-6 w-6 text-primary" />
+              <CardContent>
+                <div className="flex gap-2">
+                  {[
+                    { color: "#5C0A3A", name: "Maroon" },
+                    { color: "#CBB59C", name: "Sand" },
+                    { color: "#0F1020", name: "Night" },
+                  ].map((c) => (
+                    <div key={c.name} className="flex-1 text-center">
+                      <div 
+                        className="h-12 rounded-lg shadow-inner mb-2"
+                        style={{ backgroundColor: c.color }}
+                      />
+                      <p className="text-xs font-mono text-muted-foreground">{c.name}</p>
+                    </div>
+                  ))}
                 </div>
-                <CardTitle className="text-lg">Open Guideline</CardTitle>
-                <CardDescription>View complete brand guidelines</CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Activity Card */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  Recent Activity
+                </CardTitle>
               </CardHeader>
+              <CardContent className="space-y-3">
+                {[
+                  { text: "Logo uploaded", time: "2h ago", active: true },
+                  { text: "Guideline updated", time: "1d ago", active: false },
+                  { text: "Playbook generated", time: "3d ago", active: false },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className={`h-2 w-2 rounded-full ${item.active ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
+                    <div className="flex-1">
+                      <p className="text-sm">{item.text}</p>
+                      <p className="text-xs text-muted-foreground">{item.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
             </Card>
-          </Link>
-
-          <Link to="/requests">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                  <Sparkles className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Request Asset</CardTitle>
-                <CardDescription>AI-powered design requests</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-
-          <Link to="/library">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                  <FolderOpen className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">Browse Library</CardTitle>
-                <CardDescription>All brand assets in one place</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        </div>
-
-        {/* Brand Snapshot */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Brand Strategy</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-semibold mb-2 text-sm text-muted-foreground">Archetype</h4>
-                <p className="text-foreground font-medium">Caregiver / Explorer</p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2 text-sm text-muted-foreground">Tone</h4>
-                <p className="text-foreground font-medium">Warm, Premium, Trustworthy</p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2 text-sm text-muted-foreground">Values</h4>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                    Excellence
-                  </span>
-                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                    Innovation
-                  </span>
-                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                    Care
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Color Palette</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-semibold mb-3 text-sm text-muted-foreground">Primary Colors</h4>
-                <div className="flex gap-3">
-                  <div className="flex-1">
-                    <div className="h-16 rounded-lg bg-[#5C0A3A] shadow-md mb-2"></div>
-                    <p className="text-xs font-mono">#5C0A3A</p>
-                    <p className="text-xs text-muted-foreground">Qatar Maroon</p>
-                  </div>
-                  <div className="flex-1">
-                    <div className="h-16 rounded-lg bg-[#CBB59C] shadow-md mb-2"></div>
-                    <p className="text-xs font-mono">#CBB59C</p>
-                    <p className="text-xs text-muted-foreground">Sand</p>
-                  </div>
-                  <div className="flex-1">
-                    <div className="h-16 rounded-lg bg-[#0F1020] shadow-md mb-2"></div>
-                    <p className="text-xs font-mono">#0F1020</p>
-                    <p className="text-xs text-muted-foreground">Neutral</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary mt-2"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Logo uploaded</p>
-                    <p className="text-xs text-muted-foreground">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground mt-2"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Guideline updated</p>
-                    <p className="text-xs text-muted-foreground">1 day ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground mt-2"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Playbook generated</p>
-                    <p className="text-xs text-muted-foreground">3 days ago</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
