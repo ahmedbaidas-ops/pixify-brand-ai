@@ -128,9 +128,9 @@ const FloatingImage = ({
 
   const position = getPositionForPhase();
   
-  // Calculate repulsion from mouse (only in floating phase and not individually hovered)
+  // Calculate repulsion from mouse - images flee from cursor
   const getRepulsion = () => {
-    if (!isHovering || !containerRect || animationPhase !== "floating" || isImageHovered) return { x: 0, y: 0 };
+    if (!isHovering || !containerRect || isImageHovered) return { x: 0, y: 0 };
     
     const centerX = containerRect.width / 2 + position.x;
     const centerY = containerRect.height / 2 + position.y;
@@ -139,8 +139,15 @@ const FloatingImage = ({
     const dy = centerY - mouseY;
     const distance = Math.sqrt(dx * dx + dy * dy);
     
-    const maxDistance = 300;
-    const strength = Math.max(0, (maxDistance - distance) / maxDistance) * 60;
+    // Strong repulsion that makes images flee dramatically
+    const maxDistance = 250;
+    const minDistance = 50;
+    
+    if (distance > maxDistance) return { x: 0, y: 0 };
+    
+    // Exponential falloff for more dramatic effect
+    const normalizedDistance = Math.max(distance, minDistance);
+    const strength = Math.pow((maxDistance - normalizedDistance) / maxDistance, 1.5) * 180;
     
     const angle = Math.atan2(dy, dx);
     return {
