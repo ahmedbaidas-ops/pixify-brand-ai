@@ -6,7 +6,24 @@ import {
   PopoverContent, 
   PopoverTrigger 
 } from "@/components/ui/popover";
-import { Settings2, GripVertical, Eye, EyeOff, ChevronUp, ChevronDown } from "lucide-react";
+import { Settings2, GripVertical, Eye, EyeOff } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export interface DashboardSection {
   id: string;
@@ -19,8 +36,66 @@ interface CustomizeViewProps {
   onSectionsChange: (sections: DashboardSection[]) => void;
 }
 
+interface SortableItemProps {
+  section: DashboardSection;
+  onToggleVisibility: (id: string) => void;
+}
+
+const SortableItem = ({ section, onToggleVisibility }: SortableItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: section.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 p-2.5 rounded-lg bg-background hover:bg-muted/50 group"
+    >
+      <button
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted"
+      >
+        <GripVertical className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors" />
+      </button>
+      <span className={`flex-1 text-sm ${!section.visible ? 'text-muted-foreground' : ''}`}>
+        {section.label}
+      </span>
+      <button
+        onClick={() => onToggleVisibility(section.id)}
+        className="p-1.5 rounded-md hover:bg-muted transition-colors"
+      >
+        {section.visible ? (
+          <Eye className="h-4 w-4 text-primary" />
+        ) : (
+          <EyeOff className="h-4 w-4 text-muted-foreground" />
+        )}
+      </button>
+    </div>
+  );
+};
+
 export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const toggleVisibility = (id: string) => {
     onSectionsChange(
@@ -30,12 +105,14 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
     );
   };
 
-  const moveSection = (index: number, direction: 'up' | 'down') => {
-    const newSections = [...sections];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= sections.length) return;
-    [newSections[index], newSections[targetIndex]] = [newSections[targetIndex], newSections[index]];
-    onSectionsChange(newSections);
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = sections.findIndex((s) => s.id === active.id);
+      const newIndex = sections.findIndex((s) => s.id === over.id);
+      onSectionsChange(arrayMove(sections, oldIndex, newIndex));
+    }
   };
 
   return (
@@ -58,47 +135,29 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
         <div className="p-4 border-b border-border">
           <h3 className="font-semibold text-sm">Customize Dashboard</h3>
           <p className="text-xs text-muted-foreground mt-1">
-            Toggle sections and use arrows to reorder
+            Drag to reorder, click eye to toggle
           </p>
         </div>
         
         <div className="p-2 space-y-1">
-          {sections.map((section, index) => (
-            <div
-              key={section.id}
-              className="flex items-center gap-2 p-2.5 rounded-lg bg-background hover:bg-muted/50 group"
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={sections.map(s => s.id)}
+              strategy={verticalListSortingStrategy}
             >
-              <div className="flex flex-col">
-                <button
-                  onClick={() => moveSection(index, 'up')}
-                  disabled={index === 0}
-                  className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <ChevronUp className="h-3 w-3 text-muted-foreground" />
-                </button>
-                <button
-                  onClick={() => moveSection(index, 'down')}
-                  disabled={index === sections.length - 1}
-                  className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
-                </button>
-              </div>
-              <span className={`flex-1 text-sm ${!section.visible ? 'text-muted-foreground' : ''}`}>
-                {section.label}
-              </span>
-              <button
-                onClick={() => toggleVisibility(section.id)}
-                className="p-1.5 rounded-md hover:bg-muted transition-colors"
-              >
-                {section.visible ? (
-                  <Eye className="h-4 w-4 text-primary" />
-                ) : (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
-                )}
-              </button>
-            </div>
-          ))}
+              {sections.map((section) => (
+                <SortableItem
+                  key={section.id}
+                  section={section}
+                  onToggleVisibility={toggleVisibility}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         </div>
         
         <div className="p-3 border-t border-border">
