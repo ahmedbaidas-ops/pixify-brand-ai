@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { motion, AnimatePresence, Reorder } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { 
   Popover, 
   PopoverContent, 
   PopoverTrigger 
 } from "@/components/ui/popover";
-import { Settings2, GripVertical, Eye, EyeOff } from "lucide-react";
+import { Settings2, GripVertical, Eye, EyeOff, ChevronUp, ChevronDown } from "lucide-react";
 
 export interface DashboardSection {
   id: string;
@@ -31,6 +30,14 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
     );
   };
 
+  const moveSection = (index: number, direction: 'up' | 'down') => {
+    const newSections = [...sections];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= sections.length) return;
+    [newSections[index], newSections[targetIndex]] = [newSections[targetIndex], newSections[index]];
+    onSectionsChange(newSections);
+  };
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -51,44 +58,48 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
         <div className="p-4 border-b border-border">
           <h3 className="font-semibold text-sm">Customize Dashboard</h3>
           <p className="text-xs text-muted-foreground mt-1">
-            Toggle sections and drag to reorder
+            Toggle sections and use arrows to reorder
           </p>
         </div>
         
-        <Reorder.Group 
-          axis="y" 
-          values={sections} 
-          onReorder={onSectionsChange}
-          className="p-2 space-y-1"
-        >
-          <AnimatePresence>
-            {sections.map((section) => (
-              <Reorder.Item
-                key={section.id}
-                value={section}
-                className="flex items-center gap-3 p-2.5 rounded-lg bg-background hover:bg-muted/50 cursor-grab active:cursor-grabbing group"
-              >
-                <GripVertical className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors" />
-                <span className={`flex-1 text-sm ${!section.visible ? 'text-muted-foreground' : ''}`}>
-                  {section.label}
-                </span>
+        <div className="p-2 space-y-1">
+          {sections.map((section, index) => (
+            <div
+              key={section.id}
+              className="flex items-center gap-2 p-2.5 rounded-lg bg-background hover:bg-muted/50 group"
+            >
+              <div className="flex flex-col">
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleVisibility(section.id);
-                  }}
-                  className="p-1.5 rounded-md hover:bg-muted transition-colors"
+                  onClick={() => moveSection(index, 'up')}
+                  disabled={index === 0}
+                  className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                  {section.visible ? (
-                    <Eye className="h-4 w-4 text-primary" />
-                  ) : (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  )}
+                  <ChevronUp className="h-3 w-3 text-muted-foreground" />
                 </button>
-              </Reorder.Item>
-            ))}
-          </AnimatePresence>
-        </Reorder.Group>
+                <button
+                  onClick={() => moveSection(index, 'down')}
+                  disabled={index === sections.length - 1}
+                  className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                </button>
+              </div>
+              <span className={`flex-1 text-sm ${!section.visible ? 'text-muted-foreground' : ''}`}>
+                {section.label}
+              </span>
+              <button
+                onClick={() => toggleVisibility(section.id)}
+                className="p-1.5 rounded-md hover:bg-muted transition-colors"
+              >
+                {section.visible ? (
+                  <Eye className="h-4 w-4 text-primary" />
+                ) : (
+                  <EyeOff className="h-4 w-4 text-muted-foreground" />
+                )}
+              </button>
+            </div>
+          ))}
+        </div>
         
         <div className="p-3 border-t border-border">
           <Button 
