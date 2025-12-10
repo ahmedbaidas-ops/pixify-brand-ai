@@ -15,6 +15,14 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
 import { toast } from "sonner";
+import { CustomizeView, DashboardSection } from "@/components/dashboard/CustomizeView";
+
+const defaultSections: DashboardSection[] = [
+  { id: "ai-assistant", label: "AI Assistant", visible: true },
+  { id: "metrics", label: "Metrics", visible: true },
+  { id: "quick-actions", label: "Quick Actions", visible: true },
+  { id: "brand-overview", label: "Brand Overview", visible: true },
+];
 
 const quickChips = [
   { label: "Brand Colors", query: "What are our brand colors?", icon: Palette },
@@ -32,7 +40,21 @@ const Dashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [aiQuery, setAiQuery] = useState("");
+  const [sections, setSections] = useState<DashboardSection[]>(() => {
+    const saved = localStorage.getItem("dashboard-sections");
+    return saved ? JSON.parse(saved) : defaultSections;
+  });
   const { isLoading: aiLoading, response: aiResponse, processQuery, clearResponse } = useAIAssistant();
+
+  // Save sections to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem("dashboard-sections", JSON.stringify(sections));
+  }, [sections]);
+
+  const isSectionVisible = (id: string) => {
+    const section = sections.find(s => s.id === id);
+    return section?.visible ?? true;
+  };
 
   useEffect(() => {
     const fetchMetrics = async () => {
@@ -145,6 +167,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* AI Assistant Card */}
+        {isSectionVisible("ai-assistant") && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -375,8 +398,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </motion.div>
+        )}
 
         {/* Metrics Grid */}
+        {isSectionVisible("metrics") && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -411,8 +436,10 @@ const Dashboard = () => {
             </motion.div>
           ))}
         </motion.div>
+        )}
 
         {/* Quick Actions */}
+        {isSectionVisible("quick-actions") && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -442,8 +469,10 @@ const Dashboard = () => {
             ))}
           </div>
         </motion.div>
+        )}
 
         {/* Brand Overview */}
+        {isSectionVisible("brand-overview") && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -531,6 +560,10 @@ const Dashboard = () => {
             </Card>
           </div>
         </motion.div>
+        )}
+
+        {/* Customize View Floating Button */}
+        <CustomizeView sections={sections} onSectionsChange={setSections} />
       </div>
     </div>
   );
