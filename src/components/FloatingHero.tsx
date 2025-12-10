@@ -13,16 +13,16 @@ interface FloatingImageProps {
   containerRect: DOMRect | null;
 }
 
-// Heart shape parametric equation
-const getHeartPosition = (index: number, total: number, scale: number = 200) => {
+// Heart shape parametric equation - larger scale to avoid logo
+const getHeartPosition = (index: number, total: number, scale: number = 280) => {
   const t = (index / total) * Math.PI * 2;
   const x = scale * 16 * Math.pow(Math.sin(t), 3) / 16;
   const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) / 16;
   return { x, y };
 };
 
-// Circle positions
-const getCirclePosition = (index: number, total: number, radius: number = 220, offset: number = 0) => {
+// Circle positions - larger radius to avoid logo
+const getCirclePosition = (index: number, total: number, radius: number = 320, offset: number = 0) => {
   const angle = ((index / total) * Math.PI * 2) + offset;
   return {
     x: Math.cos(angle) * radius,
@@ -30,16 +30,16 @@ const getCirclePosition = (index: number, total: number, radius: number = 220, o
   };
 };
 
-// Floating positions (scattered)
+// Floating positions (scattered far from center)
 const floatingPositions = [
-  { x: -320, y: -180 },
-  { x: 280, y: -200 },
-  { x: -380, y: 80 },
-  { x: 350, y: 120 },
-  { x: -180, y: 220 },
-  { x: 180, y: 240 },
-  { x: -450, y: -50 },
-  { x: 420, y: -40 },
+  { x: -420, y: -220 },
+  { x: 380, y: -240 },
+  { x: -480, y: 100 },
+  { x: 450, y: 150 },
+  { x: -280, y: 280 },
+  { x: 280, y: 300 },
+  { x: -520, y: -80 },
+  { x: 500, y: -60 },
 ];
 
 const FloatingImage = ({ 
@@ -310,16 +310,6 @@ export const FloatingHero = () => {
         />
       </motion.div>
 
-      {/* Animation phase indicator (subtle) */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {["heart", "floating", "circle"].map((phase) => (
-          <motion.div
-            key={phase}
-            className={`w-2 h-2 rounded-full ${animationPhase === phase ? 'bg-foreground' : 'bg-foreground/20'}`}
-            animate={{ scale: animationPhase === phase ? 1.2 : 1 }}
-          />
-        ))}
-      </div>
     </div>
   );
 };
