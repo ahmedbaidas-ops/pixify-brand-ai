@@ -167,15 +167,21 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Dynamic Sections - rendered in order based on sections array */}
+        <AnimatePresence mode="popLayout">
         {sections.filter(s => s.visible).map((section, idx) => {
           switch (section.id) {
             case "ai-assistant":
               return (
                 <motion.div
                   key={section.id}
+                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ 
+                    layout: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
                 >
                   <Card className="mb-8 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
                     <CardHeader className="pb-4">
@@ -416,9 +422,14 @@ const Dashboard = () => {
               return (
                 <motion.div
                   key={section.id}
+                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ 
+                    layout: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
                   className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
                 >
                   {[
@@ -455,9 +466,14 @@ const Dashboard = () => {
               return (
                 <motion.div
                   key={section.id}
+                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ 
+                    layout: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
                   className="mb-8"
                 >
                   <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
@@ -489,9 +505,14 @@ const Dashboard = () => {
               return (
                 <motion.div
                   key={section.id}
+                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ 
+                    layout: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
                 >
                   <h2 className="text-lg font-semibold mb-4">Brand Overview</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -581,6 +602,7 @@ const Dashboard = () => {
               return null;
           }
         })}
+        </AnimatePresence>
 
         {/* Customize View Floating Button */}
         <CustomizeView sections={sections} defaultSections={defaultSections} onSectionsChange={setSections} />
