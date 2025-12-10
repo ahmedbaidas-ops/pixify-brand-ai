@@ -12,11 +12,15 @@ import pixifyLogo from "@/assets/pixify-logo-hero.png";
 const Index = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isOverDark, setIsOverDark] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const header = document.querySelector('header');
       if (!header) return;
+      
+      // Check if user has scrolled
+      setHasScrolled(window.scrollY > 50);
       
       const headerRect = header.getBoundingClientRect();
       const headerMiddle = headerRect.top + headerRect.height / 2;
@@ -74,7 +78,13 @@ const Index = () => {
     <div className="min-h-screen bg-white text-black overflow-x-hidden">
       <CustomCursor />
       {/* Noura-style Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 border-b ${isOverDark ? 'text-white bg-black/40 backdrop-blur-xl border-white/10' : 'text-black bg-white/40 backdrop-blur-xl border-black/5'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 ${
+        hasScrolled 
+          ? isOverDark 
+            ? 'bg-black/60 backdrop-blur-xl border-b border-white/10' 
+            : 'bg-white/60 backdrop-blur-xl border-b border-black/5'
+          : 'bg-transparent border-b border-transparent'
+      } ${isOverDark ? 'text-white' : 'text-black'}`}>
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
