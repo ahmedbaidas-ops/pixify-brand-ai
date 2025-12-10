@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem themes={["light", "dark", "modern"]}>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem themes={["light", "dark", "modern", "retro"]}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
