@@ -167,24 +167,24 @@ const Index = () => {
         <GrainOverlay />
         
         {/* Hero Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end pb-20 px-6 md:px-12">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-12">
           {/* Hero Description */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-2xl"
+            className="max-w-2xl text-center"
           >
-            <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-black leading-relaxed mb-8">
               Manage, organize, and distribute your creative assets with intelligence. 
               Pixify transforms how teams work with digital assets.
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-center gap-4">
               <MagneticButton strength={0.35}>
                 <Link to="/auth">
-                  <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-white text-black hover:bg-white/90">
+                  <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-black text-white hover:bg-black/90">
                     Get started
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
