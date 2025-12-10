@@ -211,7 +211,7 @@ const Index = () => {
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8">
                 Where ideas meet
                 <br />
-                <span className="text-primary">impact</span>
+                <span className="text-black">impact</span>
               </h2>
             </motion.div>
             
@@ -263,7 +263,7 @@ const Index = () => {
                 className="group relative p-8 rounded-3xl bg-white border border-black/10 hover:border-black/30 transition-colors duration-500 hover:shadow-xl cursor-pointer"
               >
                 <motion.div 
-                  className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
+                  className="w-14 h-14 rounded-2xl bg-black/10 flex items-center justify-center mb-6 group-hover:bg-black group-hover:text-white transition-all duration-300"
                   whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 0.5 } }}
                 >
                   <feature.icon className="w-6 h-6" />
@@ -318,7 +318,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
                 className="relative text-center md:text-left"
               >
-                <div className="text-8xl md:text-9xl font-bold text-primary/10 mb-4 leading-none">{item.step}</div>
+                <div className="text-8xl md:text-9xl font-bold text-black/10 mb-4 leading-none">{item.step}</div>
                 <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight">{item.title}</h3>
                 <p className="text-black/60 leading-relaxed text-lg">{item.description}</p>
               </motion.div>
