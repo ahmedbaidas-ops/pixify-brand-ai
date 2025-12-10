@@ -667,113 +667,165 @@ All colors MUST be HSL.
   }
 }
 
-/* Glitch Text Animation */
-@keyframes glitch {
-  0% {
+/* Glitch Text Animation - Intermittent */
+@keyframes glitch-intermittent {
+  0%, 5% {
     transform: translate(0);
+    text-shadow: none;
   }
-  20% {
-    transform: translate(-2px, 2px);
+  5.5% {
+    transform: translate(-3px, 2px);
+    text-shadow: 3px 0 #ff0000, -3px 0 #00ffff;
   }
-  40% {
+  6% {
+    transform: translate(3px, -2px);
+    text-shadow: -3px 0 #ff0000, 3px 0 #00ffff;
+  }
+  6.5% {
     transform: translate(-2px, -2px);
-  }
-  60% {
-    transform: translate(2px, 2px);
-  }
-  80% {
-    transform: translate(2px, -2px);
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-
-@keyframes glitch-skew {
-  0% {
-    transform: skew(0deg);
-  }
-  10% {
-    transform: skew(-2deg);
-  }
-  20% {
-    transform: skew(2deg);
-  }
-  30% {
-    transform: skew(0deg);
-  }
-  40% {
-    transform: skew(-1deg);
-  }
-  50% {
-    transform: skew(1deg);
-  }
-  60% {
-    transform: skew(0deg);
-  }
-  100% {
-    transform: skew(0deg);
-  }
-}
-
-@keyframes glitch-color {
-  0% {
-    text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
-  }
-  20% {
-    text-shadow: -2px 0 #ff0000, 2px 0 #00ffff;
-  }
-  40% {
     text-shadow: 2px 2px #ff0000, -2px -2px #00ffff;
   }
-  60% {
+  7% {
+    transform: translate(2px, 2px);
+    text-shadow: -2px -2px #ff0000, 2px 2px #00ffff;
+  }
+  7.5%, 100% {
+    transform: translate(0);
+    text-shadow: none;
+  }
+}
+
+@keyframes glitch-skew-intermittent {
+  0%, 5% {
+    transform: skew(0deg);
+  }
+  5.2% {
+    transform: skew(-3deg);
+  }
+  5.5% {
+    transform: skew(3deg);
+  }
+  6% {
+    transform: skew(-2deg);
+  }
+  6.5% {
+    transform: skew(2deg);
+  }
+  7%, 100% {
+    transform: skew(0deg);
+  }
+}
+
+@keyframes glitch-color-intermittent {
+  0%, 5% {
+    text-shadow: none;
+  }
+  5.3% {
+    text-shadow: 3px 0 #ff0000, -3px 0 #00ffff;
+  }
+  5.6% {
+    text-shadow: -3px 0 #ff0000, 3px 0 #00ffff;
+  }
+  6% {
+    text-shadow: 3px 3px #ff0000, -3px -3px #00ffff;
+  }
+  6.5% {
     text-shadow: -2px 2px #ff0000, 2px -2px #00ffff;
   }
+  7%, 100% {
+    text-shadow: none;
+  }
+}
+
+/* Intense hover glitch - fragmented aura */
+@keyframes glitch-fragment {
+  0% {
+    transform: translate(0) skew(0deg);
+    text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+    filter: blur(0);
+  }
+  10% {
+    transform: translate(-4px, 3px) skew(-5deg);
+    text-shadow: 4px 0 #ff0000, -4px 0 #00ffff, 0 4px #ff00ff;
+    filter: blur(0.5px);
+  }
+  20% {
+    transform: translate(4px, -3px) skew(5deg);
+    text-shadow: -4px 0 #ff0000, 4px 0 #00ffff, 0 -4px #ff00ff;
+    filter: blur(0);
+  }
+  30% {
+    transform: translate(-3px, -3px) skew(-3deg);
+    text-shadow: 3px 3px #ff0000, -3px -3px #00ffff;
+    filter: blur(0.3px);
+  }
+  40% {
+    transform: translate(3px, 3px) skew(3deg);
+    text-shadow: -3px -3px #ff0000, 3px 3px #00ffff;
+    filter: blur(0);
+  }
+  50% {
+    transform: translate(0) skew(-2deg);
+    text-shadow: 5px 0 #ff0000, -5px 0 #00ffff;
+    filter: blur(0.5px);
+  }
+  60% {
+    transform: translate(-5px, 2px) skew(4deg);
+    text-shadow: -5px 2px #ff0000, 5px -2px #00ffff, 2px 2px #ff00ff;
+    filter: blur(0);
+  }
+  70% {
+    transform: translate(5px, -2px) skew(-4deg);
+    text-shadow: 5px -2px #ff0000, -5px 2px #00ffff;
+    filter: blur(0.3px);
+  }
   80% {
-    text-shadow: 2px -2px #ff0000, -2px 2px #00ffff;
+    transform: translate(-2px, 4px) skew(2deg);
+    text-shadow: 2px -4px #ff0000, -2px 4px #00ffff;
+    filter: blur(0);
+  }
+  90% {
+    transform: translate(2px, -4px) skew(-2deg);
+    text-shadow: -2px 4px #ff0000, 2px -4px #00ffff;
+    filter: blur(0.5px);
   }
   100% {
+    transform: translate(0) skew(0deg);
     text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+    filter: blur(0);
   }
 }
 
 .glitch-text {
   position: relative;
-  animation: glitch-skew 4s infinite linear alternate-reverse;
+  animation: glitch-skew-intermittent 7s infinite;
 }
 
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.glitch-text::before {
-  animation: glitch 0.3s infinite linear alternate-reverse;
-  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-  text-shadow: -2px 0 #ff0000;
-}
-
-.glitch-text::after {
-  animation: glitch 0.3s infinite linear alternate-reverse;
-  animation-delay: 0.1s;
-  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-  text-shadow: 2px 0 #00ffff;
+.glitch-text:hover {
+  animation: glitch-fragment 0.4s infinite;
 }
 
 .glitch-letter {
   display: inline-block;
-  animation: glitch-color 3s infinite;
+  animation: glitch-color-intermittent 7s infinite;
+}
+
+.glitch-letter:hover {
+  animation: glitch-fragment 0.3s infinite;
+}
+
+.glitch-text:hover .glitch-letter {
+  animation: glitch-fragment 0.3s infinite;
 }
 
 .glitch-letter:nth-child(odd) {
-  animation-delay: 0.1s;
+  animation-delay: 0.05s;
 }
 
 .glitch-letter:nth-child(3n) {
-  animation-delay: 0.2s;
+  animation-delay: 0.1s;
+}
+
+.glitch-letter:nth-child(5n) {
+  animation-delay: 0.15s;
 }
