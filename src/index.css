@@ -124,6 +124,71 @@ All colors MUST be HSL.
     --sidebar-border: 235 15% 20%;
     --sidebar-ring: 330 70% 45%;
   }
+
+  /* Modern Frosty Glassmorphism Theme */
+  .modern {
+    /* Cool slate-blue dark base */
+    --background: 220 25% 12%;
+    --foreground: 210 40% 98%;
+
+    /* Frosted glass cards */
+    --card: 220 20% 18%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 25% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Vibrant primary - electric purple-pink */
+    --primary: 280 70% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 280 80% 70%;
+
+    /* Cool secondary */
+    --secondary: 220 30% 25%;
+    --secondary-foreground: 210 40% 90%;
+
+    /* Accent - cyan glow */
+    --accent: 190 80% 50%;
+    --accent-foreground: 220 25% 10%;
+
+    /* Muted frost */
+    --muted: 220 20% 22%;
+    --muted-foreground: 220 15% 65%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 28%;
+    --input: 220 20% 25%;
+    --ring: 280 70% 60%;
+
+    --radius: 1.25rem;
+
+    /* Frosty gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(280 70% 60%), hsl(320 70% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(190 80% 50%), hsl(220 60% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(220 25% 12%), hsl(220 30% 8%));
+    --gradient-glass: linear-gradient(135deg, hsl(220 20% 20% / 0.6), hsl(220 25% 15% / 0.4));
+    --gradient-frost: linear-gradient(180deg, hsl(220 30% 25% / 0.5), hsl(220 25% 18% / 0.3));
+
+    /* Glassy shadows with color tints */
+    --shadow-sm: 0 1px 3px 0 hsl(280 50% 30% / 0.15);
+    --shadow-md: 0 4px 12px -2px hsl(280 50% 30% / 0.2), 0 2px 6px -1px hsl(220 40% 10% / 0.3);
+    --shadow-lg: 0 12px 24px -4px hsl(280 50% 30% / 0.25), 0 4px 8px -2px hsl(220 40% 10% / 0.2);
+    --shadow-xl: 0 24px 48px -8px hsl(280 50% 30% / 0.3), 0 12px 16px -4px hsl(220 40% 10% / 0.2);
+    --shadow-premium: 0 32px 64px -16px hsl(280 60% 40% / 0.4);
+    --shadow-glow: 0 0 40px hsl(280 70% 60% / 0.3);
+
+    /* Glass sidebar */
+    --sidebar-background: 220 25% 14%;
+    --sidebar-foreground: 210 40% 95%;
+    --sidebar-primary: 280 70% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 25% 20%;
+    --sidebar-accent-foreground: 210 40% 90%;
+    --sidebar-border: 220 20% 25%;
+    --sidebar-ring: 280 70% 60%;
+  }
 }
 
 @layer base {
@@ -163,5 +228,79 @@ All colors MUST be HSL.
   /* Smooth transitions */
   button, a, input, textarea, select {
     transition: var(--transition-smooth);
+  }
+}
+
+/* Glassmorphism utilities for Modern theme */
+@layer components {
+  .modern .glass {
+    background: hsl(220 20% 18% / 0.6);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid hsl(220 20% 28% / 0.5);
+  }
+
+  .modern .glass-card {
+    background: linear-gradient(135deg, hsl(220 20% 20% / 0.7), hsl(220 25% 15% / 0.5));
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid hsl(220 20% 35% / 0.3);
+    box-shadow: 
+      0 8px 32px hsl(280 50% 30% / 0.15),
+      inset 0 1px 0 hsl(220 30% 40% / 0.2);
+  }
+
+  .modern .glass-subtle {
+    background: hsl(220 25% 15% / 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Grain overlay for Modern theme */
+  .modern body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* Modern theme card enhancements */
+  .modern [data-slot="card"],
+  .modern .card {
+    background: linear-gradient(135deg, hsl(220 20% 20% / 0.7), hsl(220 25% 15% / 0.5));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-color: hsl(220 20% 35% / 0.3);
+    box-shadow: 
+      0 8px 32px hsl(280 50% 30% / 0.1),
+      inset 0 1px 0 hsl(220 30% 45% / 0.15);
+  }
+
+  /* Modern sidebar glass effect */
+  .modern [data-sidebar="sidebar"] {
+    background: linear-gradient(180deg, hsl(220 25% 14% / 0.95), hsl(220 25% 10% / 0.98));
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+
+  /* Modern button glow */
+  .modern button[data-primary="true"],
+  .modern .btn-primary {
+    box-shadow: 0 0 20px hsl(280 70% 60% / 0.4);
+  }
+
+  /* Modern input frost */
+  .modern input,
+  .modern textarea,
+  .modern select {
+    background: hsl(220 20% 18% / 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 }
