@@ -59,24 +59,44 @@ const Index = () => {
 
           {/* Right side nav pill */}
           <nav className="hidden md:flex items-center bg-black/5 backdrop-blur-md rounded-full px-2 py-2 border border-black/10">
-            <a href="#features" className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+            <motion.a 
+              href="#features" 
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors rounded-full hover:bg-black/5"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <Layers className="w-4 h-4" />
               Features
-            </a>
-            <a href="#how-it-works" className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+            </motion.a>
+            <motion.a 
+              href="#how-it-works" 
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors rounded-full hover:bg-black/5"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <Info className="w-4 h-4" />
               About
-            </a>
-            <a href="#cta" className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors">
+            </motion.a>
+            <motion.a 
+              href="#cta" 
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black transition-colors rounded-full hover:bg-black/5"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <Briefcase className="w-4 h-4" />
               Works
-            </a>
-            <Link 
-              to="/auth" 
-              className="ml-2 px-5 py-2 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-colors"
+            </motion.a>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Contact
-            </Link>
+              <Link 
+                to="/auth" 
+                className="ml-2 px-5 py-2 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-colors"
+              >
+                Contact
+              </Link>
+            </motion.div>
           </nav>
 
           {/* Mobile menu button */}
@@ -93,18 +113,13 @@ const Index = () => {
           {/* Desktop theme toggle + Get Started */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            <Link 
+              to="/auth"
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap"
             >
-              <Link 
-                to="/auth"
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-black text-white rounded-full hover:bg-black/90 transition-all hover:scale-105 shadow-lg"
-              >
-                <Play className="w-4 h-4" />
-                Get Started
-              </Link>
-            </motion.div>
+              <Play className="w-4 h-4" />
+              Get Started
+            </Link>
           </div>
         </div>
 
