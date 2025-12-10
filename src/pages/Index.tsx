@@ -167,7 +167,7 @@ const Index = () => {
         <GrainOverlay />
         
         {/* Hero Content Overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-20 px-6 md:px-12">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-12">
           {/* Hero Description */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
