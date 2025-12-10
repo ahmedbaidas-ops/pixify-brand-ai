@@ -239,58 +239,6 @@ export const FloatingHero = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.3, type: "spring", stiffness: 100 }}
       >
-        {/* Glow layers */}
-        <motion.div
-          className="absolute inset-0 blur-3xl rounded-full"
-          style={{ 
-            background: "radial-gradient(circle, hsl(var(--primary) / 0.4) 0%, transparent 70%)",
-            transform: "scale(1.5)",
-          }}
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            scale: [1.3, 1.6, 1.3],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        
-        {/* Intense glow during transitions */}
-        <motion.div
-          className="absolute inset-0 blur-2xl rounded-full"
-          style={{ 
-            background: "radial-gradient(circle, hsl(var(--foreground) / 0.3) 0%, transparent 60%)",
-            transform: "scale(1.8)",
-          }}
-          animate={{
-            opacity: isTransitioning ? [0.5, 1, 0.5] : [0.1, 0.2, 0.1],
-            scale: isTransitioning ? [1.5, 2.2, 1.5] : [1.3, 1.5, 1.3],
-          }}
-          transition={{
-            duration: isTransitioning ? 0.8 : 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Secondary color ring pulse */}
-        <motion.div
-          className="absolute inset-0 rounded-full border-2 border-primary/20"
-          style={{ transform: "scale(2)" }}
-          animate={{
-            opacity: [0.2, 0.5, 0.2],
-            scale: [1.8, 2.3, 1.8],
-            borderWidth: isTransitioning ? ["4px", "2px", "4px"] : ["2px", "1px", "2px"],
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
         <motion.img 
           src={pixifyLogo} 
           alt="Pixify" 
