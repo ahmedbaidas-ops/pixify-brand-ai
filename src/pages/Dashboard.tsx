@@ -166,401 +166,421 @@ const Dashboard = () => {
           </Button>
         </motion.div>
 
-        {/* AI Assistant Card */}
-        {isSectionVisible("ai-assistant") && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="mb-8 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-lg">Ask Pixify</CardTitle>
-                  <CardDescription className="text-sm">
-                    Find assets, explore guidelines, get answers instantly
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Quick Action Chips */}
-              <div className="flex flex-wrap gap-2">
-                {quickChips.map((chip) => (
-                  <Button
-                    key={chip.label}
-                    variant="outline"
-                    size="sm"
-                    className="h-8 rounded-full text-xs font-medium hover:bg-primary/5 hover:border-primary/30 transition-all"
-                    onClick={() => handleChipClick(chip.query)}
-                    disabled={aiLoading}
-                  >
-                    <chip.icon className="h-3.5 w-3.5 mr-1.5" />
-                    {chip.label}
-                  </Button>
-                ))}
-              </div>
-
-              {/* Search Input */}
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (aiQuery.trim()) processQuery(aiQuery);
-                }}
-                className="relative"
-              >
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Ask anything about your brand..."
-                  className="pl-11 pr-24 h-12 text-sm rounded-xl border-muted-foreground/20 bg-background focus-visible:ring-primary/30"
-                  value={aiQuery}
-                  onChange={(e) => setAiQuery(e.target.value)}
-                  disabled={aiLoading}
-                />
-                <Button 
-                  type="submit" 
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 rounded-lg"
-                  disabled={aiLoading || !aiQuery.trim()}
+        {/* Dynamic Sections - rendered in order based on sections array */}
+        {sections.filter(s => s.visible).map((section, idx) => {
+          switch (section.id) {
+            case "ai-assistant":
+              return (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.1 }}
                 >
-                  {aiLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      Ask
-                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                    </>
-                  )}
-                </Button>
-              </form>
-
-              {/* AI Response */}
-              <AnimatePresence>
-                {aiResponse && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="rounded-xl bg-muted/50 p-4 border border-border/50">
-                      <div className="flex items-start justify-between mb-3">
-                        <p className="text-sm text-foreground font-medium whitespace-pre-line">{aiResponse.message}</p>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-6 w-6 -mt-1 -mr-1 shrink-0 hover:bg-destructive/10"
-                          onClick={clearResponse}
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </Button>
+                  <Card className="mb-8 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                          <Sparkles className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">Ask Pixify</CardTitle>
+                          <CardDescription className="text-sm">
+                            Find assets, explore guidelines, get answers instantly
+                          </CardDescription>
+                        </div>
                       </div>
-                      
-                      {/* Assets Response */}
-                      {aiResponse.type === "assets" && aiResponse.assets && aiResponse.assets.length > 0 && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {aiResponse.assets.map((asset) => (
-                            <motion.div
-                              key={asset.id}
-                              initial={{ opacity: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              className="bg-background rounded-xl border p-3 flex flex-col hover:shadow-md transition-shadow"
-                            >
-                              <div className="aspect-video bg-muted rounded-lg mb-2 flex items-center justify-center overflow-hidden">
-                                <img 
-                                  src={asset.storage_url} 
-                                  alt={asset.name}
-                                  className="max-h-full max-w-full object-contain"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
-                                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                                  }}
-                                />
-                                <Image className="h-8 w-8 text-muted-foreground hidden" />
-                              </div>
-                              <p className="text-sm font-medium truncate">{asset.name}</p>
-                              <p className="text-xs text-muted-foreground mb-2">{asset.mime_type || asset.type}</p>
-                              <Button 
-                                size="sm" 
-                                variant="secondary"
-                                className="w-full h-8 text-xs"
-                                onClick={() => {
-                                  const link = document.createElement('a');
-                                  link.href = asset.storage_url;
-                                  link.download = asset.name;
-                                  link.click();
-                                  toast.success(`Downloading ${asset.name}`);
-                                }}
-                              >
-                                <Download className="h-3 w-3 mr-1" />
-                                Download
-                              </Button>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Quick Action Chips */}
+                      <div className="flex flex-wrap gap-2">
+                        {quickChips.map((chip) => (
+                          <Button
+                            key={chip.label}
+                            variant="outline"
+                            size="sm"
+                            className="h-8 rounded-full text-xs font-medium hover:bg-primary/5 hover:border-primary/30 transition-all"
+                            onClick={() => handleChipClick(chip.query)}
+                            disabled={aiLoading}
+                          >
+                            <chip.icon className="h-3.5 w-3.5 mr-1.5" />
+                            {chip.label}
+                          </Button>
+                        ))}
+                      </div>
 
-                      {/* Colors Response */}
-                      {aiResponse.type === "colors" && aiResponse.colors && (
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                          {aiResponse.colors.map((color, idx) => (
-                            <motion.div
-                              key={idx}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: idx * 0.05 }}
-                              className="bg-background rounded-xl border p-3 hover:shadow-md transition-shadow cursor-pointer"
-                              onClick={() => {
-                                navigator.clipboard.writeText(color.value);
-                                toast.success(`Copied ${color.value}`);
-                              }}
-                            >
-                              <div 
-                                className="h-14 rounded-lg mb-2 shadow-inner"
-                                style={{ backgroundColor: color.value }}
-                              />
-                              <p className="text-sm font-medium">{color.name}</p>
-                              <p className="text-xs font-mono text-muted-foreground">{color.value}</p>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Typography Response */}
-                      {aiResponse.type === "typography" && aiResponse.typography && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {aiResponse.typography.map((font, idx) => (
-                            <motion.div
-                              key={idx}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: idx * 0.05 }}
-                              className="bg-background rounded-xl border p-4 hover:shadow-md transition-shadow"
-                            >
-                              <div className="flex items-center gap-2 mb-2">
-                                <Type className="h-4 w-4 text-primary" />
-                                <p className="text-xs font-medium text-muted-foreground">{font.name}</p>
-                              </div>
-                              <p className="text-xl font-medium mb-1" style={{ fontFamily: font.value }}>
-                                {font.value}
-                              </p>
-                              <p className="text-sm text-muted-foreground" style={{ fontFamily: font.value }}>
-                                Aa Bb Cc Dd Ee 123
-                              </p>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Brand Strategy Response */}
-                      {aiResponse.type === "brand" && aiResponse.brand && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="bg-background rounded-xl border p-4 space-y-3"
+                      {/* Search Input */}
+                      <form 
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (aiQuery.trim()) processQuery(aiQuery);
+                        }}
+                        className="relative"
+                      >
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Ask anything about your brand..."
+                          className="pl-11 pr-24 h-12 text-sm rounded-xl border-muted-foreground/20 bg-background focus-visible:ring-primary/30"
+                          value={aiQuery}
+                          onChange={(e) => setAiQuery(e.target.value)}
+                          disabled={aiLoading}
+                        />
+                        <Button 
+                          type="submit" 
+                          size="sm"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 rounded-lg"
+                          disabled={aiLoading || !aiQuery.trim()}
                         >
-                          <div className="grid grid-cols-2 gap-4">
-                            {aiResponse.brand.archetype && (
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Archetype</p>
-                                <p className="text-sm font-medium">{aiResponse.brand.archetype}</p>
-                              </div>
-                            )}
-                            {aiResponse.brand.tone && (
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Tone</p>
-                                <p className="text-sm">{aiResponse.brand.tone}</p>
-                              </div>
-                            )}
-                          </div>
-                          {aiResponse.brand.values && aiResponse.brand.values.length > 0 && (
-                            <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-2">Values</p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {aiResponse.brand.values.map((value, idx) => (
-                                  <Badge key={idx} variant="secondary" className="text-xs">
-                                    {value}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
+                          {aiLoading ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <>
+                              Ask
+                              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                            </>
                           )}
-                        </motion.div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </CardContent>
-          </Card>
-        </motion.div>
-        )}
+                        </Button>
+                      </form>
 
-        {/* Metrics Grid */}
-        {isSectionVisible("metrics") && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-        >
-          {[
-            { label: "Brand Consistency", value: progressValues.brandConsistency, icon: Target, color: "text-primary" },
-            { label: "Asset Usage", value: progressValues.assetLibrary, icon: FolderOpen, color: "text-primary" },
-            { label: "Campaign Score", value: progressValues.campaignPerformance, icon: TrendingUp, color: "text-primary" },
-            { label: "Team Activity", value: progressValues.teamActivity, icon: Users, color: "text-primary" },
-          ].map((metric, idx) => (
-            <motion.div
-              key={metric.label}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 + idx * 0.1 }}
-            >
-              <Card className="h-full border-0 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="pt-5 pb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <metric.icon className={`h-4 w-4 ${metric.color}`} />
-                    <Badge variant="outline" className="text-[10px] h-5">Live</Badge>
-                  </div>
-                  <div className="text-3xl font-bold mb-1">
-                    {metric.value}<span className="text-base text-muted-foreground">%</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-2">{metric.label}</p>
-                  <Progress value={metric.value} className="h-1" />
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-        )}
+                      {/* AI Response */}
+                      <AnimatePresence>
+                        {aiResponse && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="rounded-xl bg-muted/50 p-4 border border-border/50">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-primary" />
+                                  <span className="text-sm font-medium">Pixify</span>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={clearResponse}
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                              
+                              {aiResponse.message && (
+                                <p className="text-sm text-muted-foreground mb-4">{aiResponse.message}</p>
+                              )}
 
-        {/* Quick Actions */}
-        {isSectionVisible("quick-actions") && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-8"
-        >
-          <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {[
-              { title: "Brand Health", icon: Activity, href: "/brand-health" },
-              { title: "Playbook", icon: FileStack, href: "/playbook" },
-              { title: "Guidelines", icon: FileText, href: "/guideline" },
-              { title: "Asset Library", icon: FolderOpen, href: "/library" },
-              { title: "Generate", icon: Sparkles, href: "/generate" },
-            ].map((action) => (
-              <Link key={action.title} to={action.href}>
-                <Card className="h-full border-0 shadow-sm hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
-                  <CardContent className="flex items-center gap-3 p-4">
-                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <action.icon className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm font-medium">{action.title}</span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </motion.div>
-        )}
+                              {/* Asset Results */}
+                              {aiResponse.type === "assets" && aiResponse.assets && aiResponse.assets.length > 0 && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                  {aiResponse.assets.map((asset) => (
+                                    <motion.div
+                                      key={asset.id}
+                                      initial={{ opacity: 0, scale: 0.95 }}
+                                      animate={{ opacity: 1, scale: 1 }}
+                                      className="group relative bg-background rounded-xl border overflow-hidden"
+                                    >
+                                      <div className="aspect-square bg-muted flex items-center justify-center p-4">
+                                        {asset.mime_type?.startsWith("image/svg") ? (
+                                          <img 
+                                            src={asset.storage_url} 
+                                            alt={asset.name}
+                                            className="w-full h-full object-contain"
+                                          />
+                                        ) : asset.mime_type?.startsWith("image/") ? (
+                                          <img 
+                                            src={asset.storage_url} 
+                                            alt={asset.name}
+                                            className="w-full h-full object-cover rounded"
+                                          />
+                                        ) : (
+                                          <FileText className="h-8 w-8 text-muted-foreground" />
+                                        )}
+                                      </div>
+                                      <div className="p-3 border-t">
+                                        <p className="text-xs font-medium truncate">{asset.name}</p>
+                                        <div className="flex items-center justify-between mt-2">
+                                          <Badge variant="secondary" className="text-[10px]">{asset.type}</Badge>
+                                          <a 
+                                            href={asset.storage_url} 
+                                            download={asset.name}
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                          >
+                                            <Download className="h-4 w-4 text-primary hover:text-primary/80" />
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              )}
 
-        {/* Brand Overview */}
-        {isSectionVisible("brand-overview") && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <h2 className="text-lg font-semibold mb-4">Brand Overview</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Strategy Card */}
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-primary" />
-                  Strategy
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <p className="text-xs text-muted-foreground">Archetype</p>
-                  <p className="text-sm font-medium">Caregiver / Explorer</p>
-                </div>
-                <Separator />
-                <div>
-                  <p className="text-xs text-muted-foreground">Tone</p>
-                  <p className="text-sm font-medium">Warm, Premium, Trustworthy</p>
-                </div>
-                <Separator />
-                <div className="flex flex-wrap gap-1.5">
-                  {["Excellence", "Innovation", "Care"].map((value) => (
-                    <Badge key={value} variant="secondary" className="text-xs">{value}</Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                              {/* Color Results */}
+                              {aiResponse.type === "colors" && aiResponse.colors && aiResponse.colors.length > 0 && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                  {aiResponse.colors.map((color, idx) => (
+                                    <motion.div
+                                      key={idx}
+                                      initial={{ opacity: 0, y: 10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      transition={{ delay: idx * 0.1 }}
+                                      className="bg-background rounded-xl border overflow-hidden"
+                                    >
+                                      <div 
+                                        className="h-16 w-full"
+                                        style={{ backgroundColor: color.value }}
+                                      />
+                                      <div className="p-3">
+                                        <p className="text-xs font-medium">{color.name}</p>
+                                        <p className="text-[10px] font-mono text-muted-foreground">{color.value}</p>
+                                        {color.description && (
+                                          <p className="text-[10px] text-muted-foreground mt-1">{color.description}</p>
+                                        )}
+                                      </div>
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              )}
 
-            {/* Colors Card */}
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Palette className="h-4 w-4 text-primary" />
-                  Colors
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-2">
+                              {/* Typography Results */}
+                              {aiResponse.type === "typography" && aiResponse.typography && aiResponse.typography.length > 0 && (
+                                <div className="space-y-3">
+                                  {aiResponse.typography.map((font, idx) => (
+                                    <motion.div
+                                      key={idx}
+                                      initial={{ opacity: 0, y: 10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      transition={{ delay: idx * 0.1 }}
+                                      className="bg-background rounded-xl border p-4"
+                                    >
+                                      <div className="flex items-center justify-between mb-2">
+                                        <Badge variant="outline" className="text-xs">{font.name}</Badge>
+                                      </div>
+                                      <p className="text-lg font-medium" style={{ fontFamily: font.value }}>
+                                        {font.value}
+                                      </p>
+                                      <p className="text-sm text-muted-foreground" style={{ fontFamily: font.value }}>
+                                        Aa Bb Cc Dd Ee 123
+                                      </p>
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Brand Strategy Response */}
+                              {aiResponse.type === "brand" && aiResponse.brand && (
+                                <motion.div
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  className="bg-background rounded-xl border p-4 space-y-3"
+                                >
+                                  <div className="grid grid-cols-2 gap-4">
+                                    {aiResponse.brand.archetype && (
+                                      <div>
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">Archetype</p>
+                                        <p className="text-sm font-medium">{aiResponse.brand.archetype}</p>
+                                      </div>
+                                    )}
+                                    {aiResponse.brand.tone && (
+                                      <div>
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">Tone</p>
+                                        <p className="text-sm">{aiResponse.brand.tone}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                  {aiResponse.brand.values && aiResponse.brand.values.length > 0 && (
+                                    <div>
+                                      <p className="text-xs font-medium text-muted-foreground mb-2">Values</p>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {aiResponse.brand.values.map((value, valueIdx) => (
+                                          <Badge key={valueIdx} variant="secondary" className="text-xs">
+                                            {value}
+                                          </Badge>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </motion.div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+
+            case "metrics":
+              return (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+                >
                   {[
-                    { color: "#5C0A3A", name: "Maroon" },
-                    { color: "#CBB59C", name: "Sand" },
-                    { color: "#0F1020", name: "Night" },
-                  ].map((c) => (
-                    <div key={c.name} className="flex-1 text-center">
-                      <div 
-                        className="h-12 rounded-lg shadow-inner mb-2"
-                        style={{ backgroundColor: c.color }}
-                      />
-                      <p className="text-xs font-mono text-muted-foreground">{c.name}</p>
-                    </div>
+                    { label: "Brand Consistency", value: progressValues.brandConsistency, icon: Target, color: "text-primary" },
+                    { label: "Asset Usage", value: progressValues.assetLibrary, icon: FolderOpen, color: "text-primary" },
+                    { label: "Campaign Score", value: progressValues.campaignPerformance, icon: TrendingUp, color: "text-primary" },
+                    { label: "Team Activity", value: progressValues.teamActivity, icon: Users, color: "text-primary" },
+                  ].map((metric, metricIdx) => (
+                    <motion.div
+                      key={metric.label}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2 + metricIdx * 0.1 }}
+                    >
+                      <Card className="h-full border-0 shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="pt-5 pb-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                            <Badge variant="outline" className="text-[10px] h-5">Live</Badge>
+                          </div>
+                          <div className="text-3xl font-bold mb-1">
+                            {metric.value}<span className="text-base text-muted-foreground">%</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-2">{metric.label}</p>
+                          <Progress value={metric.value} className="h-1" />
+                        </CardContent>
+                      </Card>
+                    </motion.div>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
+                </motion.div>
+              );
 
-            {/* Activity Card */}
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {[
-                  { text: "Logo uploaded", time: "2h ago", active: true },
-                  { text: "Guideline updated", time: "1d ago", active: false },
-                  { text: "Playbook generated", time: "3d ago", active: false },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div className={`h-2 w-2 rounded-full ${item.active ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
-                    <div className="flex-1">
-                      <p className="text-sm">{item.text}</p>
-                      <p className="text-xs text-muted-foreground">{item.time}</p>
-                    </div>
+            case "quick-actions":
+              return (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  className="mb-8"
+                >
+                  <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    {[
+                      { title: "Brand Health", icon: Activity, href: "/brand-health" },
+                      { title: "Playbook", icon: FileStack, href: "/playbook" },
+                      { title: "Guidelines", icon: FileText, href: "/guideline" },
+                      { title: "Asset Library", icon: FolderOpen, href: "/library" },
+                      { title: "Generate", icon: Sparkles, href: "/generate" },
+                    ].map((action) => (
+                      <Link key={action.title} to={action.href}>
+                        <Card className="h-full border-0 shadow-sm hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
+                          <CardContent className="flex items-center gap-3 p-4">
+                            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                              <action.icon className="h-4 w-4 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium">{action.title}</span>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    ))}
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </motion.div>
-        )}
+                </motion.div>
+              );
+
+            case "brand-overview":
+              return (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.1 }}
+                >
+                  <h2 className="text-lg font-semibold mb-4">Brand Overview</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Strategy Card */}
+                    <Card className="border-0 shadow-sm">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-medium flex items-center gap-2">
+                          <Heart className="h-4 w-4 text-primary" />
+                          Strategy
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div>
+                          <p className="text-xs text-muted-foreground">Archetype</p>
+                          <p className="text-sm font-medium">Caregiver / Explorer</p>
+                        </div>
+                        <Separator />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Tone</p>
+                          <p className="text-sm font-medium">Warm, Premium, Trustworthy</p>
+                        </div>
+                        <Separator />
+                        <div className="flex flex-wrap gap-1.5">
+                          {["Excellence", "Innovation", "Care"].map((value) => (
+                            <Badge key={value} variant="secondary" className="text-xs">{value}</Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Colors Card */}
+                    <Card className="border-0 shadow-sm">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-medium flex items-center gap-2">
+                          <Palette className="h-4 w-4 text-primary" />
+                          Colors
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex gap-2">
+                          {[
+                            { color: "#5C0A3A", name: "Maroon" },
+                            { color: "#CBB59C", name: "Sand" },
+                            { color: "#0F1020", name: "Night" },
+                          ].map((c) => (
+                            <div key={c.name} className="flex-1 text-center">
+                              <div 
+                                className="h-12 rounded-lg shadow-inner mb-2"
+                                style={{ backgroundColor: c.color }}
+                              />
+                              <p className="text-xs font-mono text-muted-foreground">{c.name}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Activity Card */}
+                    <Card className="border-0 shadow-sm">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-medium flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-primary" />
+                          Recent Activity
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {[
+                          { text: "Logo uploaded", time: "2h ago", active: true },
+                          { text: "Guideline updated", time: "1d ago", active: false },
+                          { text: "Playbook generated", time: "3d ago", active: false },
+                        ].map((item, itemIdx) => (
+                          <div key={itemIdx} className="flex items-center gap-3">
+                            <div className={`h-2 w-2 rounded-full ${item.active ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
+                            <div className="flex-1">
+                              <p className="text-sm">{item.text}</p>
+                              <p className="text-xs text-muted-foreground">{item.time}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </motion.div>
+              );
+
+            default:
+              return null;
+          }
+        })}
 
         {/* Customize View Floating Button */}
         <CustomizeView sections={sections} defaultSections={defaultSections} onSectionsChange={setSections} />
