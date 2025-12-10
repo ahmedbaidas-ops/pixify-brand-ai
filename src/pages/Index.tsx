@@ -74,7 +74,7 @@ const Index = () => {
     <div className="min-h-screen bg-white text-black overflow-x-hidden">
       <CustomCursor />
       {/* Noura-style Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-colors duration-300 ${isOverDark ? 'text-white' : 'text-black'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 ${isOverDark ? 'text-white bg-black/80 backdrop-blur-md' : 'text-black bg-white/80 backdrop-blur-md'}`}>
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
@@ -287,7 +287,7 @@ const Index = () => {
       </section>
 
       {/* Horizontal Scrolling Marquee with Floating Chips */}
-      <section className="py-12 overflow-hidden border-y border-black/10">
+      <section className="py-12 overflow-hidden border-y border-black/10 relative z-10">
         <div className="flex animate-marquee">
           {[...marketingWords, ...marketingWords, ...marketingWords].map((word, idx) => (
             <motion.div 
