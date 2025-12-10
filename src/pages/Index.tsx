@@ -3,7 +3,7 @@ import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X } from "lucide
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -15,9 +15,30 @@ const Index = () => {
     offset: ["start start", "end start"]
   });
   
-  const imageY1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const imageY2 = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const imageY3 = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  // Smooth spring physics for natural movement
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  
+  // Different parallax speeds and rotations for each image
+  const imageY1 = useTransform(smoothProgress, [0, 1], [0, -120]);
+  const imageY2 = useTransform(smoothProgress, [0, 1], [0, -180]);
+  const imageY3 = useTransform(smoothProgress, [0, 1], [0, -80]);
+  const imageY4 = useTransform(smoothProgress, [0, 1], [0, -150]);
+  
+  const imageRotate1 = useTransform(smoothProgress, [0, 1], [-8, 15]);
+  const imageRotate2 = useTransform(smoothProgress, [0, 1], [6, -12]);
+  const imageRotate3 = useTransform(smoothProgress, [0, 1], [-4, 10]);
+  const imageRotate4 = useTransform(smoothProgress, [0, 1], [10, -8]);
+  
+  const imageScale1 = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.1, 0.9]);
+  const imageScale2 = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.15, 0.85]);
+  const imageScale3 = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.05, 0.95]);
+  const imageScale4 = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.12, 0.88]);
+  
+  const imageOpacity = useTransform(smoothProgress, [0, 0.8, 1], [1, 0.8, 0]);
+  
+  // Text parallax for depth
+  const textY = useTransform(smoothProgress, [0, 1], [0, 100]);
+  const textOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,9 +137,10 @@ const Index = () => {
       </header>
 
       {/* Hero Section - Cattleya Style */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-12">
+      <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-12 overflow-hidden">
         {/* Subtitle */}
         <motion.p 
+          style={{ y: textY, opacity: textOpacity }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -130,6 +152,7 @@ const Index = () => {
         {/* Large Hero Text with Overlapping Images */}
         <div className="relative max-w-[1800px] mx-auto w-full">
           <motion.h1 
+            style={{ y: textY }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -138,8 +161,13 @@ const Index = () => {
             <span className="relative inline-block">
               P
               <motion.div 
-                style={{ y: imageY1 }}
-                className="absolute -top-[20%] -left-[10%] w-[80px] md:w-[120px] lg:w-[160px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[-8deg] z-10"
+                style={{ 
+                  y: imageY1, 
+                  rotate: imageRotate1, 
+                  scale: imageScale1,
+                  opacity: imageOpacity 
+                }}
+                className="absolute -top-[20%] -left-[10%] w-[80px] md:w-[120px] lg:w-[160px] aspect-square rounded-2xl overflow-hidden shadow-2xl z-10"
               >
                 <img src={marqueeImages[0]} alt="" className="w-full h-full object-cover" />
               </motion.div>
@@ -148,8 +176,13 @@ const Index = () => {
             <span className="relative inline-block">
               X
               <motion.div 
-                style={{ y: imageY2 }}
-                className="absolute top-[10%] -right-[30%] w-[70px] md:w-[100px] lg:w-[140px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[6deg] z-10"
+                style={{ 
+                  y: imageY2, 
+                  rotate: imageRotate2, 
+                  scale: imageScale2,
+                  opacity: imageOpacity 
+                }}
+                className="absolute top-[10%] -right-[30%] w-[70px] md:w-[100px] lg:w-[140px] aspect-square rounded-2xl overflow-hidden shadow-2xl z-10"
               >
                 <img src={marqueeImages[1]} alt="" className="w-full h-full object-cover" />
               </motion.div>
@@ -158,8 +191,13 @@ const Index = () => {
             <span className="relative inline-block">
               F
               <motion.div 
-                style={{ y: imageY3 }}
-                className="absolute -bottom-[40%] left-[20%] w-[60px] md:w-[90px] lg:w-[120px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[-4deg] z-10"
+                style={{ 
+                  y: imageY3, 
+                  rotate: imageRotate3, 
+                  scale: imageScale3,
+                  opacity: imageOpacity 
+                }}
+                className="absolute -bottom-[40%] left-[20%] w-[60px] md:w-[90px] lg:w-[120px] aspect-square rounded-2xl overflow-hidden shadow-2xl z-10"
               >
                 <img src={marqueeImages[2]} alt="" className="w-full h-full object-cover" />
               </motion.div>
@@ -167,8 +205,13 @@ const Index = () => {
             <span className="relative inline-block">
               Y
               <motion.div 
-                style={{ y: imageY1 }}
-                className="absolute top-[30%] -right-[40%] w-[65px] md:w-[95px] lg:w-[130px] aspect-square rounded-2xl overflow-hidden shadow-2xl rotate-[10deg] z-10"
+                style={{ 
+                  y: imageY4, 
+                  rotate: imageRotate4, 
+                  scale: imageScale4,
+                  opacity: imageOpacity 
+                }}
+                className="absolute top-[30%] -right-[40%] w-[65px] md:w-[95px] lg:w-[130px] aspect-square rounded-2xl overflow-hidden shadow-2xl z-10"
               >
                 <img src={marqueeImages[3]} alt="" className="w-full h-full object-cover" />
               </motion.div>
@@ -178,6 +221,7 @@ const Index = () => {
 
         {/* Hero Description */}
         <motion.div 
+          style={{ y: textY, opacity: textOpacity }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -191,6 +235,7 @@ const Index = () => {
 
         {/* CTA Buttons */}
         <motion.div 
+          style={{ y: textY, opacity: textOpacity }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
