@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CustomCursor } from "@/components/CustomCursor";
+import { GrainOverlay } from "@/components/GrainOverlay";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -141,6 +142,9 @@ const Index = () => {
 
       {/* Hero Section - Cattleya Style */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-12 overflow-hidden">
+        {/* Grain texture overlay */}
+        <GrainOverlay />
+        
         {/* Subtitle */}
         <motion.p 
           style={{ y: textY, opacity: textOpacity }}
