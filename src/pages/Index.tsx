@@ -7,6 +7,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { AnimatedLetter } from "@/components/AnimatedText";
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -160,14 +161,14 @@ const Index = () => {
         <div className="relative max-w-[1800px] mx-auto w-full">
           <motion.h1 
             style={{ y: textY }}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
             className="text-[12vw] md:text-[10vw] lg:text-[9vw] font-bold tracking-tighter leading-[0.85] text-center"
           >
-            <span className="relative inline-block">
+            <AnimatedLetter delay={0.2} className="relative">
               P
               <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
                 style={{ 
                   y: imageY1, 
                   rotate: imageRotate1, 
@@ -178,11 +179,14 @@ const Index = () => {
               >
                 <img src={marqueeImages[0]} alt="" className="w-full h-full object-cover" />
               </motion.div>
-            </span>
-            <span>I</span>
-            <span className="relative inline-block">
+            </AnimatedLetter>
+            <AnimatedLetter delay={0.28}>I</AnimatedLetter>
+            <AnimatedLetter delay={0.36} className="relative">
               X
               <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
                 style={{ 
                   y: imageY2, 
                   rotate: imageRotate2, 
@@ -193,11 +197,14 @@ const Index = () => {
               >
                 <img src={marqueeImages[1]} alt="" className="w-full h-full object-cover" />
               </motion.div>
-            </span>
-            <span>I</span>
-            <span className="relative inline-block">
+            </AnimatedLetter>
+            <AnimatedLetter delay={0.44}>I</AnimatedLetter>
+            <AnimatedLetter delay={0.52} className="relative">
               F
               <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
                 style={{ 
                   y: imageY3, 
                   rotate: imageRotate3, 
@@ -208,10 +215,13 @@ const Index = () => {
               >
                 <img src={marqueeImages[2]} alt="" className="w-full h-full object-cover" />
               </motion.div>
-            </span>
-            <span className="relative inline-block">
+            </AnimatedLetter>
+            <AnimatedLetter delay={0.6} className="relative">
               Y
               <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 1.1 }}
                 style={{ 
                   y: imageY4, 
                   rotate: imageRotate4, 
@@ -222,7 +232,7 @@ const Index = () => {
               >
                 <img src={marqueeImages[3]} alt="" className="w-full h-full object-cover" />
               </motion.div>
-            </span>
+            </AnimatedLetter>
           </motion.h1>
         </div>
 
