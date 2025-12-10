@@ -7,7 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import { 
   FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, 
   Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart, Search,
-  ChevronRight, TrendingUp, Clock
+  ChevronRight, TrendingUp, Clock, Wand2, ShieldCheck, Lightbulb, MessageSquare,
+  HelpCircle
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,6 +38,40 @@ const quickChips = [
   { label: "Typography", query: "What fonts do we use?", icon: Type },
   { label: "Find Logo", query: "Pull the logo PNG", icon: Image },
   { label: "Brand Strategy", query: "What's our brand archetype?", icon: Heart },
+];
+
+// AI capability categories for user guidance
+const aiCapabilities = [
+  {
+    category: "Understand",
+    icon: MessageSquare,
+    color: "text-blue-500 bg-blue-500/10",
+    examples: [
+      "Explain our brand tone of voice",
+      "What's our brand archetype?",
+      "When should I use Qatar Maroon?",
+    ]
+  },
+  {
+    category: "Create",
+    icon: Wand2,
+    color: "text-purple-500 bg-purple-500/10",
+    examples: [
+      "Rewrite this in our brand voice: [your text]",
+      "Suggest headlines for a Ramadan campaign",
+      "Convert this to a social caption",
+    ]
+  },
+  {
+    category: "Check",
+    icon: ShieldCheck,
+    color: "text-green-500 bg-green-500/10",
+    examples: [
+      "Is this headline on-brand?",
+      "Check compliance for this copy",
+      "Does this match our guidelines?",
+    ]
+  }
 ];
 
 const Dashboard = () => {
@@ -209,7 +244,38 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-5">
+                      {/* AI Capabilities Guide */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {aiCapabilities.map((cap) => (
+                          <div 
+                            key={cap.category}
+                            className="rounded-xl border border-border/50 bg-background/50 p-3 space-y-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <div className={`h-7 w-7 rounded-lg flex items-center justify-center ${cap.color}`}>
+                                <cap.icon className="h-3.5 w-3.5" />
+                              </div>
+                              <span className="text-sm font-medium">{cap.category}</span>
+                            </div>
+                            <div className="space-y-1">
+                              {cap.examples.map((example, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleChipClick(example)}
+                                  disabled={aiLoading}
+                                  className="w-full text-left text-xs text-muted-foreground hover:text-foreground 
+                                           hover:bg-muted/50 rounded-md px-2 py-1.5 transition-colors truncate
+                                           disabled:opacity-50"
+                                >
+                                  "{example}"
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
                       {/* Quick Action Chips */}
                       <div className="flex flex-wrap gap-2">
                         {quickChips.map((chip) => (
