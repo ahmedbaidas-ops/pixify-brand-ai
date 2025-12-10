@@ -331,15 +331,23 @@ const Index = () => {
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="group relative p-8 rounded-3xl bg-background border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-xl cursor-pointer"
+                initial={{ opacity: 0, y: 60, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: idx * 0.15,
+                  ease: [0.25, 0.46, 0.45, 0.94]
+                }}
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className="group relative p-8 rounded-3xl bg-background border border-border hover:border-primary/50 transition-colors duration-500 hover:shadow-xl cursor-pointer"
               >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <motion.div 
+                  className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
+                  whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 0.5 } }}
+                >
                   <feature.icon className="w-6 h-6" />
-                </div>
+                </motion.div>
                 <h3 className="text-xl font-semibold mb-3 tracking-tight">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
               </motion.div>
