@@ -173,10 +173,10 @@ const Index = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-3xl text-center"
+            className="max-w-3xl text-center flex flex-col items-center"
           >
             <motion.h1 
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-black mb-6 tracking-tight"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-black mb-6 tracking-tight text-center w-full"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -191,6 +191,7 @@ const Index = () => {
                     delay: 0.3 + index * 0.03,
                     ease: [0.25, 0.46, 0.45, 0.94]
                   }}
+                  className="inline-block"
                 >
                   {char === " " ? "\u00A0" : char}
                 </motion.span>
