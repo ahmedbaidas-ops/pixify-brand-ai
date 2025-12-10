@@ -28,18 +28,19 @@ const FloatingAIAssistant = () => {
   const { isLoading, ask } = useBrandBrain();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Don't show on dashboard (has its own AI assistant)
-  if (location.pathname === "/dashboard") {
-    return null;
-  }
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // useEffect must be called before any conditional returns
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Don't show on dashboard (has its own AI assistant)
+  if (location.pathname === "/dashboard") {
+    return null;
+  }
 
   const handleSubmit = async () => {
     if (!query.trim() || isLoading) return;
