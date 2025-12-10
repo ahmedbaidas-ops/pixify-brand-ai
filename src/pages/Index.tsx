@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
-import { FloatingHero } from "@/components/FloatingHero";
 import pixifyLogo from "@/assets/pixify-logo-hero.png";
 
 const Index = () => {
@@ -148,53 +147,52 @@ const Index = () => {
         </motion.div>
       </header>
 
-      {/* Hero Section - Cattleya Style */}
-      <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-12 overflow-hidden">
+      {/* Hero Section - Full Video */}
+      <section className="relative h-screen w-full overflow-hidden">
+        {/* Full-screen Video Background */}
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/logo_animation.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Optional overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/20" />
+        
         {/* Grain texture overlay */}
         <GrainOverlay />
         
-        {/* Subtitle */}
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        className="text-center text-sm md:text-base tracking-[0.3em] uppercase text-black/60 mb-4"
-        >
-          AI-Powered Brand Management
-        </motion.p>
-
-        {/* Floating Hero with Logo */}
-        <FloatingHero />
-
-        {/* Hero Description */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 max-w-2xl mx-auto text-center"
-        >
-          <p className="text-lg md:text-xl text-black/60 leading-relaxed">
-            Manage, organize, and distribute your creative assets with intelligence. 
-            Pixify transforms how teams work with digital assets.
-          </p>
-        </motion.div>
-
-        {/* CTA Buttons */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-12 flex items-center justify-center gap-4"
-        >
-          <MagneticButton strength={0.35}>
-            <Link to="/auth">
-              <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-black text-white hover:bg-black/90">
-                Get started
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </MagneticButton>
-        </motion.div>
+        {/* Hero Content Overlay */}
+        <div className="absolute inset-0 flex flex-col justify-end pb-20 px-6 md:px-12">
+          {/* Hero Description */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="max-w-2xl"
+          >
+            <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-8">
+              Manage, organize, and distribute your creative assets with intelligence. 
+              Pixify transforms how teams work with digital assets.
+            </p>
+            
+            {/* CTA Buttons */}
+            <div className="flex items-center gap-4">
+              <MagneticButton strength={0.35}>
+                <Link to="/auth">
+                  <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-white text-black hover:bg-white/90">
+                    Get started
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </MagneticButton>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Horizontal Scrolling Marquee with Floating Chips */}
