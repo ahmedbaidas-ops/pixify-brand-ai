@@ -1,6 +1,19 @@
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+
+const themes = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "modern", label: "Modern", icon: Sparkles },
+] as const;
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -18,22 +31,45 @@ export function ThemeToggle() {
     );
   }
 
+  const currentTheme = themes.find(t => t.value === theme) || themes[0];
+  const CurrentIcon = currentTheme.icon;
+
   return (
-    <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border hover:bg-muted transition-all duration-200 group"
-    >
-      <div className="relative w-4 h-4">
-        <Sun className={`absolute inset-0 w-4 h-4 text-foreground transition-all duration-200 ${
-          theme === "dark" ? "rotate-90 scale-0" : "rotate-0 scale-100"
-        }`} />
-        <Moon className={`absolute inset-0 w-4 h-4 text-foreground transition-all duration-200 ${
-          theme === "dark" ? "rotate-0 scale-100" : "-rotate-90 scale-0"
-        }`} />
-      </div>
-      <span className="text-sm font-medium">
-        {theme === "dark" ? "Dark" : "Light"}
-      </span>
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted/50 border border-border 
+                     hover:bg-muted transition-all duration-200 group w-full justify-between"
+        >
+          <div className="flex items-center gap-2">
+            <CurrentIcon className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium">Theme</span>
+          </div>
+          <span className="text-xs text-muted-foreground bg-background/50 px-2 py-0.5 rounded-md">
+            {currentTheme.label}
+          </span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40">
+        {themes.map((t) => (
+          <DropdownMenuItem
+            key={t.value}
+            onClick={() => setTheme(t.value)}
+            className={cn(
+              "flex items-center gap-2 cursor-pointer",
+              theme === t.value && "bg-primary/10 text-primary"
+            )}
+          >
+            <t.icon className="w-4 h-4" />
+            <span>{t.label}</span>
+            {t.value === "modern" && (
+              <span className="ml-auto text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">
+                New
+              </span>
+            )}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
