@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, TrendingUp, Users, Target, Zap } from "lucide-react";
+import { FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, Users, Target, Zap, Loader2, Image, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAIAssistant } from "@/hooks/useAIAssistant";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const [progressValues, setProgressValues] = useState({
@@ -17,6 +19,8 @@ const Dashboard = () => {
     teamActivity: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [aiQuery, setAiQuery] = useState("");
+  const { isLoading: aiLoading, response: aiResponse, processQuery, clearResponse } = useAIAssistant();
 
   useEffect(() => {
     // Fetch brand metrics from database
@@ -138,16 +142,107 @@ const Dashboard = () => {
                 Get instant answers about brand guidelines, find assets, generate copy
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex gap-2">
+            <CardContent className="space-y-4">
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (aiQuery.trim()) {
+                    processQuery(aiQuery);
+                  }
+                }}
+                className="flex gap-2"
+              >
                 <Input
-                  placeholder="e.g., 'What's our primary color?' or 'Find logo variations'"
+                  placeholder="e.g., 'Pull the SVG and PNG for Qatar Airways' or 'Find logo'"
                   className="flex-1 h-12 text-base"
+                  value={aiQuery}
+                  onChange={(e) => setAiQuery(e.target.value)}
+                  disabled={aiLoading}
                 />
-                <Button size="lg" className="bg-gradient-primary hover:opacity-90">
-                  Ask <ArrowRight className="ml-2 h-5 w-5" />
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="bg-gradient-primary hover:opacity-90"
+                  disabled={aiLoading || !aiQuery.trim()}
+                >
+                  {aiLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <>Ask <ArrowRight className="ml-2 h-5 w-5" /></>
+                  )}
                 </Button>
-              </div>
+              </form>
+
+              {/* AI Response */}
+              <AnimatePresence>
+                {aiResponse && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="bg-muted/50 rounded-lg p-4 border">
+                      <div className="flex items-start justify-between mb-3">
+                        <p className="text-sm text-foreground font-medium">{aiResponse.message}</p>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6 -mt-1 -mr-1"
+                          onClick={clearResponse}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      {aiResponse.type === "assets" && aiResponse.assets && aiResponse.assets.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {aiResponse.assets.map((asset) => (
+                            <motion.div
+                              key={asset.id}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="bg-background rounded-lg border p-3 flex flex-col"
+                            >
+                              <div className="aspect-video bg-muted rounded-md mb-2 flex items-center justify-center overflow-hidden">
+                                <img 
+                                  src={asset.storage_url} 
+                                  alt={asset.name}
+                                  className="max-h-full max-w-full object-contain"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                                  }}
+                                />
+                                <Image className="h-8 w-8 text-muted-foreground hidden" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium truncate">{asset.name}</p>
+                                <p className="text-xs text-muted-foreground">{asset.mime_type || asset.type}</p>
+                              </div>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="mt-2 w-full"
+                                onClick={() => {
+                                  const link = document.createElement('a');
+                                  link.href = asset.storage_url;
+                                  link.download = asset.name;
+                                  link.click();
+                                  toast.success(`Downloading ${asset.name}`);
+                                }}
+                              >
+                                <Download className="h-3 w-3 mr-1" />
+                                Download
+                              </Button>
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </CardContent>
           </Card>
 
