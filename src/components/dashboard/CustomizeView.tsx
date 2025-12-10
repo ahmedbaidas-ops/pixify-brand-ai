@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { 
   Popover, 
   PopoverContent, 
-  PopoverTrigger 
+  PopoverTrigger,
 } from "@/components/ui/popover";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Settings2, GripVertical, Eye, EyeOff } from "lucide-react";
 import {
   DndContext,
@@ -171,13 +172,15 @@ export const CustomizeView = ({ sections, onSectionsChange }: CustomizeViewProps
           >
             Show All Sections
           </Button>
-          <Button 
-            size="sm" 
-            className="w-full text-xs"
-            onClick={() => setIsOpen(false)}
-          >
-            Confirm
-          </Button>
+          <PopoverPrimitive.Close asChild>
+            <Button 
+              size="sm" 
+              className="w-full text-xs"
+              type="button"
+            >
+              Confirm
+            </Button>
+          </PopoverPrimitive.Close>
         </div>
       </PopoverContent>
     </Popover>
