@@ -173,15 +173,47 @@ const Index = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-2xl text-center"
+            className="max-w-3xl text-center"
           >
-            <p className="text-lg md:text-xl text-black leading-relaxed mb-8">
+            <motion.h1 
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-black mb-6 tracking-tight"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {"Unlock Your Brand Potential".split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.4, 
+                    delay: 0.3 + index * 0.03,
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </motion.h1>
+            
+            <motion.p 
+              className="text-lg md:text-xl text-black/70 leading-relaxed mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+            >
               Manage, organize, and distribute your creative assets with intelligence. 
               Pixify transforms how teams work with digital assets.
-            </p>
+            </motion.p>
             
             {/* CTA Buttons */}
-            <div className="flex items-center justify-center gap-4">
+            <motion.div 
+              className="flex items-center justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+            >
               <MagneticButton strength={0.35}>
                 <Link to="/auth">
                   <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-black text-white hover:bg-black/90">
@@ -190,7 +222,7 @@ const Index = () => {
                   </Button>
                 </Link>
               </MagneticButton>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
