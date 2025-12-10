@@ -22,9 +22,11 @@ import {
   QuickActionsSkeleton, 
   BrandOverviewSkeleton 
 } from "@/components/dashboard/DashboardSkeleton";
+import AIShowcaseSection from "@/components/dashboard/AIShowcaseSection";
 
 const defaultSections: DashboardSection[] = [
   { id: "ai-assistant", label: "AI Assistant", visible: true },
+  { id: "ai-showcase", label: "AI Showcase", visible: true },
   { id: "metrics", label: "Metrics", visible: true },
   { id: "quick-actions", label: "Quick Actions", visible: true },
   { id: "brand-overview", label: "Brand Overview", visible: true },
@@ -425,6 +427,24 @@ const Dashboard = () => {
                       </AnimatePresence>
                     </CardContent>
                   </Card>
+                </motion.div>
+              );
+
+            case "ai-showcase":
+              return (
+                <motion.div
+                  key={section.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ 
+                    layout: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
+                  className="mb-12"
+                >
+                  <AIShowcaseSection />
                 </motion.div>
               );
 
