@@ -23,6 +23,17 @@ export function ThemeToggle() {
     setMounted(true);
   }, []);
 
+  const handleThemeChange = (newTheme: string) => {
+    // Add transition class before changing theme
+    document.documentElement.classList.add('theme-transition');
+    setTheme(newTheme);
+    
+    // Remove transition class after animation completes
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, 400);
+  };
+
   if (!mounted) {
     return (
       <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-muted border border-border">
@@ -54,7 +65,7 @@ export function ThemeToggle() {
         {themes.map((t) => (
           <DropdownMenuItem
             key={t.value}
-            onClick={() => setTheme(t.value)}
+            onClick={() => handleThemeChange(t.value)}
             className={cn(
               "flex items-center gap-2 cursor-pointer",
               theme === t.value && "bg-primary/10 text-primary"
