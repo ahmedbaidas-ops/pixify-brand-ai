@@ -79,7 +79,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-black overflow-x-hidden">
+    <div className="min-h-screen bg-white text-black overflow-x-hidden font-stack">
       <CustomCursor />
       {/* Noura-style Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-300 ${
@@ -263,7 +263,7 @@ const Index = () => {
             className="max-w-4xl text-center flex flex-col items-center"
           >
             <motion.h1 
-              className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-6 tracking-tight text-center whitespace-nowrap glitch-text"
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-6 tracking-tight text-center whitespace-nowrap glitch-text font-stack"
               data-text="Unlock Your Brand Potential"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -338,7 +338,7 @@ const Index = () => {
                 transition: { type: "spring", stiffness: 400, damping: 15 }
               }}
             >
-              <span className="inline-block px-6 py-3 md:px-8 md:py-4 rounded-full bg-black text-white font-medium text-sm md:text-base border border-black hover:bg-black/80 transition-colors duration-300 cursor-default whitespace-nowrap shadow-sm hover:shadow-lg">
+              <span className="inline-block px-6 py-3 md:px-8 md:py-4 rounded-full bg-black text-white font-medium text-sm md:text-base border border-black hover:bg-black/80 transition-colors duration-300 cursor-default whitespace-nowrap shadow-sm hover:shadow-lg font-stack">
                 {word}
               </span>
             </motion.div>
@@ -357,7 +357,7 @@ const Index = () => {
               transition={{ duration: 0.8 }}
             >
               <p className="text-sm tracking-[0.3em] uppercase text-black/60 mb-6">About us</p>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8 font-stack">
                 Where ideas meet
                 <br />
                 <span className="text-black">impact</span>
@@ -400,7 +400,7 @@ const Index = () => {
               Services
             </motion.p>
             <motion.h2 
-              className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl leading-[1.1]"
+              className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight max-w-4xl leading-[1.1] font-stack"
               initial={{ y: 100, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
@@ -478,7 +478,7 @@ const Index = () => {
                   </motion.div>
                   
                   {/* Title with underline animation */}
-                  <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight relative inline-block">
+                  <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight relative inline-block font-stack">
                     {feature.title}
                     <motion.span 
                       className="absolute -bottom-2 left-0 h-[2px] bg-white/50"
@@ -546,7 +546,7 @@ const Index = () => {
             className="text-center mb-20"
           >
             <p className="text-sm tracking-[0.3em] uppercase text-black/60 mb-6">How it works</p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight font-stack">
               Simple, powerful workflow
             </h2>
           </motion.div>
@@ -675,7 +675,7 @@ const Index = () => {
                 </div>
 
                 {/* Content */}
-                <h3 className="text-2xl font-bold mb-4 tracking-tight text-center">{item.title}</h3>
+                <h3 className="text-2xl font-bold mb-4 tracking-tight text-center font-stack">{item.title}</h3>
                 <p className="text-black/60 leading-relaxed text-center">{item.description}</p>
 
                 {/* Hover accent line */}
@@ -746,7 +746,7 @@ const Index = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 font-stack"
             >
               Transparent pricing
             </motion.h2>
@@ -1201,7 +1201,7 @@ const Index = () => {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-2xl md:text-3xl font-bold text-center mb-4"
+                    className="text-2xl md:text-3xl font-bold text-center mb-4 font-stack"
                   >
                     Trusted by leading brands
                   </motion.h3>
@@ -1622,7 +1622,7 @@ const Index = () => {
             className="grid lg:grid-cols-2 gap-16 items-center"
           >
             <div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8 font-stack">
                 Ready to transform your creative workflow?
               </h2>
               <p className="text-lg md:text-xl opacity-70 mb-12">
@@ -1678,7 +1678,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
               <img src={pixifyLogo} alt="Pixify Logo" className="h-8 w-auto" />
-              <span className="font-bold tracking-tight">PIXIFY</span>
+              <span className="font-bold tracking-tight font-stack">PIXIFY</span>
             </div>
             
             <nav className="flex items-center gap-8">
