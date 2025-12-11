@@ -1188,6 +1188,58 @@ const Index = () => {
                       </motion.div>
                     ))}
                   </motion.div>
+
+                  {/* Customer Logos Marquee */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="mt-16 overflow-hidden"
+                  >
+                    <p className="text-center text-xs text-black/40 uppercase tracking-widest mb-8">
+                      Trusted by innovative teams worldwide
+                    </p>
+                    
+                    <div className="relative">
+                      {/* Gradient masks */}
+                      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#f8f8f6] to-transparent z-10 pointer-events-none" />
+                      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#f8f8f6] to-transparent z-10 pointer-events-none" />
+                      
+                      {/* Scrolling container */}
+                      <div className="flex animate-marquee">
+                        {[...Array(2)].map((_, setIdx) => (
+                          <div key={setIdx} className="flex items-center gap-16 px-8">
+                            {[
+                              { name: "TechFlow", letters: "TF" },
+                              { name: "Elevate", letters: "EL" },
+                              { name: "Startify", letters: "ST" },
+                              { name: "Nexus", letters: "NX" },
+                              { name: "Quantum", letters: "QT" },
+                              { name: "Horizon", letters: "HZ" },
+                              { name: "Pinnacle", letters: "PN" },
+                              { name: "Catalyst", letters: "CT" },
+                              { name: "Vertex", letters: "VX" },
+                              { name: "Synergy", letters: "SY" },
+                            ].map((company, idx) => (
+                              <motion.div
+                                key={`${setIdx}-${idx}`}
+                                whileHover={{ scale: 1.1 }}
+                                className="flex items-center gap-3 shrink-0 group cursor-pointer"
+                              >
+                                <div className="w-10 h-10 rounded-xl bg-black/5 group-hover:bg-black group-hover:text-white flex items-center justify-center font-bold text-sm text-black/40 transition-all duration-300">
+                                  {company.letters}
+                                </div>
+                                <span className="text-lg font-semibold text-black/30 group-hover:text-black transition-colors duration-300">
+                                  {company.name}
+                                </span>
+                              </motion.div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             ) : (
