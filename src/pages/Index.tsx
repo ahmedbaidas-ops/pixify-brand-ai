@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -140,6 +140,19 @@ const Index = () => {
               <Briefcase className="w-4 h-4" />
               Works
             </motion.a>
+            <motion.a 
+              href="#pricing" 
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-full ${
+                isOverDark 
+                  ? 'text-white/70 hover:text-white hover:bg-white/10' 
+                  : 'text-black/70 hover:text-black hover:bg-black/5'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <DollarSign className="w-4 h-4" />
+              Pricing
+            </motion.a>
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
@@ -204,6 +217,9 @@ const Index = () => {
             </a>
             <a href="#cta" className="text-lg font-medium text-black/70 hover:text-black transition-colors" onClick={() => setMenuOpen(false)}>
               Works
+            </a>
+            <a href="#pricing" className="text-lg font-medium text-black/70 hover:text-black transition-colors" onClick={() => setMenuOpen(false)}>
+              Pricing
             </a>
             <Link to="/auth" className="mt-2">
               <Button className="w-full bg-black text-white hover:bg-black/90 rounded-full">
@@ -552,6 +568,140 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="py-32 px-6 md:px-12 bg-[#f8f8f6]">
+        <div className="max-w-[1800px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <span className="inline-block px-4 py-2 rounded-full bg-black/5 text-sm font-medium text-black/60 mb-6">
+              Pricing
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+              Transparent pricing
+            </h2>
+            <p className="text-lg md:text-xl text-black/60 max-w-xl">
+              No hidden fees, no transaction costs, no surprises.
+              <br />
+              That means more value for your investment.
+            </p>
+          </motion.div>
+
+          {/* Pricing Stats Row */}
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-black/10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div>
+              <p className="text-sm text-black/50 mb-2">Starting at</p>
+              <p className="text-3xl md:text-4xl font-bold">$29<span className="text-lg font-normal text-black/60">/mo</span></p>
+            </div>
+            <div>
+              <p className="text-sm text-black/50 mb-2">Storage included</p>
+              <p className="text-3xl md:text-4xl font-bold">50GB</p>
+            </div>
+            <div>
+              <p className="text-sm text-black/50 mb-2">Team members</p>
+              <p className="text-3xl md:text-4xl font-bold">Unlimited</p>
+            </div>
+            <div>
+              <p className="text-sm text-black/50 mb-2">Platform fee</p>
+              <p className="text-3xl md:text-4xl font-bold">0%</p>
+            </div>
+          </motion.div>
+
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-3 gap-6 mt-16">
+            {[
+              {
+                name: "Starter",
+                price: "$29",
+                description: "Perfect for small teams getting started with brand management.",
+                features: ["50GB storage", "Up to 10 users", "Basic AI tagging", "Email support", "API access"],
+                popular: false,
+              },
+              {
+                name: "Pro",
+                price: "$99",
+                description: "For growing teams that need advanced features and more power.",
+                features: ["500GB storage", "Unlimited users", "Advanced AI features", "Priority support", "Custom integrations", "Analytics dashboard"],
+                popular: true,
+              },
+              {
+                name: "Enterprise",
+                price: "Custom",
+                description: "For large organizations with custom requirements.",
+                features: ["Unlimited storage", "SSO & SAML", "Dedicated success manager", "Custom AI training", "SLA guarantee", "On-premise option"],
+                popular: false,
+              },
+            ].map((plan, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                className={`relative p-8 rounded-3xl ${
+                  plan.popular 
+                    ? 'bg-black text-white' 
+                    : 'bg-white border border-black/10'
+                }`}
+              >
+                {plan.popular && (
+                  <span className="absolute top-6 right-6 px-3 py-1 rounded-full bg-white/20 text-xs font-medium">
+                    Most Popular
+                  </span>
+                )}
+                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold">{plan.price}</span>
+                  {plan.price !== "Custom" && <span className={`text-lg ${plan.popular ? 'text-white/60' : 'text-black/60'}`}>/month</span>}
+                </div>
+                <p className={`text-sm mb-6 ${plan.popular ? 'text-white/70' : 'text-black/60'}`}>
+                  {plan.description}
+                </p>
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, fIdx) => (
+                    <li key={fIdx} className="flex items-center gap-3">
+                      <Check className={`w-4 h-4 ${plan.popular ? 'text-white/70' : 'text-black/50'}`} />
+                      <span className={`text-sm ${plan.popular ? 'text-white/90' : 'text-black/70'}`}>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button 
+                  className={`w-full rounded-full h-12 ${
+                    plan.popular 
+                      ? 'bg-white text-black hover:bg-white/90' 
+                      : 'bg-black text-white hover:bg-black/90'
+                  }`}
+                >
+                  {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
+                </Button>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Additional Info */}
+          <motion.div 
+            className="mt-16 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-black/50"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <p>~0.25% average platform cost compared to competitors</p>
+            <p>All prices in USD. Billed annually for best value.</p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section id="cta" className="py-32 px-6 md:px-12 bg-white text-black">
         <div className="max-w-[1800px] mx-auto">
@@ -628,6 +778,9 @@ const Index = () => {
               </a>
               <a href="#how-it-works" className="text-sm text-black/60 hover:text-black transition-colors">
                 How it works
+              </a>
+              <a href="#pricing" className="text-sm text-black/60 hover:text-black transition-colors">
+                Pricing
               </a>
               <Link to="/auth" className="text-sm text-black/60 hover:text-black transition-colors">
                 Sign In
