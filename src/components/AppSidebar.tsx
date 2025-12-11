@@ -1,4 +1,4 @@
-import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone, Zap, ChevronDown, LayoutTemplate, Map } from "lucide-react";
+import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone, Zap, ChevronDown, LayoutTemplate, Map, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -28,11 +28,12 @@ type NavigationItem = {
   mvp?: boolean; // true = show in MVP, false = hidden in MVP
 };
 
-// MVP features: Dashboard, Brand Health, Guideline, Library, Design System, Admin
+// MVP features: Dashboard, Brand Health, Brand Consistency, Guideline, Library, Design System, Admin
 // Hidden for MVP: Marketing Suite, Platform Optimizer, Competitors, Roadmaps, Generate, Template, Mindmap View, Playbook, Requests
 const navigation: NavigationItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home, mvp: true },
   { title: "Brand Health", url: "/brand-health", icon: Activity, badge: "12", mvp: true },
+  { title: "Consistency Monitor", url: "/brand-consistency", icon: Shield, badge: "5", mvp: true },
   { 
     title: "Marketing", 
     icon: Megaphone,
