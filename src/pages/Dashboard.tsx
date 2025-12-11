@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
+import { usePixifyAPI } from "@/hooks/usePixifyAPI";
 import { toast } from "sonner";
 import { CustomizeView, DashboardSection } from "@/components/dashboard/CustomizeView";
 import { 
@@ -91,6 +92,22 @@ const Dashboard = () => {
     return saved ? JSON.parse(saved) : defaultSections;
   });
   const { isLoading: aiLoading, response: aiResponse, processQuery, clearResponse } = useAIAssistant();
+  const { loading: pixifyLoading, askPixify } = usePixifyAPI();
+  const [pixifyResponse, setPixifyResponse] = useState<string | null>(null);
+  const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
+
+  // Fetch the active brand ID on mount
+  useEffect(() => {
+    const fetchBrandId = async () => {
+      const { data: brands } = await supabase
+        .from('brands')
+        .select('id')
+        .eq('name', 'Qatar Airways')
+        .single();
+      if (brands) setActiveBrandId(brands.id);
+    };
+    fetchBrandId();
+  }, []);
 
   // Save sections to localStorage when changed
   useEffect(() => {
@@ -179,9 +196,23 @@ const Dashboard = () => {
     };
   }, []);
 
-  const handleChipClick = (query: string) => {
+  const handleChipClick = async (query: string) => {
     setAiQuery(query);
-    processQuery(query);
+    // Use real AI via Pixify API
+    if (activeBrandId) {
+      const result = await askPixify(query, activeBrandId);
+      if (result) {
+        setPixifyResponse(result.answer);
+      }
+    } else {
+      // Fallback to local assistant for structured data
+      processQuery(query);
+    }
+  };
+
+  const handleClearPixifyResponse = () => {
+    setPixifyResponse(null);
+    clearResponse();
   };
 
   return (
@@ -315,7 +346,7 @@ const Dashboard = () => {
                             size="sm"
                             className="h-8 rounded-full text-xs font-medium hover:bg-primary/5 hover:border-primary/30 transition-all"
                             onClick={() => handleChipClick(chip.query)}
-                            disabled={aiLoading}
+                            disabled={aiLoading || pixifyLoading}
                           >
                             <chip.icon className="h-3.5 w-3.5 mr-1.5" />
                             {chip.label}
@@ -326,14 +357,14 @@ const Dashboard = () => {
                       {/* Animated Example Suggestion */}
                       <AnimatedAIExamples onExampleClick={(text) => {
                         setAiQuery(text);
-                        processQuery(text);
+                        handleChipClick(text);
                       }} />
 
                       {/* Search Input */}
                       <form 
                         onSubmit={(e) => {
                           e.preventDefault();
-                          if (aiQuery.trim()) processQuery(aiQuery);
+                          if (aiQuery.trim()) handleChipClick(aiQuery);
                         }}
                         className="relative"
                       >
@@ -343,15 +374,15 @@ const Dashboard = () => {
                           className="pl-11 pr-24 h-12 text-sm rounded-xl border-muted-foreground/20 bg-background focus-visible:ring-primary/30"
                           value={aiQuery}
                           onChange={(e) => setAiQuery(e.target.value)}
-                          disabled={aiLoading}
+                          disabled={aiLoading || pixifyLoading}
                         />
                         <Button 
                           type="submit" 
                           size="sm"
                           className="absolute right-2 top-1/2 -translate-y-1/2 h-8 rounded-lg"
-                          disabled={aiLoading || !aiQuery.trim()}
+                          disabled={aiLoading || pixifyLoading || !aiQuery.trim()}
                         >
-                          {aiLoading ? (
+                          {(aiLoading || pixifyLoading) ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
                             <>
@@ -362,9 +393,40 @@ const Dashboard = () => {
                         </Button>
                       </form>
 
-                      {/* AI Response */}
+                      {/* AI Response - Pixify API response */}
                       <AnimatePresence>
-                        {aiResponse && (
+                        {pixifyResponse && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="rounded-xl bg-muted/50 p-4 border border-border/50">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-primary" />
+                                  <span className="text-sm font-medium">Pixify AI</span>
+                                  <Badge variant="secondary" className="text-xs">Live</Badge>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={handleClearPixifyResponse}
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                              <p className="text-sm text-foreground whitespace-pre-wrap">{pixifyResponse}</p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* Fallback AI Response - local structured data */}
+                      <AnimatePresence>
+                        {aiResponse && !pixifyResponse && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
@@ -381,7 +443,7 @@ const Dashboard = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-6 w-6"
-                                  onClick={clearResponse}
+                                  onClick={handleClearPixifyResponse}
                                 >
                                   <X className="h-3.5 w-3.5" />
                                 </Button>
