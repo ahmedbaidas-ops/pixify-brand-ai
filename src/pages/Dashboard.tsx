@@ -8,7 +8,7 @@ import {
   FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, 
   Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart, Search,
   ChevronRight, TrendingUp, Clock, Wand2, ShieldCheck, Lightbulb, MessageSquare,
-  HelpCircle, ChevronDown
+  HelpCircle, ChevronDown, Building2
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Link } from "react-router-dom";
@@ -95,18 +95,60 @@ const Dashboard = () => {
   const { loading: pixifyLoading, askPixify } = usePixifyAPI();
   const [pixifyResponse, setPixifyResponse] = useState<string | null>(null);
   const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
+  const [activeBrand, setActiveBrand] = useState<{
+    id: string;
+    name: string;
+    purpose?: string;
+    archetype?: string;
+    tone?: string;
+  } | null>(null);
+  const [brandLogo, setBrandLogo] = useState<string | null>(null);
 
-  // Fetch the active brand ID on mount
+  // Fetch the active brand from user's organization
   useEffect(() => {
-    const fetchBrandId = async () => {
-      const { data: brands } = await supabase
-        .from('brands')
-        .select('id')
-        .eq('name', 'Qatar Airways')
-        .single();
-      if (brands) setActiveBrandId(brands.id);
+    const fetchUserBrand = async () => {
+      try {
+        // Get user's profile to find their organization
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('organization_id')
+          .eq('id', session.user.id)
+          .maybeSingle();
+
+        if (!profile?.organization_id) return;
+
+        // Fetch the user's brand(s) from their organization
+        const { data: brands } = await supabase
+          .from('brands')
+          .select('id, name, purpose, archetype, tone')
+          .eq('organization_id', profile.organization_id)
+          .limit(1);
+
+        if (brands && brands.length > 0) {
+          const brand = brands[0];
+          setActiveBrandId(brand.id);
+          setActiveBrand(brand);
+
+          // Fetch brand logo
+          const { data: logos } = await supabase
+            .from('assets')
+            .select('storage_url')
+            .eq('brand_id', brand.id)
+            .eq('type', 'logo')
+            .limit(1);
+
+          if (logos && logos.length > 0) {
+            setBrandLogo(logos[0].storage_url);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching brand:', error);
+      }
     };
-    fetchBrandId();
+    fetchUserBrand();
   }, []);
 
   // Save sections to localStorage when changed
@@ -121,47 +163,54 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchMetrics = async () => {
+      if (!activeBrandId) {
+        // No brand yet, use defaults
+        setProgressValues({
+          brandConsistency: 75,
+          assetLibrary: 60,
+          campaignPerformance: 70,
+          teamActivity: 50,
+        });
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const { data: brands, error: brandsError } = await supabase
-          .from('brands')
-          .select('id')
-          .eq('name', 'Qatar Airways')
-          .single();
+        const { data: metrics } = await supabase
+          .from('brand_metrics')
+          .select('*')
+          .eq('brand_id', activeBrandId)
+          .maybeSingle();
 
-        if (brandsError) throw brandsError;
-
-        if (brands) {
-          const { data: metrics, error: metricsError } = await supabase
-            .from('brand_metrics')
-            .select('*')
-            .eq('brand_id', brands.id)
-            .single();
-
-          if (metricsError) throw metricsError;
-
-          if (metrics) {
-            setTimeout(() => {
-              setProgressValues({
-                brandConsistency: metrics.brand_consistency_score,
-                assetLibrary: metrics.asset_library_usage,
-                campaignPerformance: metrics.campaign_performance,
-                teamActivity: metrics.team_activity,
-              });
-              setIsLoading(false);
-            }, 300);
-          }
+        if (metrics) {
+          setTimeout(() => {
+            setProgressValues({
+              brandConsistency: metrics.brand_consistency_score,
+              assetLibrary: metrics.asset_library_usage,
+              campaignPerformance: metrics.campaign_performance,
+              teamActivity: metrics.team_activity,
+            });
+            setIsLoading(false);
+          }, 300);
+        } else {
+          // No metrics yet for this brand
+          setProgressValues({
+            brandConsistency: 75,
+            assetLibrary: 60,
+            campaignPerformance: 70,
+            teamActivity: 50,
+          });
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error fetching brand metrics:', error);
-        setTimeout(() => {
-          setProgressValues({
-            brandConsistency: 87,
-            assetLibrary: 92,
-            campaignPerformance: 78,
-            teamActivity: 85,
-          });
-          setIsLoading(false);
-        }, 300);
+        setProgressValues({
+          brandConsistency: 75,
+          assetLibrary: 60,
+          campaignPerformance: 70,
+          teamActivity: 50,
+        });
+        setIsLoading(false);
       }
     };
 
@@ -194,7 +243,7 @@ const Dashboard = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [activeBrandId]);
 
   const handleChipClick = async (query: string) => {
     setAiQuery(query);
@@ -226,15 +275,23 @@ const Dashboard = () => {
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12"
         >
           <div className="flex items-center gap-4">
-            <img 
-              src="/qatar-airways-logo.png" 
-              alt="Qatar Airways" 
-              className="h-16 sm:h-20"
-            />
+            {brandLogo ? (
+              <img 
+                src={brandLogo} 
+                alt={activeBrand?.name || "Brand"} 
+                className="h-16 sm:h-20 object-contain"
+              />
+            ) : (
+              <div className="h-16 sm:h-20 w-16 sm:w-20 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Building2 className="h-8 w-8 text-primary" />
+              </div>
+            )}
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Brand Hub</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                {activeBrand?.name || "Brand Hub"}
+              </h1>
               <p className="text-muted-foreground text-sm">
-                Digital asset management & brand guidelines
+                {activeBrand?.purpose || "Digital asset management & brand guidelines"}
               </p>
             </div>
           </div>
