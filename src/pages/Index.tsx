@@ -580,7 +580,7 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-16"
+            className="mb-16 text-center"
           >
             <motion.span 
               initial={{ opacity: 0, scale: 0.8 }}
@@ -605,7 +605,7 @@ const Index = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-lg md:text-xl text-black/60 max-w-xl"
+              className="text-lg md:text-xl text-black/60 max-w-xl mx-auto"
             >
               No hidden fees, no transaction costs, no surprises.
               <br />
