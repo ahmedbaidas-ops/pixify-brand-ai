@@ -649,36 +649,6 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Billing Toggle - Only show on plans tab */}
-          <AnimatePresence>
-            {pricingTab === 'plans' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                exit={{ opacity: 0, y: -10, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="flex items-center justify-center gap-4 mb-12"
-              >
-                <span className={`text-sm font-medium transition-colors ${!isAnnual ? 'text-black' : 'text-black/50'}`}>Monthly</span>
-                <Switch
-                  checked={isAnnual}
-                  onCheckedChange={setIsAnnual}
-                  className="data-[state=checked]:bg-black"
-                />
-                <span className={`text-sm font-medium transition-colors ${isAnnual ? 'text-black' : 'text-black/50'}`}>
-                  Annual
-                  <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="ml-2 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
-                  >
-                    Save 20%
-                  </motion.span>
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <AnimatePresence mode="wait">
             {pricingTab === 'plans' ? (
               <motion.div
@@ -734,8 +704,34 @@ const Index = () => {
                   ))}
                 </motion.div>
 
+                {/* Billing Toggle - Above pricing cards */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="flex items-center justify-center gap-4 mt-16 mb-8"
+                >
+                  <span className={`text-sm font-medium transition-colors ${!isAnnual ? 'text-black' : 'text-black/50'}`}>Monthly</span>
+                  <Switch
+                    checked={isAnnual}
+                    onCheckedChange={setIsAnnual}
+                    className="data-[state=checked]:bg-black"
+                  />
+                  <span className={`text-sm font-medium transition-colors ${isAnnual ? 'text-black' : 'text-black/50'}`}>
+                    Annual
+                    <motion.span
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="ml-2 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+                    >
+                      Save 20%
+                    </motion.span>
+                  </span>
+                </motion.div>
+
                 {/* Pricing Cards */}
-                <div className="grid md:grid-cols-3 gap-6 mt-16">
+                <div className="grid md:grid-cols-3 gap-6">
                   {[
                     {
                       name: "Starter",
