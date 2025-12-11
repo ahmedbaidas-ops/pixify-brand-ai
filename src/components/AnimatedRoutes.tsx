@@ -14,6 +14,7 @@ import Library from "@/pages/Library";
 import Mindmap from "@/pages/Mindmap";
 import DesignSystem from "@/pages/DesignSystem";
 import BrandHealth from "@/pages/BrandHealth";
+import BrandConsistencyMonitor from "@/pages/BrandConsistencyMonitor";
 import Marketing from "@/pages/Marketing";
 import Competitors from "@/pages/Competitors";
 import Generate from "@/pages/Generate";
@@ -123,6 +124,14 @@ export const AnimatedRoutes = () => {
           element={
             <ProtectedLayout>
               <PageTransition><BrandHealth /></PageTransition>
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/brand-consistency"
+          element={
+            <ProtectedLayout>
+              <PageTransition><BrandConsistencyMonitor /></PageTransition>
             </ProtectedLayout>
           }
         />
