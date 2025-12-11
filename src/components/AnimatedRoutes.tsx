@@ -31,10 +31,37 @@ import NotFound from "@/pages/NotFound";
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(null);
+  const location = useLocation();
 
   useEffect(() => {
+    const checkAuthAndOnboarding = async (userId: string) => {
+      // Get user's organization
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("organization_id")
+        .eq("id", userId)
+        .single();
+
+      if (profile?.organization_id) {
+        // Check if onboarding is complete
+        const { data: workspaceProfile } = await supabase
+          .from("workspace_profiles")
+          .select("onboarding_complete")
+          .eq("organization_id", profile.organization_id)
+          .single();
+
+        setOnboardingComplete(workspaceProfile?.onboarding_complete ?? false);
+      } else {
+        setOnboardingComplete(false);
+      }
+    };
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAuthAndOnboarding(session.user.id);
+      }
       setLoading(false);
     });
 
@@ -42,6 +69,9 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAuthAndOnboarding(session.user.id);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -57,6 +87,11 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
 
   if (!user) {
     return <Navigate to="/auth" replace />;
+  }
+
+  // Redirect to onboarding if not complete
+  if (onboardingComplete === false && location.pathname !== "/onboarding") {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return (
