@@ -1057,7 +1057,7 @@ const Index = () => {
                   transition={{ duration: 0.5, delay: 0.1 }}
                   className="text-center mb-12"
                 >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 text-sm font-medium mb-4">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 text-black/70 text-sm font-medium mb-4">
                     <Sparkles className="w-4 h-4" />
                     Power your AI features
                   </div>
@@ -1118,7 +1118,7 @@ const Index = () => {
                       }}
                       className={`relative p-6 rounded-3xl cursor-pointer group flex flex-col ${
                         pack.popular 
-                          ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-2xl shadow-purple-500/20' 
+                          ? 'bg-black text-white shadow-2xl shadow-black/20' 
                           : 'bg-white border border-black/10 hover:border-black/20 hover:shadow-xl'
                       } transition-all duration-500`}
                     >
@@ -1127,7 +1127,7 @@ const Index = () => {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.3, delay: 0.4 }}
-                          className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-yellow-400 text-yellow-900 text-xs font-bold shadow-lg"
+                          className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-black text-xs font-bold shadow-lg border border-black/10"
                         >
                           Best Value
                         </motion.span>
@@ -1140,11 +1140,11 @@ const Index = () => {
                           transition={{ duration: 0.4, delay: 0.2 + idx * 0.1, type: "spring" }}
                           className={`w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center ${
                             pack.popular 
-                              ? 'bg-white/20' 
-                              : 'bg-gradient-to-br from-purple-100 to-blue-100'
+                              ? 'bg-white/10' 
+                              : 'bg-black/5'
                           }`}
                         >
-                          <Coins className={`w-6 h-6 ${pack.popular ? 'text-white' : 'text-purple-600'}`} />
+                          <Coins className={`w-6 h-6 ${pack.popular ? 'text-white' : 'text-black/70'}`} />
                         </motion.div>
                         <p className={`text-xs font-medium mb-1 ${pack.popular ? 'text-white/70' : 'text-black/50'}`}>
                           {pack.label}
@@ -1177,7 +1177,7 @@ const Index = () => {
                             className={`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
                               pack.popular 
                                 ? 'bg-white/20 text-white' 
-                                : 'bg-green-100 text-green-700'
+                                : 'bg-black/10 text-black/70'
                             }`}
                           >
                             Save {pack.savings}%
@@ -1197,7 +1197,7 @@ const Index = () => {
                         <Button 
                           className={`w-full rounded-full h-10 text-sm transition-all duration-300 ${
                             pack.popular 
-                              ? 'bg-white text-purple-600 hover:bg-white/90 hover:shadow-lg' 
+                              ? 'bg-white text-black hover:bg-white/90 hover:shadow-lg' 
                               : 'bg-black text-white hover:bg-black/90'
                           }`}
                         >
@@ -1208,7 +1208,7 @@ const Index = () => {
                       {/* Glow effect */}
                       {pack.popular && (
                         <motion.div 
-                          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
                         />
                       )}
                     </motion.div>
@@ -1232,7 +1232,7 @@ const Index = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: 0.6 + idx * 0.1 }}
-                      className="flex items-center gap-4 p-4 rounded-2xl bg-white/50 border border-black/5"
+                      className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-black/5"
                     >
                       <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center">
                         <usage.icon className="w-5 h-5 text-black/60" />
