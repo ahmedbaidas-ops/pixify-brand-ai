@@ -1037,6 +1037,158 @@ const Index = () => {
                     </table>
                   </div>
                 </motion.div>
+
+                {/* Customer Testimonials */}
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="mt-24"
+                >
+                  <motion.h3 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="text-2xl md:text-3xl font-bold text-center mb-4"
+                  >
+                    Trusted by leading brands
+                  </motion.h3>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-black/60 text-center mb-12 max-w-lg mx-auto"
+                  >
+                    See what our customers have to say about transforming their brand workflows
+                  </motion.p>
+
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {[
+                      {
+                        quote: "Pixify has completely transformed how we manage our brand assets. The AI tagging alone saves us hours every week.",
+                        author: "Sarah Chen",
+                        role: "Head of Brand",
+                        company: "TechFlow",
+                        avatar: "SC",
+                      },
+                      {
+                        quote: "The best investment we made this year. Our team collaboration improved dramatically and brand consistency is now effortless.",
+                        author: "Marcus Johnson",
+                        role: "Creative Director",
+                        company: "Elevate Agency",
+                        avatar: "MJ",
+                      },
+                      {
+                        quote: "Finally, a DAM that understands modern brand teams. The AI features are incredibly powerful yet simple to use.",
+                        author: "Emma Rodriguez",
+                        role: "Marketing Lead",
+                        company: "Startify",
+                        avatar: "ER",
+                      },
+                    ].map((testimonial, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 40, rotateY: -5 }}
+                        whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ 
+                          duration: 0.6, 
+                          delay: 0.2 + idx * 0.15,
+                          ease: [0.16, 1, 0.3, 1]
+                        }}
+                        whileHover={{ 
+                          y: -8,
+                          transition: { duration: 0.3, ease: "easeOut" }
+                        }}
+                        className="relative p-8 rounded-3xl bg-white border border-black/10 hover:border-black/20 hover:shadow-xl transition-all duration-500 group"
+                      >
+                        {/* Quote mark */}
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: 0.3 + idx * 0.1, type: "spring" }}
+                          className="absolute -top-4 left-8 w-8 h-8 bg-black rounded-full flex items-center justify-center"
+                        >
+                          <span className="text-white text-xl font-serif leading-none">"</span>
+                        </motion.div>
+
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: 0.35 + idx * 0.1 }}
+                          className="text-black/70 leading-relaxed mb-6 pt-2"
+                        >
+                          {testimonial.quote}
+                        </motion.p>
+
+                        <motion.div
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: 0.4 + idx * 0.1 }}
+                          className="flex items-center gap-4"
+                        >
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-semibold text-sm"
+                          >
+                            {testimonial.avatar}
+                          </motion.div>
+                          <div>
+                            <p className="font-semibold text-sm">{testimonial.author}</p>
+                            <p className="text-xs text-black/50">{testimonial.role}, {testimonial.company}</p>
+                          </div>
+                        </motion.div>
+
+                        {/* Hover gradient */}
+                        <motion.div 
+                          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-black/[0.02] to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Trust indicators */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                    className="mt-12 flex flex-wrap items-center justify-center gap-8 text-black/40"
+                  >
+                    {[
+                      { value: "10,000+", label: "Active users" },
+                      { value: "500+", label: "Companies" },
+                      { value: "99.9%", label: "Uptime" },
+                      { value: "4.9/5", label: "Rating" },
+                    ].map((stat, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: 0.55 + idx * 0.1 }}
+                        className="text-center"
+                      >
+                        <motion.p
+                          initial={{ scale: 0.5 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.6 + idx * 0.1, type: "spring" }}
+                          className="text-2xl font-bold text-black"
+                        >
+                          {stat.value}
+                        </motion.p>
+                        <p className="text-xs">{stat.label}</p>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </motion.div>
               </motion.div>
             ) : (
               <motion.div
