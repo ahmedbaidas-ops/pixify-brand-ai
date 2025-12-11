@@ -522,8 +522,22 @@ const Index = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-32 px-6 md:px-12">
-        <div className="max-w-[1800px] mx-auto">
+      <section id="how-it-works" className="py-32 px-6 md:px-12 bg-[#f8f8f6] relative overflow-hidden">
+        {/* Decorative background shapes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-20 -right-20 w-64 h-64 border-[3px] border-[#FF6B35]/20 rounded-full"
+          />
+          <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-20 -left-32 w-80 h-80 border-[3px] border-black/5 rounded-full"
+          />
+        </div>
+
+        <div className="max-w-[1400px] mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -537,22 +551,98 @@ const Index = () => {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-16">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
             {[
               {
                 step: "01",
                 title: "Upload & Organize",
                 description: "Drag and drop your assets. Our AI automatically tags and categorizes everything.",
+                icon: (
+                  <div className="relative">
+                    {/* Star burst shape */}
+                    <svg viewBox="0 0 100 100" className="w-16 h-16">
+                      <motion.path
+                        d="M50 0 L54 42 L96 50 L54 58 L50 100 L46 58 L4 50 L46 42 Z"
+                        fill="#FF6B35"
+                        initial={{ scale: 0, rotate: -180 }}
+                        whileInView={{ scale: 1, rotate: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
+                      />
+                    </svg>
+                    {/* Small circle accent */}
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.4 }}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-black rounded-full"
+                    />
+                  </div>
+                ),
               },
               {
                 step: "02",
                 title: "Collaborate",
                 description: "Share with your team, get feedback, and approve assets in real-time.",
+                icon: (
+                  <div className="relative">
+                    {/* Circles cluster */}
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="w-14 h-14 bg-[#FF6B35] rounded-full"
+                    />
+                    <motion.div 
+                      initial={{ scale: 0, x: 20 }}
+                      whileInView={{ scale: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.35 }}
+                      className="absolute -top-3 -right-3 w-8 h-8 bg-black rounded-full"
+                    />
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
+                      className="absolute -bottom-1 -right-4 w-5 h-5 border-2 border-black rounded-full bg-white"
+                    />
+                  </div>
+                ),
               },
               {
                 step: "03",
                 title: "Distribute",
                 description: "Deliver the right assets to the right channels at the right time.",
+                icon: (
+                  <div className="relative">
+                    {/* Arrow/send shape */}
+                    <svg viewBox="0 0 100 100" className="w-16 h-16">
+                      <motion.polygon
+                        points="10,50 90,10 70,50 90,90"
+                        fill="#FF6B35"
+                        initial={{ x: -50, opacity: 0 }}
+                        whileInView={{ x: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                      />
+                    </svg>
+                    {/* Trail dots */}
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.5 }}
+                      className="absolute top-1/2 -left-6 -translate-y-1/2 flex gap-1"
+                    >
+                      <div className="w-2 h-2 bg-black/30 rounded-full" />
+                      <div className="w-2 h-2 bg-black/50 rounded-full" />
+                      <div className="w-2 h-2 bg-black/70 rounded-full" />
+                    </motion.div>
+                  </div>
+                ),
               },
             ].map((item, idx) => (
               <motion.div 
@@ -561,13 +651,69 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="relative text-center md:text-left"
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className="relative bg-white rounded-3xl p-8 lg:p-10 shadow-[0_4px_40px_-12px_rgba(0,0,0,0.08)] group"
               >
-                <div className="text-8xl md:text-9xl font-bold text-black/10 mb-4 leading-none">{item.step}</div>
-                <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight">{item.title}</h3>
-                <p className="text-black/60 leading-relaxed text-lg">{item.description}</p>
+                {/* Step number badge */}
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: idx * 0.15 + 0.3, type: "spring" }}
+                  className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg"
+                >
+                  {item.step}
+                </motion.div>
+
+                {/* Icon area */}
+                <div className="h-24 flex items-center justify-center mb-8">
+                  {item.icon}
+                </div>
+
+                {/* Content */}
+                <h3 className="text-2xl font-bold mb-4 tracking-tight text-center">{item.title}</h3>
+                <p className="text-black/60 leading-relaxed text-center">{item.description}</p>
+
+                {/* Hover accent line */}
+                <motion.div 
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 bg-[#FF6B35] rounded-full"
+                  initial={{ width: 0 }}
+                  whileHover={{ width: "50%" }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.div>
             ))}
+          </div>
+
+          {/* Connecting line with dots (visible on desktop) */}
+          <div className="hidden md:block absolute top-[calc(50%+2rem)] left-1/2 -translate-x-1/2 w-[60%] z-0">
+            <svg className="w-full h-4" viewBox="0 0 600 20">
+              <motion.line
+                x1="50" y1="10" x2="550" y2="10"
+                stroke="black"
+                strokeWidth="2"
+                strokeDasharray="8,8"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.5, delay: 0.5 }}
+              />
+              {[100, 300, 500].map((cx, i) => (
+                <motion.circle
+                  key={i}
+                  cx={cx}
+                  cy="10"
+                  r="6"
+                  fill="white"
+                  stroke="black"
+                  strokeWidth="2"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.8 + i * 0.2 }}
+                />
+              ))}
+            </svg>
           </div>
         </div>
       </section>
