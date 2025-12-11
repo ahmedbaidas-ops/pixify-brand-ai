@@ -569,52 +569,91 @@ const Index = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-32 px-6 md:px-12 bg-[#f8f8f6]">
+      <section id="pricing" className="py-32 px-6 md:px-12 bg-[#f8f8f6] overflow-hidden">
         <div className="max-w-[1800px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mb-16"
           >
-            <span className="inline-block px-4 py-2 rounded-full bg-black/5 text-sm font-medium text-black/60 mb-6">
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="inline-block px-4 py-2 rounded-full bg-black/5 text-sm font-medium text-black/60 mb-6"
+            >
               Pricing
-            </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6"
+            >
               Transparent pricing
-            </h2>
-            <p className="text-lg md:text-xl text-black/60 max-w-xl">
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-lg md:text-xl text-black/60 max-w-xl"
+            >
               No hidden fees, no transaction costs, no surprises.
               <br />
               That means more value for your investment.
-            </p>
+            </motion.p>
           </motion.div>
 
           {/* Pricing Stats Row */}
           <motion.div 
             className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-black/10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div>
-              <p className="text-sm text-black/50 mb-2">Starting at</p>
-              <p className="text-3xl md:text-4xl font-bold">$29<span className="text-lg font-normal text-black/60">/mo</span></p>
-            </div>
-            <div>
-              <p className="text-sm text-black/50 mb-2">Storage included</p>
-              <p className="text-3xl md:text-4xl font-bold">50GB</p>
-            </div>
-            <div>
-              <p className="text-sm text-black/50 mb-2">Team members</p>
-              <p className="text-3xl md:text-4xl font-bold">Unlimited</p>
-            </div>
-            <div>
-              <p className="text-sm text-black/50 mb-2">Platform fee</p>
-              <p className="text-3xl md:text-4xl font-bold">0%</p>
-            </div>
+            {[
+              { label: "Starting at", value: "$29", suffix: "/mo" },
+              { label: "Storage included", value: "50GB", suffix: "" },
+              { label: "Team members", value: "Unlimited", suffix: "" },
+              { label: "Platform fee", value: "0%", suffix: "" },
+            ].map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.3 + idx * 0.1,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                whileHover={{ scale: 1.05 }}
+                className="group cursor-default"
+              >
+                <p className="text-sm text-black/50 mb-2 group-hover:text-black/70 transition-colors">{stat.label}</p>
+                <motion.p 
+                  className="text-3xl md:text-4xl font-bold"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.5 + idx * 0.1,
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                >
+                  {stat.value}
+                  {stat.suffix && <span className="text-lg font-normal text-black/60">{stat.suffix}</span>}
+                </motion.p>
+              </motion.div>
+            ))}
           </motion.div>
 
           {/* Pricing Cards */}
@@ -644,46 +683,124 @@ const Index = () => {
             ].map((plan, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 60, rotateX: -10 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className={`relative p-8 rounded-3xl ${
+                transition={{ 
+                  duration: 0.7, 
+                  delay: 0.2 + idx * 0.15,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                whileHover={{ 
+                  y: -12,
+                  scale: 1.02,
+                  transition: { duration: 0.3, ease: "easeOut" }
+                }}
+                className={`relative p-8 rounded-3xl cursor-pointer group ${
                   plan.popular 
-                    ? 'bg-black text-white' 
-                    : 'bg-white border border-black/10'
-                }`}
+                    ? 'bg-black text-white shadow-2xl shadow-black/20' 
+                    : 'bg-white border border-black/10 hover:border-black/20 hover:shadow-xl'
+                } transition-shadow duration-500`}
               >
                 {plan.popular && (
-                  <span className="absolute top-6 right-6 px-3 py-1 rounded-full bg-white/20 text-xs font-medium">
+                  <motion.span 
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="absolute top-6 right-6 px-3 py-1 rounded-full bg-white/20 text-xs font-medium"
+                  >
                     Most Popular
-                  </span>
+                  </motion.span>
                 )}
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                <div className="mb-4">
+                
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
+                >
+                  <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                </motion.div>
+                
+                <motion.div 
+                  className="mb-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.5 + idx * 0.1 }}
+                >
                   <span className="text-4xl font-bold">{plan.price}</span>
                   {plan.price !== "Custom" && <span className={`text-lg ${plan.popular ? 'text-white/60' : 'text-black/60'}`}>/month</span>}
-                </div>
-                <p className={`text-sm mb-6 ${plan.popular ? 'text-white/70' : 'text-black/60'}`}>
+                </motion.div>
+                
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.55 + idx * 0.1 }}
+                  className={`text-sm mb-6 ${plan.popular ? 'text-white/70' : 'text-black/60'}`}
+                >
                   {plan.description}
-                </p>
+                </motion.p>
+                
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, fIdx) => (
-                    <li key={fIdx} className="flex items-center gap-3">
-                      <Check className={`w-4 h-4 ${plan.popular ? 'text-white/70' : 'text-black/50'}`} />
+                    <motion.li 
+                      key={fIdx} 
+                      className="flex items-center gap-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ 
+                        duration: 0.4, 
+                        delay: 0.6 + idx * 0.1 + fIdx * 0.05,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ 
+                          duration: 0.3, 
+                          delay: 0.65 + idx * 0.1 + fIdx * 0.05,
+                          type: "spring",
+                          stiffness: 300
+                        }}
+                      >
+                        <Check className={`w-4 h-4 ${plan.popular ? 'text-white/70' : 'text-black/50'}`} />
+                      </motion.div>
                       <span className={`text-sm ${plan.popular ? 'text-white/90' : 'text-black/70'}`}>{feature}</span>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
-                <Button 
-                  className={`w-full rounded-full h-12 ${
-                    plan.popular 
-                      ? 'bg-white text-black hover:bg-white/90' 
-                      : 'bg-black text-white hover:bg-black/90'
-                  }`}
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.8 + idx * 0.1 }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
-                </Button>
+                  <Button 
+                    className={`w-full rounded-full h-12 transition-all duration-300 ${
+                      plan.popular 
+                        ? 'bg-white text-black hover:bg-white/90 hover:shadow-lg hover:shadow-white/20' 
+                        : 'bg-black text-white hover:bg-black/90 hover:shadow-lg hover:shadow-black/20'
+                    }`}
+                  >
+                    {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
+                  </Button>
+                </motion.div>
+
+                {/* Hover glow effect for popular card */}
+                {plan.popular && (
+                  <motion.div 
+                    className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                  />
+                )}
               </motion.div>
             ))}
           </div>
