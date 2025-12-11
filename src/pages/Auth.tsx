@@ -3,14 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Building2, Briefcase } from "lucide-react";
+import { Mail, Lock, User, Building2 } from "lucide-react";
 import pixifyLogo from "@/assets/pixify-logo.png";
 
 const ROLES = [
@@ -25,7 +22,7 @@ const ROLES = [
 const Auth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
+  const [isSignUp, setIsSignUp] = useState(false);
   
   // Sign in state
   const [signInEmail, setSignInEmail] = useState("");
@@ -169,7 +166,6 @@ const Auth = () => {
 
         if (orgError) {
           console.error("Org creation error:", orgError);
-          // Continue anyway - the trigger might create the profile
         }
 
         if (org) {
@@ -231,257 +227,263 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center p-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+    <div className="min-h-screen flex">
+      {/* Left Panel - Dark with gradient and text */}
+      <motion.div 
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="hidden lg:flex lg:w-1/2 bg-black relative overflow-hidden"
       >
-        <Card className="border-border/40 shadow-2xl">
-          <CardHeader className="text-center pb-6">
-            <motion.div 
-              className="mx-auto h-16 w-16 rounded-2xl bg-foreground flex items-center justify-center mb-4"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            >
-              <img 
-                src={pixifyLogo} 
-                alt="Pixify" 
-                className="h-10 w-10 object-contain brightness-0 invert"
-              />
-            </motion.div>
-            <CardTitle className="text-3xl font-bold">Pixify DAM</CardTitle>
-            <CardDescription className="text-base">
-              Your brand operating system
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent>
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "signin" | "signup")}>
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Create Account</TabsTrigger>
-              </TabsList>
+        {/* Abstract gradient elements */}
+        <div className="absolute inset-0">
+          <div className="absolute bottom-0 left-0 w-96 h-[600px] bg-gradient-to-t from-neutral-800/80 via-neutral-700/40 to-transparent blur-3xl transform -translate-x-1/4" />
+          <div className="absolute bottom-20 left-20 w-32 h-[400px] bg-gradient-to-t from-neutral-600/60 to-transparent blur-2xl" />
+          <div className="absolute bottom-10 left-40 w-24 h-[300px] bg-gradient-to-t from-neutral-500/40 to-transparent blur-xl" />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-center px-16 py-12">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight"
+          >
+            Transform your<br />
+            brand into<br />
+            success.
+          </motion.h1>
+        </div>
+      </motion.div>
 
-              {/* Sign In Tab */}
-              <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="signin-email"
-                        type="email"
-                        placeholder="you@company.com"
-                        value={signInEmail}
-                        onChange={(e) => setSignInEmail(e.target.value)}
-                        className="pl-10 h-11"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="signin-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={signInPassword}
-                        onChange={(e) => setSignInPassword(e.target.value)}
-                        className="pl-10 h-11"
-                        required
-                      />
-                    </div>
-                  </div>
+      {/* Right Panel - Form */}
+      <motion.div 
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white"
+      >
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8"
+          >
+            <img 
+              src={pixifyLogo} 
+              alt="Pixify" 
+              className="h-10 w-auto"
+            />
+          </motion.div>
 
-                  <Button
-                    type="submit"
-                    className="w-full h-11 text-base"
-                    disabled={loading}
-                  >
-                    {loading ? "Signing in..." : "Sign In"}
-                  </Button>
-                </form>
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mb-8"
+          >
+            <h2 className="text-3xl font-bold text-black mb-2">
+              {isSignUp ? "Get Started" : "Welcome back"}
+            </h2>
+            <p className="text-neutral-500">
+              {isSignUp 
+                ? "Welcome to Pixify — Let's get started" 
+                : "Sign in to your Pixify account"}
+            </p>
+          </motion.div>
 
-                <div className="relative my-6">
-                  <Separator />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                    or continue with
-                  </span>
+          {/* Form */}
+          {isSignUp ? (
+            <form onSubmit={handleSignUp} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-neutral-600 text-sm">Full name</Label>
+                <div className="relative">
+                  <Input
+                    id="fullName"
+                    type="text"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10 pl-4"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-neutral-600 text-sm">Your email</Label>
+                <div className="relative">
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="hi@pixify.io"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10 pl-4"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-neutral-600 text-sm">Create new password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10 pl-4"
+                    minLength={6}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="companyName" className="text-neutral-600 text-sm">Company</Label>
+                  <Input
+                    id="companyName"
+                    type="text"
+                    placeholder="Acme Inc"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10 pl-4"
+                  />
                 </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full h-11"
-                  onClick={handleGoogleSignIn}
-                  disabled={loading}
-                >
-                  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-                    <path
-                      fill="currentColor"
-                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    />
-                  </svg>
-                  Continue with Google
-                </Button>
-              </TabsContent>
-
-              {/* Sign Up Tab */}
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="fullName"
-                        type="text"
-                        placeholder="John Doe"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10 h-11"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Work Email *</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="you@company.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 h-11"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password *</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 h-11"
-                        minLength={6}
-                        required
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-2">
-                      <Label htmlFor="companyName">Company</Label>
-                      <div className="relative">
-                        <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="companyName"
-                          type="text"
-                          placeholder="Acme Inc"
-                          value={companyName}
-                          onChange={(e) => setCompanyName(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="role">Role</Label>
-                      <Select value={role} onValueChange={setRole}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ROLES.map((r) => (
-                            <SelectItem key={r} value={r.toLowerCase()}>
-                              {r}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full h-11 text-base"
-                    disabled={loading}
-                  >
-                    {loading ? "Creating account..." : "Create Account"}
-                  </Button>
-                </form>
-
-                <div className="relative my-6">
-                  <Separator />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                    or continue with
-                  </span>
+                <div className="space-y-2">
+                  <Label htmlFor="role" className="text-neutral-600 text-sm">Role</Label>
+                  <Select value={role} onValueChange={setRole}>
+                    <SelectTrigger className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10">
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ROLES.map((r) => (
+                        <SelectItem key={r} value={r.toLowerCase()}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+              </div>
 
-                <Button
+              <Button
+                type="submit"
+                className="w-full h-12 text-base bg-black text-white hover:bg-neutral-800 rounded-lg font-medium"
+                disabled={loading}
+              >
+                {loading ? "Creating account..." : "Create new account"}
+              </Button>
+
+              <p className="text-center text-neutral-500 text-sm">
+                Already have account?{" "}
+                <button
                   type="button"
-                  variant="outline"
-                  className="w-full h-11"
-                  onClick={handleGoogleSignIn}
-                  disabled={loading}
+                  onClick={() => setIsSignUp(false)}
+                  className="text-black font-medium underline underline-offset-2 hover:no-underline"
                 >
-                  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-                    <path
-                      fill="currentColor"
-                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    />
-                  </svg>
-                  Continue with Google
-                </Button>
+                  Login
+                </button>
+              </p>
+            </form>
+          ) : (
+            <form onSubmit={handleSignIn} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="signin-email" className="text-neutral-600 text-sm">Your email</Label>
+                <div className="relative">
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    placeholder="hi@pixify.io"
+                    value={signInEmail}
+                    onChange={(e) => setSignInEmail(e.target.value)}
+                    className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10 pl-4"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="signin-password" className="text-neutral-600 text-sm">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="signin-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={signInPassword}
+                    onChange={(e) => setSignInPassword(e.target.value)}
+                    className="h-12 border-neutral-200 bg-white focus:border-black focus:ring-black/10 pl-4"
+                    required
+                  />
+                </div>
+              </div>
 
-                <p className="text-xs text-center text-muted-foreground mt-4">
-                  By creating an account, you agree to our Terms of Service and Privacy Policy
-                </p>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+              <Button
+                type="submit"
+                className="w-full h-12 text-base bg-black text-white hover:bg-neutral-800 rounded-lg font-medium"
+                disabled={loading}
+              >
+                {loading ? "Signing in..." : "Sign In"}
+              </Button>
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-neutral-200" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-neutral-400">or continue with</span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12 border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+              >
+                <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  />
+                </svg>
+                Continue with Google
+              </Button>
+
+              <p className="text-center text-neutral-500 text-sm">
+                Don't have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setIsSignUp(true)}
+                  className="text-black font-medium underline underline-offset-2 hover:no-underline"
+                >
+                  Create account
+                </button>
+              </p>
+            </form>
+          )}
+        </div>
       </motion.div>
     </div>
   );
