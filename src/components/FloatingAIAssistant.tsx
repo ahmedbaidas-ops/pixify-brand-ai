@@ -37,8 +37,8 @@ const FloatingAIAssistant = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Don't show on dashboard (has its own AI assistant) or landing page
-  if (location.pathname === "/dashboard" || location.pathname === "/") {
+  // Don't show on dashboard (has its own AI assistant), landing page, auth, or onboarding
+  if (location.pathname === "/dashboard" || location.pathname === "/" || location.pathname === "/auth" || location.pathname === "/onboarding") {
     return null;
   }
 
