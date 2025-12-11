@@ -294,7 +294,7 @@ const Onboarding = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Panel - Static Info */}
-      <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] bg-gradient-to-br from-muted/50 via-muted/30 to-background p-8 flex-col justify-between border-r border-border/40">
+      <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] bg-muted/30 p-8 flex-col justify-between border-r border-border">
         <div>
           <div className="flex items-center gap-3 mb-12">
             <div className="h-10 w-10 rounded-xl bg-foreground flex items-center justify-center">
@@ -311,25 +311,81 @@ const Onboarding = () => {
           </p>
         </div>
 
-        {/* Steps Progress */}
+        {/* Steps Progress with Animations */}
         <div className="space-y-4">
-          {STEPS.map((s, index) => (
-            <div key={s.id} className="flex items-center gap-4">
-              <div className={`
-                h-10 w-10 rounded-full flex items-center justify-center text-sm font-medium transition-all
-                ${step > s.id 
-                  ? 'bg-primary text-primary-foreground' 
-                  : step === s.id 
-                    ? 'bg-foreground text-background' 
-                    : 'bg-muted text-muted-foreground'}
-              `}>
-                {step > s.id ? <Check className="h-5 w-5" /> : s.id}
-              </div>
-              <span className={`text-sm font-medium ${step >= s.id ? 'text-foreground' : 'text-muted-foreground'}`}>
-                {s.label}
-              </span>
-            </div>
-          ))}
+          {STEPS.map((s) => {
+            const isCompleted = step > s.id;
+            const isCurrent = step === s.id;
+            
+            return (
+              <motion.div 
+                key={s.id} 
+                className="flex items-center gap-4"
+                initial={false}
+                animate={{ 
+                  x: isCurrent ? 8 : 0,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <motion.div 
+                  className="h-10 w-10 rounded-full flex items-center justify-center text-sm font-medium border-2 overflow-hidden"
+                  initial={false}
+                  animate={{ 
+                    backgroundColor: isCompleted || isCurrent ? 'hsl(var(--foreground))' : 'transparent',
+                    borderColor: isCompleted || isCurrent ? 'hsl(var(--foreground))' : 'hsl(var(--border))',
+                    scale: isCurrent ? 1.1 : 1,
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  <AnimatePresence mode="wait">
+                    {isCompleted ? (
+                      <motion.div
+                        key="check"
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0, rotate: 180 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                      >
+                        <Check className="h-5 w-5 text-background" />
+                      </motion.div>
+                    ) : (
+                      <motion.span
+                        key="number"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className={isCurrent ? 'text-background' : 'text-muted-foreground'}
+                      >
+                        {s.id}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+                
+                <motion.span 
+                  className="text-sm font-medium"
+                  initial={false}
+                  animate={{ 
+                    color: isCurrent ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
+                    fontWeight: isCurrent ? 600 : 500,
+                  }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {s.label}
+                </motion.span>
+
+                {isCurrent && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="h-1.5 w-1.5 rounded-full bg-foreground"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  />
+                )}
+              </motion.div>
+            );
+          })}
         </div>
 
         <p className="text-xs text-muted-foreground">
@@ -340,7 +396,7 @@ const Onboarding = () => {
       {/* Right Panel - Forms */}
       <div className="flex-1 flex flex-col">
         {/* Mobile Header */}
-        <header className="lg:hidden p-4 border-b border-border/40 flex items-center justify-between">
+        <header className="lg:hidden p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-foreground flex items-center justify-center">
               <img src={pixifyLogo} alt="Pixify" className="h-5 w-5 object-contain brightness-0 invert" />
@@ -381,16 +437,21 @@ const Onboarding = () => {
                           className={`
                             relative p-5 rounded-2xl border-2 text-left transition-all
                             ${isSelected 
-                              ? 'border-primary bg-primary/5 shadow-lg' 
-                              : 'border-border hover:border-primary/50 hover:bg-muted/50'}
+                              ? 'border-foreground bg-foreground/5' 
+                              : 'border-border hover:border-foreground/50 hover:bg-muted/50'}
                           `}
                         >
                           {isSelected && (
-                            <div className="absolute top-3 right-3">
-                              <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-                                <Check className="h-4 w-4 text-primary-foreground" />
+                            <motion.div 
+                              className="absolute top-3 right-3"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            >
+                              <div className="h-6 w-6 rounded-full bg-foreground flex items-center justify-center">
+                                <Check className="h-4 w-4 text-background" />
                               </div>
-                            </div>
+                            </motion.div>
                           )}
                           <div className="h-11 w-11 rounded-xl bg-muted flex items-center justify-center mb-3">
                             <Icon className="h-5 w-5 text-foreground" />
@@ -406,7 +467,7 @@ const Onboarding = () => {
                     <Button 
                       onClick={handleStep1Next}
                       size="lg"
-                      className="px-8"
+                      className="px-8 bg-foreground text-background hover:bg-foreground/90"
                       disabled={!businessType}
                     >
                       Continue
@@ -444,16 +505,21 @@ const Onboarding = () => {
                           className={`
                             relative p-5 rounded-2xl border-2 text-left transition-all
                             ${isSelected 
-                              ? 'border-primary bg-primary/5 shadow-lg' 
-                              : 'border-border hover:border-primary/50 hover:bg-muted/50'}
+                              ? 'border-foreground bg-foreground/5' 
+                              : 'border-border hover:border-foreground/50 hover:bg-muted/50'}
                           `}
                         >
                           {isSelected && (
-                            <div className="absolute top-3 right-3">
-                              <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-                                <Check className="h-4 w-4 text-primary-foreground" />
+                            <motion.div 
+                              className="absolute top-3 right-3"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            >
+                              <div className="h-6 w-6 rounded-full bg-foreground flex items-center justify-center">
+                                <Check className="h-4 w-4 text-background" />
                               </div>
-                            </div>
+                            </motion.div>
                           )}
                           <div className="h-11 w-11 rounded-xl bg-muted flex items-center justify-center mb-3">
                             <Icon className="h-5 w-5 text-foreground" />
@@ -474,10 +540,10 @@ const Onboarding = () => {
                           key={size.value}
                           onClick={() => setTeamSize(size.value)}
                           className={`
-                            px-4 py-2 rounded-full text-sm font-medium transition-all
+                            px-4 py-2 rounded-full text-sm font-medium transition-all border
                             ${teamSize === size.value 
-                              ? 'bg-foreground text-background' 
-                              : 'bg-muted hover:bg-muted/80 text-foreground'}
+                              ? 'bg-foreground text-background border-foreground' 
+                              : 'bg-transparent border-border hover:border-foreground/50 text-foreground'}
                           `}
                         >
                           {size.label}
@@ -495,10 +561,10 @@ const Onboarding = () => {
                           key={ind}
                           onClick={() => setIndustry(ind.toLowerCase())}
                           className={`
-                            px-4 py-2 rounded-full text-sm font-medium transition-all
+                            px-4 py-2 rounded-full text-sm font-medium transition-all border
                             ${industry === ind.toLowerCase() 
-                              ? 'bg-foreground text-background' 
-                              : 'bg-muted hover:bg-muted/80 text-foreground'}
+                              ? 'bg-foreground text-background border-foreground' 
+                              : 'bg-transparent border-border hover:border-foreground/50 text-foreground'}
                           `}
                         >
                           {ind}
@@ -508,21 +574,21 @@ const Onboarding = () => {
                   </div>
 
                   {/* Multiple Brands Toggle */}
-                  <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-border">
                     <span className="text-sm font-medium">Do you manage multiple brands?</span>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setManagesMultipleBrands(true)}
-                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                          managesMultipleBrands ? 'bg-foreground text-background' : 'bg-background border border-border'
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                          managesMultipleBrands ? 'bg-foreground text-background border-foreground' : 'bg-transparent border-border'
                         }`}
                       >
                         Yes
                       </button>
                       <button
                         onClick={() => setManagesMultipleBrands(false)}
-                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                          !managesMultipleBrands ? 'bg-foreground text-background' : 'bg-background border border-border'
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                          !managesMultipleBrands ? 'bg-foreground text-background border-foreground' : 'bg-transparent border-border'
                         }`}
                       >
                         No
@@ -531,14 +597,14 @@ const Onboarding = () => {
                   </div>
 
                   <div className="flex justify-between pt-4">
-                    <Button variant="ghost" onClick={() => setStep(1)}>
+                    <Button variant="ghost" onClick={() => setStep(1)} className="hover:bg-muted">
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Back
                     </Button>
                     <Button 
                       onClick={handleStep2Next}
                       size="lg"
-                      className="px-8"
+                      className="px-8 bg-foreground text-background hover:bg-foreground/90"
                       disabled={loading || primaryGoals.length === 0 || !teamSize || !industry}
                     >
                       {loading ? "Saving..." : "Continue"}
@@ -570,7 +636,7 @@ const Onboarding = () => {
                         value={brandName}
                         onChange={(e) => setBrandName(e.target.value)}
                         placeholder="Enter your brand name"
-                        className="h-12"
+                        className="h-12 border-border focus:border-foreground"
                       />
                     </div>
 
@@ -580,7 +646,7 @@ const Onboarding = () => {
                         value={brandTagline}
                         onChange={(e) => setBrandTagline(e.target.value)}
                         placeholder="Your brand's mission or tagline"
-                        className="h-12"
+                        className="h-12 border-border focus:border-foreground"
                       />
                     </div>
 
@@ -591,7 +657,7 @@ const Onboarding = () => {
                           value={brandArchetype}
                           onChange={(e) => setBrandArchetype(e.target.value)}
                           placeholder="e.g., Explorer, Caregiver"
-                          className="h-12"
+                          className="h-12 border-border focus:border-foreground"
                         />
                       </div>
                       <div className="space-y-2">
@@ -600,7 +666,7 @@ const Onboarding = () => {
                           value={brandTone}
                           onChange={(e) => setBrandTone(e.target.value)}
                           placeholder="e.g., Warm, Professional"
-                          className="h-12"
+                          className="h-12 border-border focus:border-foreground"
                         />
                       </div>
                     </div>
@@ -614,7 +680,7 @@ const Onboarding = () => {
                       {/* Primary Logo */}
                       <label className={`
                         relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed cursor-pointer transition-all
-                        ${primaryLogo ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/50'}
+                        ${primaryLogo ? 'border-foreground bg-foreground/5' : 'border-border hover:border-foreground/50 hover:bg-muted/50'}
                       `}>
                         <input
                           type="file"
@@ -624,12 +690,16 @@ const Onboarding = () => {
                         />
                         {primaryLogo ? (
                           <>
-                            <div className="absolute top-2 right-2">
-                              <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                                <Check className="h-3 w-3 text-primary-foreground" />
+                            <motion.div 
+                              className="absolute top-2 right-2"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                            >
+                              <div className="h-5 w-5 rounded-full bg-foreground flex items-center justify-center">
+                                <Check className="h-3 w-3 text-background" />
                               </div>
-                            </div>
-                            <Image className="h-8 w-8 text-primary mb-2" />
+                            </motion.div>
+                            <Image className="h-8 w-8 text-foreground mb-2" />
                             <span className="text-sm font-medium truncate max-w-full">{primaryLogo.name}</span>
                           </>
                         ) : (
@@ -644,7 +714,7 @@ const Onboarding = () => {
                       {/* Cover Image */}
                       <label className={`
                         relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed cursor-pointer transition-all
-                        ${coverImage ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/50'}
+                        ${coverImage ? 'border-foreground bg-foreground/5' : 'border-border hover:border-foreground/50 hover:bg-muted/50'}
                       `}>
                         <input
                           type="file"
@@ -654,12 +724,16 @@ const Onboarding = () => {
                         />
                         {coverImage ? (
                           <>
-                            <div className="absolute top-2 right-2">
-                              <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                                <Check className="h-3 w-3 text-primary-foreground" />
+                            <motion.div 
+                              className="absolute top-2 right-2"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                            >
+                              <div className="h-5 w-5 rounded-full bg-foreground flex items-center justify-center">
+                                <Check className="h-3 w-3 text-background" />
                               </div>
-                            </div>
-                            <Image className="h-8 w-8 text-primary mb-2" />
+                            </motion.div>
+                            <Image className="h-8 w-8 text-foreground mb-2" />
                             <span className="text-sm font-medium truncate max-w-full">{coverImage.name}</span>
                           </>
                         ) : (
@@ -675,7 +749,7 @@ const Onboarding = () => {
                     {/* Guidelines PDF */}
                     <label className={`
                       flex items-center gap-4 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all
-                      ${guidelinePdf ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/50'}
+                      ${guidelinePdf ? 'border-foreground bg-foreground/5' : 'border-border hover:border-foreground/50 hover:bg-muted/50'}
                     `}>
                       <input
                         type="file"
@@ -695,22 +769,27 @@ const Onboarding = () => {
                         </p>
                       </div>
                       {guidelinePdf && (
-                        <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                          <Check className="h-3 w-3 text-primary-foreground" />
-                        </div>
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                        >
+                          <div className="h-5 w-5 rounded-full bg-foreground flex items-center justify-center">
+                            <Check className="h-3 w-3 text-background" />
+                          </div>
+                        </motion.div>
                       )}
                     </label>
                   </div>
 
                   <div className="flex justify-between pt-4">
-                    <Button variant="ghost" onClick={() => setStep(2)}>
+                    <Button variant="ghost" onClick={() => setStep(2)} className="hover:bg-muted">
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Back
                     </Button>
                     <Button 
                       onClick={handleComplete}
                       size="lg"
-                      className="px-8"
+                      className="px-8 bg-foreground text-background hover:bg-foreground/90"
                       disabled={loading || !brandName || !primaryLogo}
                     >
                       {loading ? "Creating..." : "Create Workspace"}
