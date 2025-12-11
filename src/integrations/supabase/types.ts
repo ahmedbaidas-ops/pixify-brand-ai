@@ -242,6 +242,42 @@ export type Database = {
           },
         ]
       }
+      brand_templates: {
+        Row: {
+          created_at: string
+          default_colors: Json | null
+          default_guideline: Json | null
+          default_typography: Json | null
+          demo_assets: Json | null
+          hidden: boolean | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_colors?: Json | null
+          default_guideline?: Json | null
+          default_typography?: Json | null
+          demo_assets?: Json | null
+          hidden?: boolean | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_colors?: Json | null
+          default_guideline?: Json | null
+          default_typography?: Json | null
+          demo_assets?: Json | null
+          hidden?: boolean | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       brands: {
         Row: {
           archetype: string | null
@@ -707,26 +743,32 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          company_name: string | null
           created_at: string
           display_name: string | null
           id: string
           organization_id: string | null
+          role: string | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
+          company_name?: string | null
           created_at?: string
           display_name?: string | null
           id: string
           organization_id?: string | null
+          role?: string | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
+          company_name?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
           organization_id?: string | null
+          role?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1760,6 +1802,53 @@ export type Database = {
             foreignKeyName: "webhook_endpoints_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workspace_profiles: {
+        Row: {
+          business_type: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          manages_multiple_brands: boolean | null
+          onboarding_complete: boolean | null
+          organization_id: string
+          primary_goals: string[] | null
+          team_size: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_type?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          manages_multiple_brands?: boolean | null
+          onboarding_complete?: boolean | null
+          organization_id: string
+          primary_goals?: string[] | null
+          team_size?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_type?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          manages_multiple_brands?: boolean | null
+          onboarding_complete?: boolean | null
+          organization_id?: string
+          primary_goals?: string[] | null
+          team_size?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },

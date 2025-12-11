@@ -25,6 +25,7 @@ import Admin from "@/pages/Admin";
 import Roadmaps from "@/pages/Roadmaps";
 import Roadmap from "@/pages/Roadmap";
 import Auth from "@/pages/Auth";
+import Onboarding from "@/pages/Onboarding";
 import NotFound from "@/pages/NotFound";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
@@ -83,6 +84,7 @@ export const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Index /></PageTransition>} />
         <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
+        <Route path="/onboarding" element={<PageTransition><Onboarding /></PageTransition>} />
         <Route
           path="/dashboard"
           element={
