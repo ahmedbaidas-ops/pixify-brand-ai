@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play, DollarSign } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play, DollarSign, Coins } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -13,6 +15,8 @@ const Index = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isOverDark, setIsOverDark] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [pricingTab, setPricingTab] = useState<'plans' | 'credits'>('plans');
+  const [isAnnual, setIsAnnual] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -609,324 +613,636 @@ const Index = () => {
             </motion.p>
           </motion.div>
 
-          {/* Pricing Stats Row */}
-          <motion.div 
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-black/10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+          {/* Pricing Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex justify-center mb-12"
           >
-            {[
-              { label: "Starting at", value: "$29", suffix: "/mo" },
-              { label: "Storage included", value: "50GB", suffix: "" },
-              { label: "Team members", value: "Unlimited", suffix: "" },
-              { label: "Platform fee", value: "0%", suffix: "" },
-            ].map((stat, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.5, 
-                  delay: 0.3 + idx * 0.1,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                whileHover={{ scale: 1.05 }}
-                className="group cursor-default"
-              >
-                <p className="text-sm text-black/50 mb-2 group-hover:text-black/70 transition-colors">{stat.label}</p>
-                <motion.p 
-                  className="text-3xl md:text-4xl font-bold"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ 
-                    duration: 0.6, 
-                    delay: 0.5 + idx * 0.1,
-                    type: "spring",
-                    stiffness: 200
-                  }}
+            <div className="inline-flex bg-black/5 rounded-full p-1.5">
+              {[
+                { id: 'plans' as const, label: 'Subscription Plans', icon: Layers },
+                { id: 'credits' as const, label: 'AI Credits', icon: Coins },
+              ].map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => setPricingTab(tab.id)}
+                  className={`relative px-6 py-3 rounded-full text-sm font-medium flex items-center gap-2 transition-colors duration-300 ${
+                    pricingTab === tab.id ? 'text-white' : 'text-black/60 hover:text-black'
+                  }`}
+                  whileHover={{ scale: pricingTab === tab.id ? 1 : 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {stat.value}
-                  {stat.suffix && <span className="text-lg font-normal text-black/60">{stat.suffix}</span>}
-                </motion.p>
-              </motion.div>
-            ))}
+                  {pricingTab === tab.id && (
+                    <motion.div
+                      layoutId="pricingTab"
+                      className="absolute inset-0 bg-black rounded-full"
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <tab.icon className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10">{tab.label}</span>
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
 
-          {/* Pricing Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mt-16">
-            {[
-              {
-                name: "Starter",
-                price: "$29",
-                description: "Perfect for small teams getting started with brand management.",
-                features: ["50GB storage", "Up to 10 users", "Basic AI tagging", "Email support", "API access"],
-                popular: false,
-              },
-              {
-                name: "Pro",
-                price: "$99",
-                description: "For growing teams that need advanced features and more power.",
-                features: ["500GB storage", "Unlimited users", "Advanced AI features", "Priority support", "Custom integrations", "Analytics dashboard"],
-                popular: true,
-              },
-              {
-                name: "Enterprise",
-                price: "Custom",
-                description: "For large organizations with custom requirements.",
-                features: ["Unlimited storage", "SSO & SAML", "Dedicated success manager", "Custom AI training", "SLA guarantee", "On-premise option"],
-                popular: false,
-              },
-            ].map((plan, idx) => (
+          <AnimatePresence mode="wait">
+            {pricingTab === 'plans' ? (
               <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 60, rotateX: -10 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.7, 
-                  delay: 0.2 + idx * 0.15,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                whileHover={{ 
-                  y: -12,
-                  scale: 1.02,
-                  transition: { duration: 0.3, ease: "easeOut" }
-                }}
-                className={`relative p-8 rounded-3xl cursor-pointer group flex flex-col h-full ${
-                  plan.popular 
-                    ? 'bg-black text-white shadow-2xl shadow-black/20' 
-                    : 'bg-white border border-black/10 hover:border-black/20 hover:shadow-xl'
-                } transition-shadow duration-500`}
+                key="plans"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
               >
-                {plan.popular && (
-                  <motion.span 
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.6 }}
-                    className="absolute top-6 right-6 px-3 py-1 rounded-full bg-white/20 text-xs font-medium"
-                  >
-                    Most Popular
-                  </motion.span>
-                )}
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
-                >
-                  <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                </motion.div>
-                
-                <motion.div 
-                  className="mb-4"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.5 + idx * 0.1 }}
-                >
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  {plan.price !== "Custom" && <span className={`text-lg ${plan.popular ? 'text-white/60' : 'text-black/60'}`}>/month</span>}
-                </motion.div>
-                
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.55 + idx * 0.1 }}
-                  className={`text-sm mb-6 min-h-[40px] ${plan.popular ? 'text-white/70' : 'text-black/60'}`}
-                >
-                  {plan.description}
-                </motion.p>
-                
-                <ul className="space-y-3 mb-8 flex-1">
-                  {plan.features.map((feature, fIdx) => (
-                    <motion.li 
-                      key={fIdx} 
-                      className="flex items-center gap-3"
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ 
-                        duration: 0.4, 
-                        delay: 0.6 + idx * 0.1 + fIdx * 0.05,
-                        ease: "easeOut"
-                      }}
-                    >
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        whileInView={{ scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ 
-                          duration: 0.3, 
-                          delay: 0.65 + idx * 0.1 + fIdx * 0.05,
-                          type: "spring",
-                          stiffness: 300
-                        }}
-                      >
-                        <Check className={`w-4 h-4 ${plan.popular ? 'text-white/70' : 'text-black/50'}`} />
-                      </motion.div>
-                      <span className={`text-sm ${plan.popular ? 'text-white/90' : 'text-black/70'}`}>{feature}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-                
+                {/* Billing Toggle */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.8 + idx * 0.1 }}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="mt-auto"
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="flex items-center justify-center gap-4 mb-12"
                 >
-                  <Button 
-                    className={`w-full rounded-full h-12 transition-all duration-300 ${
-                      plan.popular 
-                        ? 'bg-white text-black hover:bg-white/90 hover:shadow-lg hover:shadow-white/20' 
-                        : 'bg-black text-white hover:bg-black/90 hover:shadow-lg hover:shadow-black/20'
-                    }`}
-                  >
-                    {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
-                  </Button>
+                  <span className={`text-sm font-medium transition-colors ${!isAnnual ? 'text-black' : 'text-black/50'}`}>Monthly</span>
+                  <Switch
+                    checked={isAnnual}
+                    onCheckedChange={setIsAnnual}
+                    className="data-[state=checked]:bg-black"
+                  />
+                  <span className={`text-sm font-medium transition-colors ${isAnnual ? 'text-black' : 'text-black/50'}`}>
+                    Annual
+                    <motion.span
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="ml-2 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+                    >
+                      Save 20%
+                    </motion.span>
+                  </span>
                 </motion.div>
 
-                {/* Hover glow effect for popular card */}
-                {plan.popular && (
-                  <motion.div 
-                    className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
-                  />
-                )}
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Feature Comparison Table */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-24"
-          >
-            <motion.h3 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-2xl md:text-3xl font-bold text-center mb-12"
-            >
-              Compare all features
-            </motion.h3>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px]">
-                <thead>
-                  <motion.tr
-                    initial={{ opacity: 0, y: -20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="border-b border-black/10"
-                  >
-                    <th className="text-left py-4 px-4 font-medium text-black/60">Features</th>
-                    <th className="text-center py-4 px-4 font-semibold">Starter</th>
-                    <th className="text-center py-4 px-4 font-semibold bg-black/5 rounded-t-xl">Pro</th>
-                    <th className="text-center py-4 px-4 font-semibold">Enterprise</th>
-                  </motion.tr>
-                </thead>
-                <tbody>
+                {/* Pricing Stats Row */}
+                <motion.div 
+                  className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-black/10"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   {[
-                    { feature: "Storage", starter: "50GB", pro: "500GB", enterprise: "Unlimited" },
-                    { feature: "Team members", starter: "10", pro: "Unlimited", enterprise: "Unlimited" },
-                    { feature: "AI asset tagging", starter: "Basic", pro: "Advanced", enterprise: "Custom trained" },
-                    { feature: "Brand guidelines", starter: true, pro: true, enterprise: true },
-                    { feature: "API access", starter: true, pro: true, enterprise: true },
-                    { feature: "Custom integrations", starter: false, pro: true, enterprise: true },
-                    { feature: "Analytics dashboard", starter: false, pro: true, enterprise: true },
-                    { feature: "SSO & SAML", starter: false, pro: false, enterprise: true },
-                    { feature: "Dedicated support", starter: false, pro: false, enterprise: true },
-                    { feature: "SLA guarantee", starter: false, pro: false, enterprise: true },
-                    { feature: "On-premise option", starter: false, pro: false, enterprise: true },
-                  ].map((row, idx) => (
-                    <motion.tr
+                    { label: "Starting at", value: isAnnual ? "$23" : "$29", suffix: "/mo" },
+                    { label: "Storage included", value: "50GB", suffix: "" },
+                    { label: "Team members", value: "Unlimited", suffix: "" },
+                    { label: "Platform fee", value: "0%", suffix: "" },
+                  ].map((stat, idx) => (
+                    <motion.div
                       key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ 
-                        duration: 0.4, 
-                        delay: 0.15 + idx * 0.05,
-                        ease: "easeOut"
+                        duration: 0.5, 
+                        delay: 0.3 + idx * 0.1,
+                        ease: [0.16, 1, 0.3, 1]
                       }}
-                      className="border-b border-black/5 hover:bg-black/[0.02] transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      className="group cursor-default"
                     >
-                      <td className="py-4 px-4 text-sm font-medium">{row.feature}</td>
-                      <td className="py-4 px-4 text-center">
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          whileInView={{ scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.2 + idx * 0.05, type: "spring" }}
-                        >
-                          {typeof row.starter === 'boolean' ? (
-                            row.starter ? (
-                              <Check className="w-5 h-5 text-green-500 mx-auto" />
-                            ) : (
-                              <X className="w-5 h-5 text-black/20 mx-auto" />
-                            )
-                          ) : (
-                            <span className="text-sm text-black/70">{row.starter}</span>
-                          )}
-                        </motion.div>
-                      </td>
-                      <td className="py-4 px-4 text-center bg-black/5">
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          whileInView={{ scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.25 + idx * 0.05, type: "spring" }}
-                        >
-                          {typeof row.pro === 'boolean' ? (
-                            row.pro ? (
-                              <Check className="w-5 h-5 text-green-500 mx-auto" />
-                            ) : (
-                              <X className="w-5 h-5 text-black/20 mx-auto" />
-                            )
-                          ) : (
-                            <span className="text-sm font-medium">{row.pro}</span>
-                          )}
-                        </motion.div>
-                      </td>
-                      <td className="py-4 px-4 text-center">
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          whileInView={{ scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.3 + idx * 0.05, type: "spring" }}
-                        >
-                          {typeof row.enterprise === 'boolean' ? (
-                            row.enterprise ? (
-                              <Check className="w-5 h-5 text-green-500 mx-auto" />
-                            ) : (
-                              <X className="w-5 h-5 text-black/20 mx-auto" />
-                            )
-                          ) : (
-                            <span className="text-sm text-black/70">{row.enterprise}</span>
-                          )}
-                        </motion.div>
-                      </td>
-                    </motion.tr>
+                      <p className="text-sm text-black/50 mb-2 group-hover:text-black/70 transition-colors">{stat.label}</p>
+                      <div className="text-3xl md:text-4xl font-bold">
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={stat.value}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            {stat.value}
+                          </motion.span>
+                        </AnimatePresence>
+                        {stat.suffix && <span className="text-lg font-normal text-black/60">{stat.suffix}</span>}
+                      </div>
+                    </motion.div>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
+                </motion.div>
+
+                {/* Pricing Cards */}
+                <div className="grid md:grid-cols-3 gap-6 mt-16">
+                  {[
+                    {
+                      name: "Starter",
+                      monthlyPrice: 29,
+                      annualPrice: 23,
+                      description: "Perfect for small teams getting started with brand management.",
+                      features: ["50GB storage", "Up to 10 users", "Basic AI tagging", "Email support", "API access"],
+                      aiCredits: 500,
+                      popular: false,
+                    },
+                    {
+                      name: "Pro",
+                      monthlyPrice: 99,
+                      annualPrice: 79,
+                      description: "For growing teams that need advanced features and more power.",
+                      features: ["500GB storage", "Unlimited users", "Advanced AI features", "Priority support", "Custom integrations", "Analytics dashboard"],
+                      aiCredits: 5000,
+                      popular: true,
+                    },
+                    {
+                      name: "Enterprise",
+                      monthlyPrice: null,
+                      annualPrice: null,
+                      description: "For large organizations with custom requirements.",
+                      features: ["Unlimited storage", "SSO & SAML", "Dedicated success manager", "Custom AI training", "SLA guarantee", "On-premise option"],
+                      aiCredits: null,
+                      popular: false,
+                    },
+                  ].map((plan, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 60, rotateX: -10 }}
+                      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ 
+                        duration: 0.7, 
+                        delay: 0.2 + idx * 0.15,
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                      whileHover={{ 
+                        y: -12,
+                        scale: 1.02,
+                        transition: { duration: 0.3, ease: "easeOut" }
+                      }}
+                      className={`relative p-8 rounded-3xl cursor-pointer group flex flex-col h-full ${
+                        plan.popular 
+                          ? 'bg-black text-white shadow-2xl shadow-black/20' 
+                          : 'bg-white border border-black/10 hover:border-black/20 hover:shadow-xl'
+                      } transition-shadow duration-500`}
+                    >
+                      {plan.popular && (
+                        <motion.span 
+                          initial={{ opacity: 0, x: 20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: 0.6 }}
+                          className="absolute top-6 right-6 px-3 py-1 rounded-full bg-white/20 text-xs font-medium"
+                        >
+                          Most Popular
+                        </motion.span>
+                      )}
+                      
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
+                      >
+                        <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                      </motion.div>
+                      
+                      <motion.div 
+                        className="mb-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.5 + idx * 0.1 }}
+                      >
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={isAnnual ? 'annual' : 'monthly'}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="text-4xl font-bold"
+                          >
+                            {plan.monthlyPrice ? `$${isAnnual ? plan.annualPrice : plan.monthlyPrice}` : 'Custom'}
+                          </motion.span>
+                        </AnimatePresence>
+                        {plan.monthlyPrice && (
+                          <span className={`text-lg ${plan.popular ? 'text-white/60' : 'text-black/60'}`}>/month</span>
+                        )}
+                      </motion.div>
+
+                      {/* AI Credits Badge */}
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: 0.55 + idx * 0.1 }}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium mb-4 w-fit ${
+                          plan.popular 
+                            ? 'bg-white/10 text-white/90' 
+                            : 'bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700'
+                        }`}
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        {plan.aiCredits ? `${plan.aiCredits.toLocaleString()} AI credits/mo` : 'Custom AI credits'}
+                      </motion.div>
+                      
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.6 + idx * 0.1 }}
+                        className={`text-sm mb-6 min-h-[40px] ${plan.popular ? 'text-white/70' : 'text-black/60'}`}
+                      >
+                        {plan.description}
+                      </motion.p>
+                      
+                      <ul className="space-y-3 mb-8 flex-1">
+                        {plan.features.map((feature, fIdx) => (
+                          <motion.li 
+                            key={fIdx} 
+                            className="flex items-center gap-3"
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ 
+                              duration: 0.4, 
+                              delay: 0.65 + idx * 0.1 + fIdx * 0.05,
+                              ease: "easeOut"
+                            }}
+                          >
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              whileInView={{ scale: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ 
+                                duration: 0.3, 
+                                delay: 0.7 + idx * 0.1 + fIdx * 0.05,
+                                type: "spring",
+                                stiffness: 300
+                              }}
+                            >
+                              <Check className={`w-4 h-4 ${plan.popular ? 'text-white/70' : 'text-black/50'}`} />
+                            </motion.div>
+                            <span className={`text-sm ${plan.popular ? 'text-white/90' : 'text-black/70'}`}>{feature}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                      
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.85 + idx * 0.1 }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="mt-auto"
+                      >
+                        <Button 
+                          className={`w-full rounded-full h-12 transition-all duration-300 ${
+                            plan.popular 
+                              ? 'bg-white text-black hover:bg-white/90 hover:shadow-lg hover:shadow-white/20' 
+                              : 'bg-black text-white hover:bg-black/90 hover:shadow-lg hover:shadow-black/20'
+                          }`}
+                        >
+                          {!plan.monthlyPrice ? "Contact Sales" : "Get Started"}
+                        </Button>
+                      </motion.div>
+
+                      {/* Hover glow effect for popular card */}
+                      {plan.popular && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                        />
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Feature Comparison Table */}
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="mt-24"
+                >
+                  <motion.h3 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="text-2xl md:text-3xl font-bold text-center mb-12"
+                  >
+                    Compare all features
+                  </motion.h3>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[600px]">
+                      <thead>
+                        <motion.tr
+                          initial={{ opacity: 0, y: -20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: 0.1 }}
+                          className="border-b border-black/10"
+                        >
+                          <th className="text-left py-4 px-4 font-medium text-black/60">Features</th>
+                          <th className="text-center py-4 px-4 font-semibold">Starter</th>
+                          <th className="text-center py-4 px-4 font-semibold bg-black/5 rounded-t-xl">Pro</th>
+                          <th className="text-center py-4 px-4 font-semibold">Enterprise</th>
+                        </motion.tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { feature: "Storage", starter: "50GB", pro: "500GB", enterprise: "Unlimited" },
+                          { feature: "Team members", starter: "10", pro: "Unlimited", enterprise: "Unlimited" },
+                          { feature: "AI credits/month", starter: "500", pro: "5,000", enterprise: "Custom" },
+                          { feature: "AI asset tagging", starter: "Basic", pro: "Advanced", enterprise: "Custom trained" },
+                          { feature: "Brand guidelines", starter: true, pro: true, enterprise: true },
+                          { feature: "API access", starter: true, pro: true, enterprise: true },
+                          { feature: "Custom integrations", starter: false, pro: true, enterprise: true },
+                          { feature: "Analytics dashboard", starter: false, pro: true, enterprise: true },
+                          { feature: "SSO & SAML", starter: false, pro: false, enterprise: true },
+                          { feature: "Dedicated support", starter: false, pro: false, enterprise: true },
+                          { feature: "SLA guarantee", starter: false, pro: false, enterprise: true },
+                          { feature: "On-premise option", starter: false, pro: false, enterprise: true },
+                        ].map((row, idx) => (
+                          <motion.tr
+                            key={idx}
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ 
+                              duration: 0.4, 
+                              delay: 0.15 + idx * 0.05,
+                              ease: "easeOut"
+                            }}
+                            className="border-b border-black/5 hover:bg-black/[0.02] transition-colors"
+                          >
+                            <td className="py-4 px-4 text-sm font-medium">{row.feature}</td>
+                            <td className="py-4 px-4 text-center">
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                whileInView={{ scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: 0.2 + idx * 0.05, type: "spring" }}
+                              >
+                                {typeof row.starter === 'boolean' ? (
+                                  row.starter ? (
+                                    <Check className="w-5 h-5 text-green-500 mx-auto" />
+                                  ) : (
+                                    <X className="w-5 h-5 text-black/20 mx-auto" />
+                                  )
+                                ) : (
+                                  <span className="text-sm text-black/70">{row.starter}</span>
+                                )}
+                              </motion.div>
+                            </td>
+                            <td className="py-4 px-4 text-center bg-black/5">
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                whileInView={{ scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: 0.25 + idx * 0.05, type: "spring" }}
+                              >
+                                {typeof row.pro === 'boolean' ? (
+                                  row.pro ? (
+                                    <Check className="w-5 h-5 text-green-500 mx-auto" />
+                                  ) : (
+                                    <X className="w-5 h-5 text-black/20 mx-auto" />
+                                  )
+                                ) : (
+                                  <span className="text-sm font-medium">{row.pro}</span>
+                                )}
+                              </motion.div>
+                            </td>
+                            <td className="py-4 px-4 text-center">
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                whileInView={{ scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: 0.3 + idx * 0.05, type: "spring" }}
+                              >
+                                {typeof row.enterprise === 'boolean' ? (
+                                  row.enterprise ? (
+                                    <Check className="w-5 h-5 text-green-500 mx-auto" />
+                                  ) : (
+                                    <X className="w-5 h-5 text-black/20 mx-auto" />
+                                  )
+                                ) : (
+                                  <span className="text-sm text-black/70">{row.enterprise}</span>
+                                )}
+                              </motion.div>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </motion.div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="credits"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+              >
+                {/* AI Credits Header */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="text-center mb-12"
+                >
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 text-sm font-medium mb-4">
+                    <Sparkles className="w-4 h-4" />
+                    Power your AI features
+                  </div>
+                  <p className="text-black/60 max-w-lg mx-auto">
+                    Need more AI power? Purchase additional credits to fuel your creative workflows.
+                    Credits never expire and can be used across all AI features.
+                  </p>
+                </motion.div>
+
+                {/* AI Credits Cards */}
+                <div className="grid md:grid-cols-4 gap-6">
+                  {[
+                    {
+                      credits: 1000,
+                      price: 10,
+                      perCredit: 0.01,
+                      popular: false,
+                      label: "Starter Pack",
+                    },
+                    {
+                      credits: 5000,
+                      price: 40,
+                      perCredit: 0.008,
+                      popular: false,
+                      label: "Growth Pack",
+                      savings: 20,
+                    },
+                    {
+                      credits: 15000,
+                      price: 99,
+                      perCredit: 0.0066,
+                      popular: true,
+                      label: "Pro Pack",
+                      savings: 34,
+                    },
+                    {
+                      credits: 50000,
+                      price: 249,
+                      perCredit: 0.005,
+                      popular: false,
+                      label: "Enterprise Pack",
+                      savings: 50,
+                    },
+                  ].map((pack, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: 0.15 + idx * 0.1,
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                      whileHover={{ 
+                        y: -8,
+                        scale: 1.02,
+                        transition: { duration: 0.3, ease: "easeOut" }
+                      }}
+                      className={`relative p-6 rounded-3xl cursor-pointer group flex flex-col ${
+                        pack.popular 
+                          ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-2xl shadow-purple-500/20' 
+                          : 'bg-white border border-black/10 hover:border-black/20 hover:shadow-xl'
+                      } transition-all duration-500`}
+                    >
+                      {pack.popular && (
+                        <motion.span 
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3, delay: 0.4 }}
+                          className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-yellow-400 text-yellow-900 text-xs font-bold shadow-lg"
+                        >
+                          Best Value
+                        </motion.span>
+                      )}
+
+                      <div className="text-center mb-4">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ duration: 0.4, delay: 0.2 + idx * 0.1, type: "spring" }}
+                          className={`w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center ${
+                            pack.popular 
+                              ? 'bg-white/20' 
+                              : 'bg-gradient-to-br from-purple-100 to-blue-100'
+                          }`}
+                        >
+                          <Coins className={`w-6 h-6 ${pack.popular ? 'text-white' : 'text-purple-600'}`} />
+                        </motion.div>
+                        <p className={`text-xs font-medium mb-1 ${pack.popular ? 'text-white/70' : 'text-black/50'}`}>
+                          {pack.label}
+                        </p>
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.3, delay: 0.25 + idx * 0.1 }}
+                          className="text-2xl font-bold"
+                        >
+                          {pack.credits.toLocaleString()}
+                        </motion.p>
+                        <p className={`text-xs ${pack.popular ? 'text-white/60' : 'text-black/40'}`}>credits</p>
+                      </div>
+
+                      <div className="text-center mb-4">
+                        <motion.span
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.3 + idx * 0.1 }}
+                          className="text-3xl font-bold"
+                        >
+                          ${pack.price}
+                        </motion.span>
+                        {pack.savings && (
+                          <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: 0.35 + idx * 0.1 }}
+                            className={`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
+                              pack.popular 
+                                ? 'bg-white/20 text-white' 
+                                : 'bg-green-100 text-green-700'
+                            }`}
+                          >
+                            Save {pack.savings}%
+                          </motion.span>
+                        )}
+                      </div>
+
+                      <p className={`text-xs text-center mb-4 ${pack.popular ? 'text-white/60' : 'text-black/40'}`}>
+                        ${pack.perCredit.toFixed(4)} per credit
+                      </p>
+
+                      <motion.div
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="mt-auto"
+                      >
+                        <Button 
+                          className={`w-full rounded-full h-10 text-sm transition-all duration-300 ${
+                            pack.popular 
+                              ? 'bg-white text-purple-600 hover:bg-white/90 hover:shadow-lg' 
+                              : 'bg-black text-white hover:bg-black/90'
+                          }`}
+                        >
+                          Buy Credits
+                        </Button>
+                      </motion.div>
+
+                      {/* Glow effect */}
+                      {pack.popular && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                        />
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Credits Usage Info */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="mt-12 grid md:grid-cols-3 gap-6"
+                >
+                  {[
+                    { icon: Zap, title: "AI Image Generation", credits: "~10 credits/image" },
+                    { icon: Sparkles, title: "AI Copy Writing", credits: "~5 credits/generation" },
+                    { icon: Layers, title: "AI Asset Tagging", credits: "~2 credits/asset" },
+                  ].map((usage, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.6 + idx * 0.1 }}
+                      className="flex items-center gap-4 p-4 rounded-2xl bg-white/50 border border-black/5"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center">
+                        <usage.icon className="w-5 h-5 text-black/60" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">{usage.title}</p>
+                        <p className="text-xs text-black/50">{usage.credits}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Additional Info */}
           <motion.div 
@@ -942,7 +1258,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section id="cta" className="py-32 px-6 md:px-12 bg-white text-black">
         <div className="max-w-[1800px] mx-auto">
           <motion.div
