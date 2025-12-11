@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -68,9 +69,8 @@ const Template = () => {
   );
 };
 
-// Branded View Component - Inspired by Careem's brand.careem.com
 const BrandedView = () => {
-  const [showStrategyDialog, setShowStrategyDialog] = useState(false);
+  const navigate = useNavigate();
   
   const brandSections = [
     {
@@ -161,7 +161,7 @@ const BrandedView = () => {
             <Card
               key={section.id}
               className={`group relative overflow-hidden border-0 cursor-pointer transition-all hover:scale-105 hover:shadow-2xl bg-gradient-to-br ${section.gradient} text-white`}
-              onClick={() => section.id === "strategy" && setShowStrategyDialog(true)}
+              onClick={() => section.id === "strategy" && navigate("/strategy")}
             >
               <div className="relative p-8 aspect-square flex flex-col justify-between">
                 {/* Pattern Overlay */}
@@ -230,171 +230,6 @@ const BrandedView = () => {
         </div>
       </Card>
 
-      {/* Strategy Dialog */}
-      <Dialog open={showStrategyDialog} onOpenChange={setShowStrategyDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-[#5C0A3A] to-[#9b2e66] bg-clip-text text-transparent">
-              Qatar Airways Brand Strategy
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-[70vh] pr-4">
-            <div className="space-y-8">
-              {/* Brand Purpose */}
-              <section>
-                <h3 className="text-lg font-bold mb-2 text-[#5C0A3A]">Brand Purpose</h3>
-                <p className="text-muted-foreground">
-                  To elevate global travel into a deeply human, emotionally rich experience that connects people, cultures, and possibilities.
-                </p>
-              </section>
-
-              {/* Vision */}
-              <section>
-                <h3 className="text-lg font-bold mb-2 text-[#5C0A3A]">Vision</h3>
-                <p className="text-muted-foreground">
-                  To become the world's most inspiring airline — one that blends luxury, warmth, and innovation into a seamless journey across every touchpoint.
-                </p>
-              </section>
-
-              {/* Mission */}
-              <section>
-                <h3 className="text-lg font-bold mb-2 text-[#5C0A3A]">Mission</h3>
-                <p className="text-muted-foreground">
-                  To deliver exceptional travel experiences by combining world-class service, cultural authenticity, and modern aviation excellence.
-                </p>
-              </section>
-
-              {/* Brand Promise */}
-              <section>
-                <h3 className="text-lg font-bold mb-2 text-[#5C0A3A]">Brand Promise</h3>
-                <p className="text-lg font-medium italic text-foreground">
-                  "A journey that feels like home — wherever you are in the world."
-                </p>
-              </section>
-
-              {/* Brand Values */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Brand Values</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {["Excellence Without Compromise", "Warmth & Hospitality", "Cultural Pride", "Innovation with Purpose", "Care for Every Detail", "Global Openness"].map((value) => (
-                    <div key={value} className="p-3 bg-[#5C0A3A]/5 rounded-lg border border-[#5C0A3A]/10">
-                      <p className="text-sm font-medium">{value}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Brand Archetype */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Brand Archetype</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gradient-to-br from-[#5C0A3A]/10 to-[#5C0A3A]/5 rounded-lg">
-                    <p className="font-bold mb-1">The Caregiver (Primary)</p>
-                    <p className="text-sm text-muted-foreground">Warm, reassuring, attentive, human-centered.</p>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-[#CBB59C]/20 to-[#CBB59C]/10 rounded-lg">
-                    <p className="font-bold mb-1">The Explorer (Secondary)</p>
-                    <p className="text-sm text-muted-foreground">Curious, inspiring, elevating, global.</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Brand Personality */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Brand Personality</h3>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {["Warm", "Elegant", "Precise", "Inspiring", "Sophisticated", "Human"].map((trait) => (
-                    <Badge key={trait} className="bg-[#5C0A3A] hover:bg-[#5C0A3A]/90">{trait}</Badge>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground italic">
-                  Emotional Outcome: "I feel taken care of, understood, and uplifted."
-                </p>
-              </section>
-
-              {/* Audience Segments */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Audience Segments</h3>
-                <div className="space-y-3">
-                  {[
-                    { name: "Elite Business Travelers", values: "comfort, productivity, seamlessness", needs: "reliability, privacy, premium service" },
-                    { name: "Affluent Leisure Travelers", values: "luxury, beauty, memorable experiences", needs: "personalization, exclusivity" },
-                    { name: "Families & Cultural Travelers", values: "care, safety, tradition", needs: "comfort, reassurance, warm service" },
-                    { name: "Transit Travelers (Global Hubs)", values: "efficiency, clarity", needs: "smooth transfers, stress-free guidance" },
-                  ].map((segment) => (
-                    <div key={segment.name} className="p-4 bg-muted/50 rounded-lg">
-                      <p className="font-medium mb-1">{segment.name}</p>
-                      <p className="text-xs text-muted-foreground">Values: {segment.values}</p>
-                      <p className="text-xs text-muted-foreground">Needs: {segment.needs}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Tone of Voice */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Tone of Voice</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { tone: "Warm & Reassuring", example: "Let us take care of the details." },
-                    { tone: "Elegant & Premium", example: "Experience luxury shaped by intention." },
-                    { tone: "Confident & Worldly", example: "Your journey begins with us." },
-                    { tone: "Human & Empathetic", example: "Where every journey feels personal." },
-                  ].map((item) => (
-                    <div key={item.tone} className="p-3 border border-border rounded-lg">
-                      <p className="font-medium text-sm mb-1">{item.tone}</p>
-                      <p className="text-xs text-muted-foreground italic">"{item.example}"</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Visual Identity */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Visual Identity</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium mb-2">Color System</p>
-                    <div className="flex gap-3">
-                      {[
-                        { name: "Qatar Maroon", color: "#5C0A3A" },
-                        { name: "Desert Gold", color: "#CBB59C" },
-                        { name: "Night Indigo", color: "#0F1020" },
-                        { name: "Sky Pearl", color: "#F5F5F5" },
-                      ].map((c) => (
-                        <div key={c.name} className="text-center">
-                          <div className="w-12 h-12 rounded-lg border" style={{ backgroundColor: c.color }} />
-                          <p className="text-xs mt-1">{c.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-2">Typography</p>
-                    <p className="text-xs text-muted-foreground">Display: Cormorant Garamond | UI: Inter</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Competitive Positioning */}
-              <section>
-                <h3 className="text-lg font-bold mb-3 text-[#5C0A3A]">Competitive Positioning</h3>
-                <div className="space-y-2">
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm"><strong>vs Emirates:</strong> Qatar is warmer, more human-centered; Emirates is more futuristic/luxury-driven</p>
-                  </div>
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm"><strong>vs Etihad:</strong> Qatar emphasizes emotional storytelling; Etihad focuses on modern minimalism</p>
-                  </div>
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm"><strong>vs Turkish Airlines:</strong> Qatar offers higher premium care; Turkish targets mass global positioning</p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

@@ -19,6 +19,7 @@ import Competitors from "@/pages/Competitors";
 import Generate from "@/pages/Generate";
 import PlatformOptimizer from "@/pages/PlatformOptimizer";
 import Template from "@/pages/Template";
+import Strategy from "@/pages/Strategy";
 import Admin from "@/pages/Admin";
 import Roadmaps from "@/pages/Roadmaps";
 import Roadmap from "@/pages/Roadmap";
@@ -162,6 +163,14 @@ export const AnimatedRoutes = () => {
           element={
             <ProtectedLayout>
               <PageTransition><Template /></PageTransition>
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/strategy"
+          element={
+            <ProtectedLayout>
+              <PageTransition><Strategy /></PageTransition>
             </ProtectedLayout>
           }
         />
