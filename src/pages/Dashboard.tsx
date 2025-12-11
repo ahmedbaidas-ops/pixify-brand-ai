@@ -43,8 +43,8 @@ const quickChips = [
   { label: "Brand Strategy", query: "What's our brand archetype?", icon: Heart },
 ];
 
-// AI capability categories for user guidance
-const aiCapabilities = [
+// AI capability categories for user guidance - will be updated dynamically with brand name
+const getAiCapabilities = (brandName: string) => [
   {
     category: "Understand",
     icon: MessageSquare,
@@ -52,7 +52,7 @@ const aiCapabilities = [
     examples: [
       "Explain our brand tone of voice",
       "What's our brand archetype?",
-      "When should I use Qatar Maroon?",
+      `When should I use ${brandName}'s primary color?`,
     ]
   },
   {
@@ -61,7 +61,7 @@ const aiCapabilities = [
     color: "text-purple-500 bg-purple-500/10",
     examples: [
       "Rewrite this in our brand voice: [your text]",
-      "Suggest headlines for a Ramadan campaign",
+      "Suggest headlines for a new campaign",
       "Convert this to a social caption",
     ]
   },
@@ -103,6 +103,8 @@ const Dashboard = () => {
     tone?: string;
   } | null>(null);
   const [brandLogo, setBrandLogo] = useState<string | null>(null);
+  const [brandColors, setBrandColors] = useState<{ primary?: string; secondary?: string }>({});
+  const [brandFonts, setBrandFonts] = useState<{ display?: string; body?: string }>({});
 
   // Fetch the active brand from user's organization
   useEffect(() => {
@@ -142,6 +144,37 @@ const Dashboard = () => {
 
           if (logos && logos.length > 0) {
             setBrandLogo(logos[0].storage_url);
+          }
+
+          // Fetch design tokens (colors and fonts)
+          const { data: tokens } = await supabase
+            .from('design_tokens')
+            .select('name, type, value')
+            .eq('brand_id', brand.id);
+
+          if (tokens) {
+            const colors: { primary?: string; secondary?: string } = {};
+            const fonts: { display?: string; body?: string } = {};
+
+            tokens.forEach((token) => {
+              const value = token.value as Record<string, unknown>;
+              if (token.type === 'color') {
+                if (token.name === 'primary' && value?.hex) {
+                  colors.primary = value.hex as string;
+                } else if (token.name === 'secondary' && value?.hex) {
+                  colors.secondary = value.hex as string;
+                }
+              } else if (token.type === 'typography') {
+                if (token.name === 'display' && value?.font) {
+                  fonts.display = value.font as string;
+                } else if (token.name === 'body' && value?.font) {
+                  fonts.body = value.font as string;
+                }
+              }
+            });
+
+            setBrandColors(colors);
+            setBrandFonts(fonts);
           }
         }
       } catch (error) {
@@ -363,7 +396,7 @@ const Dashboard = () => {
                             transition={{ duration: 0.2 }}
                             className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3"
                           >
-                            {aiCapabilities.map((cap) => (
+                            {getAiCapabilities(activeBrand?.name || 'your brand').map((cap) => (
                               <div 
                                 key={cap.category}
                                 className="rounded-xl border border-border/50 bg-background/50 p-3 space-y-2"
@@ -787,18 +820,24 @@ const Dashboard = () => {
                       <CardContent className="space-y-3">
                         <div>
                           <p className="text-xs text-muted-foreground">Archetype</p>
-                          <p className="text-sm font-medium">Caregiver / Explorer</p>
+                          <p className="text-sm font-medium">{activeBrand?.archetype || 'Not set'}</p>
                         </div>
                         <Separator />
                         <div>
                           <p className="text-xs text-muted-foreground">Tone</p>
-                          <p className="text-sm font-medium">Warm, Premium, Trustworthy</p>
+                          <p className="text-sm font-medium">{activeBrand?.tone || 'Not set'}</p>
                         </div>
                         <Separator />
                         <div className="flex flex-wrap gap-1.5">
-                          {["Excellence", "Innovation", "Care"].map((value) => (
-                            <Badge key={value} variant="secondary" className="text-xs">{value}</Badge>
-                          ))}
+                          {brandFonts.display && (
+                            <Badge variant="secondary" className="text-xs">{brandFonts.display}</Badge>
+                          )}
+                          {brandFonts.body && (
+                            <Badge variant="secondary" className="text-xs">{brandFonts.body}</Badge>
+                          )}
+                          {!brandFonts.display && !brandFonts.body && (
+                            <span className="text-xs text-muted-foreground">No fonts configured</span>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -813,19 +852,30 @@ const Dashboard = () => {
                       </CardHeader>
                       <CardContent>
                         <div className="flex gap-2">
-                          {[
-                            { color: "#5C0A3A", name: "Maroon" },
-                            { color: "#CBB59C", name: "Sand" },
-                            { color: "#0F1020", name: "Night" },
-                          ].map((c) => (
-                            <div key={c.name} className="flex-1 text-center">
-                              <div 
-                                className="h-12 rounded-lg shadow-inner mb-2"
-                                style={{ backgroundColor: c.color }}
-                              />
-                              <p className="text-xs font-mono text-muted-foreground">{c.name}</p>
-                            </div>
-                          ))}
+                          {brandColors.primary || brandColors.secondary ? (
+                            <>
+                              {brandColors.primary && (
+                                <div className="flex-1 text-center">
+                                  <div 
+                                    className="h-12 rounded-lg shadow-inner mb-2"
+                                    style={{ backgroundColor: brandColors.primary }}
+                                  />
+                                  <p className="text-xs font-mono text-muted-foreground">Primary</p>
+                                </div>
+                              )}
+                              {brandColors.secondary && (
+                                <div className="flex-1 text-center">
+                                  <div 
+                                    className="h-12 rounded-lg shadow-inner mb-2"
+                                    style={{ backgroundColor: brandColors.secondary }}
+                                  />
+                                  <p className="text-xs font-mono text-muted-foreground">Secondary</p>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <p className="text-xs text-muted-foreground">No colors configured</p>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -840,9 +890,9 @@ const Dashboard = () => {
                       </CardHeader>
                       <CardContent className="space-y-3">
                         {[
-                          { text: "Logo uploaded", time: "2h ago", active: true },
-                          { text: "Guideline updated", time: "1d ago", active: false },
-                          { text: "Playbook generated", time: "3d ago", active: false },
+                          { text: "Brand created", time: "Just now", active: true },
+                          { text: "Logo uploaded", time: brandLogo ? "Recently" : "Pending", active: !!brandLogo },
+                          { text: "Colors configured", time: brandColors.primary ? "Recently" : "Pending", active: !!brandColors.primary },
                         ].map((item, itemIdx) => (
                           <div key={itemIdx} className="flex items-center gap-3">
                             <div className={`h-2 w-2 rounded-full ${item.active ? 'bg-primary' : 'bg-muted-foreground/30'}`} />

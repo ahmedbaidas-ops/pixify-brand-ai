@@ -65,6 +65,10 @@ const Onboarding = () => {
   const [brandTagline, setBrandTagline] = useState("");
   const [brandArchetype, setBrandArchetype] = useState("");
   const [brandTone, setBrandTone] = useState("");
+  const [primaryColor, setPrimaryColor] = useState("#5C0A3A");
+  const [secondaryColor, setSecondaryColor] = useState("#CBB59C");
+  const [displayFont, setDisplayFont] = useState("Cormorant Garamond");
+  const [bodyFont, setBodyFont] = useState("Inter");
   const [primaryLogo, setPrimaryLogo] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [guidelinePdf, setGuidelinePdf] = useState<File | null>(null);
@@ -249,6 +253,23 @@ const Onboarding = () => {
               uploaded_by: userId,
             });
           }
+        }
+
+        // Create design tokens for colors and typography
+        const designTokens = [
+          { name: "primary", type: "color", value: { hex: primaryColor, name: "Primary" } },
+          { name: "secondary", type: "color", value: { hex: secondaryColor, name: "Secondary" } },
+          { name: "display", type: "typography", value: { font: displayFont, fallback: "serif", size: "48px" } },
+          { name: "body", type: "typography", value: { font: bodyFont, fallback: "sans-serif", size: "16px" } },
+        ];
+
+        for (const token of designTokens) {
+          await supabase.from("design_tokens").insert({
+            brand_id: brand.id,
+            name: token.name,
+            type: token.type,
+            value: token.value,
+          });
         }
 
         const guidelineSections = [
@@ -668,6 +689,72 @@ const Onboarding = () => {
                           placeholder="e.g., Warm, Professional"
                           className="h-12 border-border focus:border-foreground"
                         />
+                      </div>
+                    </div>
+
+                    {/* Brand Colors */}
+                    <div className="space-y-3 pt-2">
+                      <Label className="text-base font-medium">Brand Colors</Label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm text-muted-foreground">Primary Color</Label>
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="color"
+                              value={primaryColor}
+                              onChange={(e) => setPrimaryColor(e.target.value)}
+                              className="h-12 w-12 rounded-lg cursor-pointer border border-border"
+                            />
+                            <Input
+                              value={primaryColor}
+                              onChange={(e) => setPrimaryColor(e.target.value)}
+                              placeholder="#5C0A3A"
+                              className="h-12 flex-1 font-mono uppercase"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm text-muted-foreground">Secondary Color</Label>
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="color"
+                              value={secondaryColor}
+                              onChange={(e) => setSecondaryColor(e.target.value)}
+                              className="h-12 w-12 rounded-lg cursor-pointer border border-border"
+                            />
+                            <Input
+                              value={secondaryColor}
+                              onChange={(e) => setSecondaryColor(e.target.value)}
+                              placeholder="#CBB59C"
+                              className="h-12 flex-1 font-mono uppercase"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Typography */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-medium">Typography</Label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm text-muted-foreground">Display Font</Label>
+                          <Input
+                            value={displayFont}
+                            onChange={(e) => setDisplayFont(e.target.value)}
+                            placeholder="e.g., Playfair Display"
+                            className="h-12 border-border focus:border-foreground"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm text-muted-foreground">Body Font</Label>
+                          <Input
+                            value={bodyFont}
+                            onChange={(e) => setBodyFont(e.target.value)}
+                            placeholder="e.g., Inter"
+                            className="h-12 border-border focus:border-foreground"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
