@@ -1,7 +1,7 @@
 import { Home, FileText, FolderOpen, Palette, FileStack, Settings, Sparkles, Network, Activity, Plane, Megaphone, Zap, ChevronDown, LayoutTemplate, Map } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -25,37 +25,73 @@ type NavigationItem = {
   badge?: string;
   collapsible?: boolean;
   items?: { title: string; url: string }[];
+  mvp?: boolean; // true = show in MVP, false = hidden in MVP
 };
 
+// MVP features: Dashboard, Brand Health, Guideline, Library, Design System, Admin
+// Hidden for MVP: Marketing Suite, Platform Optimizer, Competitors, Roadmaps, Generate, Template, Mindmap View, Playbook, Requests
 const navigation: NavigationItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Brand Health", url: "/brand-health", icon: Activity, badge: "12" },
+  { title: "Dashboard", url: "/dashboard", icon: Home, mvp: true },
+  { title: "Brand Health", url: "/brand-health", icon: Activity, badge: "12", mvp: true },
   { 
     title: "Marketing", 
     icon: Megaphone,
     collapsible: true,
+    mvp: false, // Hidden for MVP
     items: [
       { title: "Marketing Suite", url: "/marketing" },
       { title: "Platform Optimizer", url: "/marketing/optimizer" },
     ]
   },
-  { title: "Competitors", url: "/competitors", icon: Plane },
-  { title: "Roadmaps", url: "/roadmaps", icon: Map },
-  { title: "Generate", url: "/generate", icon: Sparkles, badge: "5" },
-  { title: "Template", url: "/template", icon: LayoutTemplate },
-  { title: "Mindmap View", url: "/mindmap", icon: Network },
-  { title: "Guideline", url: "/guideline", icon: FileText },
-  { title: "Library", url: "/library", icon: FolderOpen },
-  { title: "Design System", url: "/design-system", icon: Palette },
-  { title: "Playbook", url: "/playbook", icon: FileStack },
-  { title: "Requests", url: "/requests", icon: Sparkles },
-  { title: "Admin", url: "/admin", icon: Settings },
+  { title: "Competitors", url: "/competitors", icon: Plane, mvp: false },
+  { title: "Roadmaps", url: "/roadmaps", icon: Map, mvp: false },
+  { title: "Generate", url: "/generate", icon: Sparkles, badge: "5", mvp: false },
+  { title: "Template", url: "/template", icon: LayoutTemplate, mvp: false },
+  { title: "Mindmap View", url: "/mindmap", icon: Network, mvp: false },
+  { title: "Guideline", url: "/guideline", icon: FileText, mvp: true },
+  { title: "Library", url: "/library", icon: FolderOpen, mvp: true },
+  { title: "Design System", url: "/design-system", icon: Palette, mvp: true },
+  { title: "Playbook", url: "/playbook", icon: FileStack, mvp: false },
+  { title: "Requests", url: "/requests", icon: Sparkles, mvp: false },
+  { title: "Admin", url: "/admin", icon: Settings, mvp: true },
 ];
+
+// Storage key for feature visibility state
+const FEATURE_VISIBILITY_KEY = "pixify_show_all_features";
 
 export function AppSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const [openGroups, setOpenGroups] = useState<string[]>(["Marketing"]);
+  const [showAllFeatures, setShowAllFeatures] = useState(() => {
+    return localStorage.getItem(FEATURE_VISIBILITY_KEY) === "true";
+  });
+
+  // Listen for custom events to toggle feature visibility
+  useEffect(() => {
+    const handleShowFeatures = () => {
+      setShowAllFeatures(true);
+      localStorage.setItem(FEATURE_VISIBILITY_KEY, "true");
+    };
+    
+    const handleHideFeatures = () => {
+      setShowAllFeatures(false);
+      localStorage.setItem(FEATURE_VISIBILITY_KEY, "false");
+    };
+
+    window.addEventListener("pixify:show-all-features", handleShowFeatures);
+    window.addEventListener("pixify:hide-features", handleHideFeatures);
+
+    return () => {
+      window.removeEventListener("pixify:show-all-features", handleShowFeatures);
+      window.removeEventListener("pixify:hide-features", handleHideFeatures);
+    };
+  }, []);
+
+  // Filter navigation based on MVP mode
+  const visibleNavigation = showAllFeatures 
+    ? navigation 
+    : navigation.filter(item => item.mvp === true);
 
   const toggleGroup = (title: string) => {
     setOpenGroups(prev => 
@@ -81,7 +117,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {navigation.map((item) => (
+              {visibleNavigation.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   {item.collapsible ? (
                     <div>
