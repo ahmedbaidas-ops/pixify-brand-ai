@@ -1,22 +1,93 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play, DollarSign, Coins } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Zap, Shield, Users, Menu, X, Layers, Info, Briefcase, Play, DollarSign, Coins, LogOut } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 import pixifyLogo from "@/assets/pixify-logo-hero.png";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isOverDark, setIsOverDark] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [pricingTab, setPricingTab] = useState<'plans' | 'credits'>('plans');
   const [isAnnual, setIsAnnual] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [brandLogo, setBrandLogo] = useState<string | null>(null);
+
+  // Check auth state
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          // Fetch brand logo
+          setTimeout(() => {
+            fetchBrandLogo(session.user.id);
+          }, 0);
+        } else {
+          setBrandLogo(null);
+        }
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchBrandLogo(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchBrandLogo = async (userId: string) => {
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("organization_id")
+        .eq("id", userId)
+        .single();
+
+      if (profile?.organization_id) {
+        const { data: brand } = await supabase
+          .from("brands")
+          .select("id")
+          .eq("organization_id", profile.organization_id)
+          .single();
+
+        if (brand?.id) {
+          const { data: logoAsset } = await supabase
+            .from("assets")
+            .select("storage_url")
+            .eq("brand_id", brand.id)
+            .eq("type", "logo")
+            .limit(1)
+            .single();
+
+          if (logoAsset?.storage_url) {
+            setBrandLogo(logoAsset.storage_url);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching brand logo:", error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setBrandLogo(null);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -189,20 +260,55 @@ const Index = () => {
             </button>
           </div>
 
-          {/* Desktop theme toggle + Get Started */}
+          {/* Desktop theme toggle + Get Started / Profile */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
-            <Link 
-              to="/auth"
-              className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all hover:scale-105 shadow-lg whitespace-nowrap ${
-                isOverDark 
-                  ? 'bg-white text-black hover:bg-white/90' 
-                  : 'bg-black text-white hover:bg-black/90'
-              }`}
-            >
-              <Play className="w-4 h-4" />
-              Get Started
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Link 
+                  to="/dashboard"
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all hover:scale-105 ${
+                    isOverDark 
+                      ? 'bg-white/10 text-white hover:bg-white/20' 
+                      : 'bg-black/5 text-black hover:bg-black/10'
+                  }`}
+                >
+                  {brandLogo ? (
+                    <img src={brandLogo} alt="Brand" className="w-6 h-6 rounded-full object-cover" />
+                  ) : (
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                      isOverDark ? 'bg-white/20' : 'bg-black/10'
+                    }`}>
+                      {user.email?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all hover:scale-105 ${
+                    isOverDark 
+                      ? 'text-white/70 hover:text-white hover:bg-white/10' 
+                      : 'text-black/70 hover:text-black hover:bg-black/5'
+                  }`}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/auth"
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all hover:scale-105 shadow-lg whitespace-nowrap ${
+                  isOverDark 
+                    ? 'bg-white text-black hover:bg-white/90' 
+                    : 'bg-black text-white hover:bg-black/90'
+                }`}
+              >
+                <Play className="w-4 h-4" />
+                Get Started
+              </Link>
+            )}
           </div>
         </div>
 
@@ -225,11 +331,30 @@ const Index = () => {
             <a href="#pricing" className="text-lg font-medium text-black/70 hover:text-black transition-colors" onClick={() => setMenuOpen(false)}>
               Pricing
             </a>
-            <Link to="/auth" className="mt-2">
-              <Button className="w-full bg-black text-white hover:bg-black/90 rounded-full">
-                Contact
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/dashboard" className="mt-2" onClick={() => setMenuOpen(false)}>
+                  <Button className="w-full bg-black text-white hover:bg-black/90 rounded-full flex items-center gap-2">
+                    {brandLogo ? (
+                      <img src={brandLogo} alt="Brand" className="w-5 h-5 rounded-full object-cover" />
+                    ) : null}
+                    Dashboard
+                  </Button>
+                </Link>
+                <button
+                  onClick={() => { handleSignOut(); setMenuOpen(false); }}
+                  className="w-full text-center py-2 text-black/70 hover:text-black transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link to="/auth" className="mt-2" onClick={() => setMenuOpen(false)}>
+                <Button className="w-full bg-black text-white hover:bg-black/90 rounded-full">
+                  Get Started
+                </Button>
+              </Link>
+            )}
           </nav>
         </motion.div>
       </header>
@@ -304,9 +429,9 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 1.4 }}
             >
               <MagneticButton strength={0.35}>
-                <Link to="/auth">
+                <Link to={user ? "/dashboard" : "/auth"}>
                   <Button size="lg" className="text-base px-8 h-14 group rounded-full bg-black text-white hover:bg-black/90">
-                    Get started
+                    {user ? "Go to Dashboard" : "Get started"}
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
