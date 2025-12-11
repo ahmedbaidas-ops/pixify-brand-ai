@@ -696,7 +696,7 @@ const Index = () => {
                   scale: 1.02,
                   transition: { duration: 0.3, ease: "easeOut" }
                 }}
-                className={`relative p-8 rounded-3xl cursor-pointer group ${
+                className={`relative p-8 rounded-3xl cursor-pointer group flex flex-col h-full ${
                   plan.popular 
                     ? 'bg-black text-white shadow-2xl shadow-black/20' 
                     : 'bg-white border border-black/10 hover:border-black/20 hover:shadow-xl'
@@ -739,12 +739,12 @@ const Index = () => {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.55 + idx * 0.1 }}
-                  className={`text-sm mb-6 ${plan.popular ? 'text-white/70' : 'text-black/60'}`}
+                  className={`text-sm mb-6 min-h-[40px] ${plan.popular ? 'text-white/70' : 'text-black/60'}`}
                 >
                   {plan.description}
                 </motion.p>
                 
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 mb-8 flex-1">
                   {plan.features.map((feature, fIdx) => (
                     <motion.li 
                       key={fIdx} 
@@ -783,6 +783,7 @@ const Index = () => {
                   transition={{ duration: 0.5, delay: 0.8 + idx * 0.1 }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
+                  className="mt-auto"
                 >
                   <Button 
                     className={`w-full rounded-full h-12 transition-all duration-300 ${
@@ -804,6 +805,128 @@ const Index = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* Feature Comparison Table */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-24"
+          >
+            <motion.h3 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-2xl md:text-3xl font-bold text-center mb-12"
+            >
+              Compare all features
+            </motion.h3>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[600px]">
+                <thead>
+                  <motion.tr
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="border-b border-black/10"
+                  >
+                    <th className="text-left py-4 px-4 font-medium text-black/60">Features</th>
+                    <th className="text-center py-4 px-4 font-semibold">Starter</th>
+                    <th className="text-center py-4 px-4 font-semibold bg-black/5 rounded-t-xl">Pro</th>
+                    <th className="text-center py-4 px-4 font-semibold">Enterprise</th>
+                  </motion.tr>
+                </thead>
+                <tbody>
+                  {[
+                    { feature: "Storage", starter: "50GB", pro: "500GB", enterprise: "Unlimited" },
+                    { feature: "Team members", starter: "10", pro: "Unlimited", enterprise: "Unlimited" },
+                    { feature: "AI asset tagging", starter: "Basic", pro: "Advanced", enterprise: "Custom trained" },
+                    { feature: "Brand guidelines", starter: true, pro: true, enterprise: true },
+                    { feature: "API access", starter: true, pro: true, enterprise: true },
+                    { feature: "Custom integrations", starter: false, pro: true, enterprise: true },
+                    { feature: "Analytics dashboard", starter: false, pro: true, enterprise: true },
+                    { feature: "SSO & SAML", starter: false, pro: false, enterprise: true },
+                    { feature: "Dedicated support", starter: false, pro: false, enterprise: true },
+                    { feature: "SLA guarantee", starter: false, pro: false, enterprise: true },
+                    { feature: "On-premise option", starter: false, pro: false, enterprise: true },
+                  ].map((row, idx) => (
+                    <motion.tr
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ 
+                        duration: 0.4, 
+                        delay: 0.15 + idx * 0.05,
+                        ease: "easeOut"
+                      }}
+                      className="border-b border-black/5 hover:bg-black/[0.02] transition-colors"
+                    >
+                      <td className="py-4 px-4 text-sm font-medium">{row.feature}</td>
+                      <td className="py-4 px-4 text-center">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.2 + idx * 0.05, type: "spring" }}
+                        >
+                          {typeof row.starter === 'boolean' ? (
+                            row.starter ? (
+                              <Check className="w-5 h-5 text-green-500 mx-auto" />
+                            ) : (
+                              <X className="w-5 h-5 text-black/20 mx-auto" />
+                            )
+                          ) : (
+                            <span className="text-sm text-black/70">{row.starter}</span>
+                          )}
+                        </motion.div>
+                      </td>
+                      <td className="py-4 px-4 text-center bg-black/5">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.25 + idx * 0.05, type: "spring" }}
+                        >
+                          {typeof row.pro === 'boolean' ? (
+                            row.pro ? (
+                              <Check className="w-5 h-5 text-green-500 mx-auto" />
+                            ) : (
+                              <X className="w-5 h-5 text-black/20 mx-auto" />
+                            )
+                          ) : (
+                            <span className="text-sm font-medium">{row.pro}</span>
+                          )}
+                        </motion.div>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.3 + idx * 0.05, type: "spring" }}
+                        >
+                          {typeof row.enterprise === 'boolean' ? (
+                            row.enterprise ? (
+                              <Check className="w-5 h-5 text-green-500 mx-auto" />
+                            ) : (
+                              <X className="w-5 h-5 text-black/20 mx-auto" />
+                            )
+                          ) : (
+                            <span className="text-sm text-black/70">{row.enterprise}</span>
+                          )}
+                        </motion.div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
 
           {/* Additional Info */}
           <motion.div 
