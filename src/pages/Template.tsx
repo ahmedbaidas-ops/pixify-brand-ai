@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Network, BookOpen, Palette, Target, MessageSquare, Image as ImageIcon, Type, Shapes, Download, Sparkles, Brain, Radar, Dna, FlaskConical, Bot, Music, Heart, Users, Globe, Building, Smile, Box, LineChart, Wand2, BarChart3, PenTool, Activity, RefreshCw, Layers, Share2, Cpu } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Network, BookOpen, Palette, Target, MessageSquare, Image as ImageIcon, Type, Shapes, Download, Sparkles, Brain, Radar, Dna, FlaskConical, Bot, Music, Heart, Users, Globe, Building, Smile, Box, LineChart, Wand2, BarChart3, PenTool, Activity, RefreshCw, Layers, Share2, Cpu, Star, Eye, Briefcase, Home, ChevronRight } from "lucide-react";
 import Mindmap from "./Mindmap";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -508,6 +510,8 @@ const PlaybookView = () => {
 
 // Strategy View Component - Next-Gen Features
 const StrategyView = () => {
+  const [showStrategyDialog, setShowStrategyDialog] = useState(false);
+
   const features = [
     {
       id: 1,
@@ -741,6 +745,108 @@ const StrategyView = () => {
     },
   ];
 
+  // Qatar Airways Brand Strategy Content
+  const brandStrategy = {
+    purpose: "To elevate global travel into a deeply human, emotionally rich experience that connects people, cultures, and possibilities.",
+    vision: "To become the world's most inspiring airline — one that blends luxury, warmth, and innovation into a seamless journey across every touchpoint.",
+    mission: "To deliver exceptional travel experiences by combining world-class service, cultural authenticity, and modern aviation excellence.",
+    promise: "A journey that feels like home — wherever you are in the world.",
+    values: [
+      "Excellence Without Compromise",
+      "Warmth & Hospitality",
+      "Cultural Pride",
+      "Innovation with Purpose",
+      "Care for Every Detail",
+      "Global Openness"
+    ],
+    archetype: {
+      primary: { name: "The Caregiver", traits: "Warm, reassuring, attentive, human-centered" },
+      secondary: { name: "The Explorer", traits: "Curious, inspiring, elevating, global" }
+    },
+    personality: ["Warm", "Elegant", "Precise", "Inspiring", "Sophisticated", "Human"],
+    emotionalOutcome: "I feel taken care of, understood, and uplifted.",
+    audienceSegments: [
+      { name: "Elite Business Travelers", values: "comfort, productivity, seamlessness", needs: "reliability, privacy, premium service" },
+      { name: "Affluent Leisure Travelers", values: "luxury, beauty, memorable experiences", needs: "personalization, exclusivity" },
+      { name: "Families & Cultural Travelers", values: "care, safety, tradition", needs: "comfort, reassurance, warm service" },
+      { name: "Transit Travelers (Global Hubs)", values: "efficiency, clarity", needs: "smooth transfers, stress-free guidance" }
+    ],
+    valuePropositions: [
+      { segment: "For Premium Travelers", message: "A sanctuary in the sky, crafted with care, elegance, and world-leading service." },
+      { segment: "For Families", message: "Travel that feels safe, warm, and reassuring." },
+      { segment: "For Explorers", message: "Discover the world with unmatched comfort and cultural richness." }
+    ],
+    messaging: {
+      core: "Where care meets the world.",
+      proofPoints: [
+        "Award-winning service",
+        "World-class cabin experience",
+        "Attentive hospitality",
+        "Modern fleet & safety standards",
+        "Premium lounges & transit experience"
+      ],
+      pillars: [
+        "Care Beyond Expectations",
+        "Luxury Designed Around You",
+        "A Window to the World's Cultures",
+        "Precision, Excellence, and Innovation"
+      ]
+    },
+    toneOfVoice: [
+      { style: "Warm & Reassuring", description: "Soft, caring, welcoming", example: "Let us take care of the details." },
+      { style: "Elegant & Premium", description: "Refined wording and structure", example: "Experience luxury shaped by intention." },
+      { style: "Confident & Worldly", description: "Global sophistication", example: "Your journey begins with us." },
+      { style: "Human & Empathetic", description: "Sensitive to emotional needs", example: "Where every journey feels personal." }
+    ],
+    experiencePrinciples: [
+      { name: "Elegant Simplicity", description: "Minimal, premium, thoughtful." },
+      { name: "Anticipatory Care", description: "Always one step ahead of traveler needs." },
+      { name: "Cultural Warmth", description: "A sense of home, tradition, and hospitality." },
+      { name: "Precision & Detail", description: "Every interaction feels intentional." },
+      { name: "Emotional Elevation", description: "Travel should feel meaningful, not just functional." }
+    ],
+    visualIdentity: {
+      colors: [
+        { name: "Qatar Maroon", role: "core", hex: "#5C0A3A" },
+        { name: "Desert Gold", role: "luxury accent", hex: "#CBB59C" },
+        { name: "Sky Pearl", role: "soft white/cream", hex: "#F8F6F3" },
+        { name: "Night Indigo", role: "premium aviation blue", hex: "#0F1020" }
+      ],
+      typography: [
+        "Modern Arabic-English harmony",
+        "Elegant serif headlines",
+        "Clean sans-serif body copy"
+      ],
+      photography: [
+        "Warm light",
+        "Real human emotion",
+        "Soft gradients",
+        "Cultural moments"
+      ],
+      graphics: [
+        "Curved lines inspired by air flow",
+        "Soft shadows",
+        "Premium spacing"
+      ]
+    },
+    contentStrategy: {
+      heroThemes: ["Human stories", "Cultural richness", "Sky luxury", "Crafted experiences"],
+      categories: ["Destination storytelling", "Cabin experience", "Crew stories", "Culinary art", "Behind the scenes", "Traveler testimonials"]
+    },
+    differentiators: [
+      "Exceptional hospitality culture",
+      "Premium experience at every touchpoint",
+      "Global yet culturally rooted identity",
+      "Emotional storytelling",
+      "Precision in design, service, and execution"
+    ],
+    competitivePositioning: [
+      { competitor: "Emirates", positioning: "Qatar: warmer, more human | Emirates: more futuristic/luxury-driven" },
+      { competitor: "Etihad", positioning: "Qatar: emotional storytelling | Etihad: modern minimalism" },
+      { competitor: "Turkish Airlines", positioning: "Qatar: higher premium care | Turkish: mass global positioning" }
+    ]
+  };
+
   return (
     <div className="space-y-8">
       {/* Hero Section */}
@@ -783,6 +889,7 @@ const StrategyView = () => {
             <Card
               key={feature.id}
               className="group relative overflow-hidden border border-border/50 hover:border-border transition-all hover:shadow-xl cursor-pointer bg-card"
+              onClick={() => setShowStrategyDialog(true)}
             >
               <div className="p-6">
                 {/* Header */}
@@ -839,6 +946,328 @@ const StrategyView = () => {
           </button>
         </div>
       </Card>
+
+      {/* Brand Strategy Dialog */}
+      <Dialog open={showStrategyDialog} onOpenChange={setShowStrategyDialog}>
+        <DialogContent className="max-w-5xl max-h-[90vh] p-0 overflow-hidden">
+          <ScrollArea className="h-[90vh]">
+            <div className="p-8">
+              {/* Dialog Header */}
+              <DialogHeader className="mb-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <img src="/qatar-airways-logo.png" alt="Qatar Airways" className="h-12 w-auto" />
+                  <div>
+                    <DialogTitle className="text-3xl font-black">Qatar Airways</DialogTitle>
+                    <p className="text-muted-foreground">Brand Strategy Document</p>
+                  </div>
+                </div>
+                <Badge className="w-fit bg-[#5C0A3A] text-white">Demo Version</Badge>
+              </DialogHeader>
+
+              {/* Purpose, Vision, Mission */}
+              <div className="space-y-8">
+                {/* Brand Foundation */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Target className="h-6 w-6 text-[#5C0A3A]" />
+                    Brand Foundation
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-6 bg-gradient-to-br from-[#5C0A3A]/10 to-transparent border-[#5C0A3A]/20">
+                      <h3 className="font-bold text-lg mb-2">Brand Purpose</h3>
+                      <p className="text-muted-foreground">{brandStrategy.purpose}</p>
+                    </Card>
+                    <Card className="p-6 bg-gradient-to-br from-[#CBB59C]/20 to-transparent border-[#CBB59C]/30">
+                      <h3 className="font-bold text-lg mb-2">Vision</h3>
+                      <p className="text-muted-foreground">{brandStrategy.vision}</p>
+                    </Card>
+                    <Card className="p-6 bg-gradient-to-br from-[#0F1020]/10 to-transparent border-border/50">
+                      <h3 className="font-bold text-lg mb-2">Mission</h3>
+                      <p className="text-muted-foreground">{brandStrategy.mission}</p>
+                    </Card>
+                    <Card className="p-6 bg-gradient-to-br from-[#5C0A3A] to-[#7d2052] text-white border-0">
+                      <h3 className="font-bold text-lg mb-2">Brand Promise</h3>
+                      <p className="text-white/90 text-xl font-medium italic">"{brandStrategy.promise}"</p>
+                    </Card>
+                  </div>
+                </section>
+
+                {/* Brand Values */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Star className="h-6 w-6 text-[#CBB59C]" />
+                    Brand Values
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {brandStrategy.values.map((value, i) => (
+                      <Card key={i} className="p-4 text-center hover:shadow-lg transition-shadow">
+                        <p className="font-semibold">{value}</p>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Brand Archetype */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Heart className="h-6 w-6 text-[#5C0A3A]" />
+                    Brand Archetype
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-6 border-2 border-[#5C0A3A]/30">
+                      <Badge className="mb-3 bg-[#5C0A3A]">Primary</Badge>
+                      <h3 className="text-xl font-bold mb-2">{brandStrategy.archetype.primary.name}</h3>
+                      <p className="text-muted-foreground">{brandStrategy.archetype.primary.traits}</p>
+                    </Card>
+                    <Card className="p-6 border-2 border-[#CBB59C]/30">
+                      <Badge className="mb-3 bg-[#CBB59C] text-[#0F1020]">Secondary</Badge>
+                      <h3 className="text-xl font-bold mb-2">{brandStrategy.archetype.secondary.name}</h3>
+                      <p className="text-muted-foreground">{brandStrategy.archetype.secondary.traits}</p>
+                    </Card>
+                  </div>
+                </section>
+
+                {/* Brand Personality */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Smile className="h-6 w-6 text-[#CBB59C]" />
+                    Brand Personality
+                  </h2>
+                  <div className="flex flex-wrap gap-3 mb-4">
+                    {brandStrategy.personality.map((trait, i) => (
+                      <Badge key={i} variant="secondary" className="text-sm px-4 py-2">
+                        {trait}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Card className="p-4 bg-muted/50">
+                    <p className="text-sm text-muted-foreground mb-1">Emotional Outcome</p>
+                    <p className="font-medium italic">"{brandStrategy.emotionalOutcome}"</p>
+                  </Card>
+                </section>
+
+                {/* Audience Segments */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Users className="h-6 w-6 text-[#5C0A3A]" />
+                    Audience Segments
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {brandStrategy.audienceSegments.map((segment, i) => (
+                      <Card key={i} className="p-5">
+                        <h3 className="font-bold mb-3 flex items-center gap-2">
+                          <span className="w-8 h-8 rounded-full bg-[#5C0A3A]/10 flex items-center justify-center text-sm font-bold text-[#5C0A3A]">
+                            {i + 1}
+                          </span>
+                          {segment.name}
+                        </h3>
+                        <div className="space-y-2 text-sm">
+                          <p><span className="font-medium">Values:</span> <span className="text-muted-foreground">{segment.values}</span></p>
+                          <p><span className="font-medium">Needs:</span> <span className="text-muted-foreground">{segment.needs}</span></p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Value Propositions */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Briefcase className="h-6 w-6 text-[#CBB59C]" />
+                    Value Propositions
+                  </h2>
+                  <div className="space-y-3">
+                    {brandStrategy.valuePropositions.map((vp, i) => (
+                      <Card key={i} className="p-5 flex items-start gap-4">
+                        <Badge variant="outline" className="shrink-0">{vp.segment}</Badge>
+                        <p className="text-muted-foreground italic">{vp.message}</p>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Messaging Framework */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <MessageSquare className="h-6 w-6 text-[#5C0A3A]" />
+                    Messaging Framework
+                  </h2>
+                  <Card className="p-6 mb-4 bg-gradient-to-r from-[#5C0A3A] to-[#7d2052] text-white border-0">
+                    <p className="text-sm mb-2 opacity-80">Core Message</p>
+                    <p className="text-2xl font-bold">"{brandStrategy.messaging.core}"</p>
+                  </Card>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-5">
+                      <h4 className="font-bold mb-3">Proof Points</h4>
+                      <ul className="space-y-2">
+                        {brandStrategy.messaging.proofPoints.map((point, i) => (
+                          <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <ChevronRight className="h-4 w-4 text-[#5C0A3A]" />
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                    <Card className="p-5">
+                      <h4 className="font-bold mb-3">Narrative Pillars</h4>
+                      <ul className="space-y-2">
+                        {brandStrategy.messaging.pillars.map((pillar, i) => (
+                          <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <ChevronRight className="h-4 w-4 text-[#CBB59C]" />
+                            {pillar}
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                  </div>
+                </section>
+
+                {/* Tone of Voice */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <MessageSquare className="h-6 w-6 text-[#CBB59C]" />
+                    Tone of Voice
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {brandStrategy.toneOfVoice.map((tone, i) => (
+                      <Card key={i} className="p-5">
+                        <h4 className="font-bold mb-1">{tone.style}</h4>
+                        <p className="text-sm text-muted-foreground mb-3">{tone.description}</p>
+                        <div className="p-3 bg-muted/50 rounded-lg">
+                          <p className="text-sm italic">"{tone.example}"</p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Brand Experience Principles */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Sparkles className="h-6 w-6 text-[#5C0A3A]" />
+                    Brand Experience Principles
+                  </h2>
+                  <div className="space-y-3">
+                    {brandStrategy.experiencePrinciples.map((principle, i) => (
+                      <Card key={i} className="p-4 flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#5C0A3A] to-[#7d2052] flex items-center justify-center text-white font-bold">
+                          {i + 1}
+                        </div>
+                        <div>
+                          <h4 className="font-bold">{principle.name}</h4>
+                          <p className="text-sm text-muted-foreground">{principle.description}</p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Visual Identity */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Palette className="h-6 w-6 text-[#CBB59C]" />
+                    Visual Identity Strategy
+                  </h2>
+                  
+                  {/* Colors */}
+                  <Card className="p-6 mb-4">
+                    <h4 className="font-bold mb-4">Color System</h4>
+                    <div className="flex flex-wrap gap-4">
+                      {brandStrategy.visualIdentity.colors.map((color, i) => (
+                        <div key={i} className="text-center">
+                          <div 
+                            className="w-16 h-16 rounded-xl shadow-lg mb-2"
+                            style={{ backgroundColor: color.hex }}
+                          />
+                          <p className="font-medium text-sm">{color.name}</p>
+                          <p className="text-xs text-muted-foreground">{color.role}</p>
+                          <p className="text-xs font-mono">{color.hex}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="p-5">
+                      <h4 className="font-bold mb-3">Typography</h4>
+                      <ul className="space-y-2">
+                        {brandStrategy.visualIdentity.typography.map((item, i) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <Type className="h-4 w-4 text-[#5C0A3A]" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                    <Card className="p-5">
+                      <h4 className="font-bold mb-3">Photography</h4>
+                      <ul className="space-y-2">
+                        {brandStrategy.visualIdentity.photography.map((item, i) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <ImageIcon className="h-4 w-4 text-[#CBB59C]" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                    <Card className="p-5">
+                      <h4 className="font-bold mb-3">Graphics</h4>
+                      <ul className="space-y-2">
+                        {brandStrategy.visualIdentity.graphics.map((item, i) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <Shapes className="h-4 w-4 text-[#0F1020]" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                  </div>
+                </section>
+
+                {/* Brand Differentiators */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Star className="h-6 w-6 text-[#5C0A3A]" />
+                    Brand Differentiators
+                  </h2>
+                  <div className="flex flex-wrap gap-3">
+                    {brandStrategy.differentiators.map((diff, i) => (
+                      <Badge key={i} className="px-4 py-2 bg-[#5C0A3A]/10 text-[#5C0A3A] hover:bg-[#5C0A3A]/20 border-[#5C0A3A]/20">
+                        {diff}
+                      </Badge>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Competitive Positioning */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <BarChart3 className="h-6 w-6 text-[#CBB59C]" />
+                    Competitive Positioning
+                  </h2>
+                  <div className="space-y-3">
+                    {brandStrategy.competitivePositioning.map((cp, i) => (
+                      <Card key={i} className="p-4">
+                        <div className="flex items-center gap-4">
+                          <Badge variant="outline" className="shrink-0">vs {cp.competitor}</Badge>
+                          <p className="text-sm text-muted-foreground">{cp.positioning}</p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Footer */}
+                <Card className="p-6 bg-gradient-to-br from-[#5C0A3A]/5 to-[#CBB59C]/5 border-[#5C0A3A]/20 mt-8">
+                  <p className="text-center text-muted-foreground text-sm">
+                    This brand strategy can be used inside Pixify to demonstrate AI brand assistant, AI content generation, AI brand consistency checking, and campaign creation.
+                  </p>
+                </Card>
+              </div>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
