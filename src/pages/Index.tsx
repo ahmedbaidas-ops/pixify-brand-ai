@@ -528,7 +528,7 @@ const Index = () => {
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-20 -right-20 w-64 h-64 border-[3px] border-[#FF6B35]/20 rounded-full"
+            className="absolute -top-20 -right-20 w-64 h-64 border-[3px] border-black/20 rounded-full"
           />
           <motion.div 
             animate={{ rotate: -360 }}
@@ -563,7 +563,9 @@ const Index = () => {
                     <svg viewBox="0 0 100 100" className="w-16 h-16">
                       <motion.path
                         d="M50 0 L54 42 L96 50 L54 58 L50 100 L46 58 L4 50 L46 42 Z"
-                        fill="#FF6B35"
+                        fill="none"
+                        stroke="black"
+                        strokeWidth="3"
                         initial={{ scale: 0, rotate: -180 }}
                         whileInView={{ scale: 1, rotate: 0 }}
                         viewport={{ once: true }}
@@ -593,7 +595,7 @@ const Index = () => {
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="w-14 h-14 bg-[#FF6B35] rounded-full"
+                      className="w-14 h-14 border-[3px] border-black rounded-full"
                     />
                     <motion.div 
                       initial={{ scale: 0, x: 20 }}
@@ -622,7 +624,9 @@ const Index = () => {
                     <svg viewBox="0 0 100 100" className="w-16 h-16">
                       <motion.polygon
                         points="10,50 90,10 70,50 90,90"
-                        fill="#FF6B35"
+                        fill="none"
+                        stroke="black"
+                        strokeWidth="3"
                         initial={{ x: -50, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1 }}
                         viewport={{ once: true }}
@@ -676,7 +680,7 @@ const Index = () => {
 
                 {/* Hover accent line */}
                 <motion.div 
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 bg-[#FF6B35] rounded-full"
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 bg-black rounded-full"
                   initial={{ width: 0 }}
                   whileHover={{ width: "50%" }}
                   transition={{ duration: 0.3 }}
