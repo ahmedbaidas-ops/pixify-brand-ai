@@ -38,6 +38,57 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_logs: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          execution_time_ms: number | null
+          id: string
+          organization_id: string
+          query: string
+          response_summary: string | null
+          tokens_used: number | null
+          user_id: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          execution_time_ms?: number | null
+          id?: string
+          organization_id: string
+          query: string
+          response_summary?: string | null
+          tokens_used?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          execution_time_ms?: number | null
+          id?: string
+          organization_id?: string
+          query?: string
+          response_summary?: string | null
+          tokens_used?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_logs_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assets: {
         Row: {
           brand_id: string
