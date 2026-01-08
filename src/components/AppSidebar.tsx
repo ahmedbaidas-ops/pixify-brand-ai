@@ -65,7 +65,9 @@ export function AppSidebar() {
   const currentPath = location.pathname;
   const [openGroups, setOpenGroups] = useState<string[]>(["Marketing"]);
   const [showAllFeatures, setShowAllFeatures] = useState(() => {
-    return localStorage.getItem(FEATURE_VISIBILITY_KEY) === "true";
+    // Default to showing all features (Qatar Airways full DAM)
+    const stored = localStorage.getItem(FEATURE_VISIBILITY_KEY);
+    return stored === null ? true : stored === "true";
   });
 
   // Listen for custom events to toggle feature visibility
