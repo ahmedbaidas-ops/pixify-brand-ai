@@ -280,8 +280,20 @@ const Dashboard = () => {
 
   const handleChipClick = async (query: string) => {
     setAiQuery(query);
-    // Use real AI via Pixify API
-    if (activeBrandId) {
+    const lowerQuery = query.toLowerCase();
+    
+    // Check if this is an asset/logo request - use local structured data to show the actual image
+    const isAssetRequest = lowerQuery.includes("logo") || lowerQuery.includes("png") || 
+                           lowerQuery.includes("svg") || lowerQuery.includes("pull") ||
+                           lowerQuery.includes("asset") || lowerQuery.includes("download");
+    
+    if (isAssetRequest) {
+      // For asset requests, use the local processor which fetches and displays the actual assets
+      await processQuery(query);
+      // Clear any previous Pixify text response so asset display takes priority
+      setPixifyResponse(null);
+    } else if (activeBrandId) {
+      // For other queries, use the AI for natural language response
       const result = await askPixify(query, activeBrandId);
       if (result) {
         setPixifyResponse(result.answer);
