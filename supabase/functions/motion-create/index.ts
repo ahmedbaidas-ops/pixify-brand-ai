@@ -12,6 +12,14 @@ serve(async (req) => {
   }
 
   try {
+    // Use service role key for system-level operations (bypasses RLS securely)
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    // Also create a client with user auth for validation
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -21,6 +29,25 @@ serve(async (req) => {
         },
       }
     );
+
+    // Verify user authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'No authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token);
+
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const { title, brandId, sourceAssetId, mode, params } = await req.json();
 
@@ -53,8 +80,8 @@ serve(async (req) => {
       );
     }
 
-    // Create motion output (stub - start as QUEUED)
-    const { data: output, error: outputError } = await supabaseClient
+    // Create motion output using admin client (system-level operation)
+    const { data: output, error: outputError } = await supabaseAdmin
       .from('motion_outputs')
       .insert({
         project_id: project.id,
@@ -77,9 +104,9 @@ serve(async (req) => {
     console.log('Motion generation stubbed - would call Runway API here');
     console.log('Project params:', params);
 
-    // Simulate processing by updating status after a delay
+    // Simulate processing by updating status after a delay using admin client
     setTimeout(async () => {
-      await supabaseClient
+      await supabaseAdmin
         .from('motion_outputs')
         .update({ 
           status: 'RENDERING',
@@ -92,7 +119,7 @@ serve(async (req) => {
 
       // Simulate completion after 10 seconds
       setTimeout(async () => {
-        await supabaseClient
+        await supabaseAdmin
           .from('motion_outputs')
           .update({ 
             status: 'DONE',
