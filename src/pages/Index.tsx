@@ -11,6 +11,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { resolveBrandAssetUrl } from "@/lib/assetUrls";
 import pixifyLogo from "@/assets/pixify-logo-hero.png";
 
 const Index = () => {
@@ -74,7 +75,8 @@ const Index = () => {
             .single();
 
           if (logoAsset?.storage_url) {
-            setBrandLogo(logoAsset.storage_url);
+            const resolved = await resolveBrandAssetUrl(logoAsset.storage_url);
+            setBrandLogo(resolved);
           }
         }
       }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { resolveBrandAssetUrl } from "@/lib/assetUrls";
 
 interface AssetResult {
   id: string;
@@ -73,7 +74,13 @@ export const useAIAssistant = () => {
       const { data: assets } = await assetQuery.limit(10);
 
       if (assets && assets.length > 0) {
-        return { assets: assets as AssetResult[] };
+        const resolvedAssets = await Promise.all(
+          (assets as AssetResult[]).map(async (asset) => ({
+            ...asset,
+            storage_url: await resolveBrandAssetUrl(asset.storage_url),
+          }))
+        );
+        return { assets: resolvedAssets };
       } else {
         return {
           assets: [{
