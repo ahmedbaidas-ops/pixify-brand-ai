@@ -123,9 +123,19 @@ export const AnimatedRoutes = () => {
         <Route
           path="/dashboard"
           element={
-            <ProtectedLayout>
-              <PageTransition><Dashboard /></PageTransition>
-            </ProtectedLayout>
+            <SidebarProvider>
+              <div className="min-h-screen flex w-full">
+                <AppSidebar />
+                <main className="flex-1 overflow-auto">
+                  <div className="border-b border-border bg-card sticky top-0 z-10">
+                    <div className="px-6 py-3">
+                      <SidebarTrigger />
+                    </div>
+                  </div>
+                  <PageTransition><Dashboard /></PageTransition>
+                </main>
+              </div>
+            </SidebarProvider>
           }
         />
         <Route
