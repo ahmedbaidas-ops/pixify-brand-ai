@@ -25,8 +25,8 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   
   // Sign in state
-  const [signInEmail, setSignInEmail] = useState("");
-  const [signInPassword, setSignInPassword] = useState("");
+  const [signInEmail, setSignInEmail] = useState("ahmedbaidas@gmail.com");
+  const [signInPassword, setSignInPassword] = useState("abb123");
   
   // Sign up state
   const [fullName, setFullName] = useState("");
