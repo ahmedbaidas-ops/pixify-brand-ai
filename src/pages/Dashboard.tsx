@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
 import { usePixifyAPI } from "@/hooks/usePixifyAPI";
 import { toast } from "sonner";
+import { resolveBrandAssetUrl } from "@/lib/assetUrls";
 import { CustomizeView, DashboardSection } from "@/components/dashboard/CustomizeView";
 import { 
   AIAssistantSkeleton, 
@@ -143,7 +144,8 @@ const Dashboard = () => {
             .limit(1);
 
           if (logos && logos.length > 0) {
-            setBrandLogo(logos[0].storage_url);
+            const resolved = await resolveBrandAssetUrl(logos[0].storage_url);
+            setBrandLogo(resolved);
           }
 
           // Fetch design tokens (colors and fonts)

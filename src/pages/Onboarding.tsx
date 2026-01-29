@@ -214,16 +214,13 @@ const Onboarding = () => {
             .upload(logoPath, primaryLogo);
 
           if (!uploadError) {
-            const { data: { publicUrl } } = supabase.storage
-              .from("brand-assets")
-              .getPublicUrl(logoPath);
-
             await supabase.from("assets").insert({
               brand_id: brand.id,
               name: "Primary Logo",
               type: "logo",
               file_key: logoPath,
-              storage_url: publicUrl,
+              // Store the object path; UI will resolve it to a signed URL when needed.
+              storage_url: logoPath,
               mime_type: primaryLogo.type,
               size_bytes: primaryLogo.size,
               uploaded_by: userId,
@@ -238,16 +235,13 @@ const Onboarding = () => {
             .upload(coverPath, coverImage);
 
           if (!uploadError) {
-            const { data: { publicUrl } } = supabase.storage
-              .from("brand-assets")
-              .getPublicUrl(coverPath);
-
             await supabase.from("assets").insert({
               brand_id: brand.id,
               name: "Brand Cover",
               type: "image",
               file_key: coverPath,
-              storage_url: publicUrl,
+              // Store the object path; UI will resolve it to a signed URL when needed.
+              storage_url: coverPath,
               mime_type: coverImage.type,
               size_bytes: coverImage.size,
               uploaded_by: userId,
