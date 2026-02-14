@@ -85,14 +85,7 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  // Redirect to onboarding if not complete
-  if (onboardingComplete === false && location.pathname !== "/onboarding") {
-    return <Navigate to="/onboarding" replace />;
-  }
+  // Auth and onboarding checks disabled – direct access enabled
 
   return (
     <SidebarProvider>
@@ -117,8 +110,8 @@ export const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/auth" element={<Navigate to="/dashboard" replace />} />
         <Route path="/onboarding" element={<PageTransition><Onboarding /></PageTransition>} />
         <Route
           path="/dashboard"
