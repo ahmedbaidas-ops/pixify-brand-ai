@@ -257,6 +257,7 @@ export const AnimatedRoutes = () => {
             </ProtectedLayout>
           }
         />
+        {/* Roadmap routes hidden
         <Route
           path="/roadmaps"
           element={
@@ -273,6 +274,7 @@ export const AnimatedRoutes = () => {
             </ProtectedLayout>
           }
         />
+        */}
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
