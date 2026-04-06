@@ -110,7 +110,7 @@ export const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
         <Route path="/auth" element={<Navigate to="/dashboard" replace />} />
         <Route path="/onboarding" element={<PageTransition><Onboarding /></PageTransition>} />
         <Route
