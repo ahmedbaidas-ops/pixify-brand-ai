@@ -1,938 +1,223 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Sparkles, Paperclip, Send, Plus, ArrowUpRight, RefreshCw, AlertTriangle, CheckCircle2, XCircle, Globe, Instagram, Linkedin, Image as ImageIcon, Layers, Video, FileText, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { 
-  FileText, FolderOpen, Sparkles, Download, ArrowRight, FileStack, Activity, 
-  Users, Target, Zap, Loader2, Image, X, Palette, Type, Heart, Search,
-  ChevronRight, TrendingUp, Clock, Wand2, ShieldCheck, Lightbulb, MessageSquare,
-  HelpCircle, ChevronDown, Building2
-} from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAIAssistant } from "@/hooks/useAIAssistant";
-import { usePixifyAPI } from "@/hooks/usePixifyAPI";
-import { toast } from "sonner";
-import { resolveBrandAssetUrl } from "@/lib/assetUrls";
-import { CustomizeView, DashboardSection } from "@/components/dashboard/CustomizeView";
-import { 
-  AIAssistantSkeleton, 
-  MetricsSkeleton, 
-  QuickActionsSkeleton, 
-  BrandOverviewSkeleton 
-} from "@/components/dashboard/DashboardSkeleton";
-import AIShowcaseSection from "@/components/dashboard/AIShowcaseSection";
-import { AnimatedAIExamples } from "@/components/ai/TypewriterText";
 
-const defaultSections: DashboardSection[] = [
-  { id: "ai-assistant", label: "AI Assistant", visible: true },
-  { id: "ai-showcase", label: "AI Showcase", visible: true },
-  { id: "metrics", label: "Metrics", visible: true },
-  { id: "quick-actions", label: "Quick Actions", visible: true },
-  { id: "brand-overview", label: "Brand Overview", visible: true },
+const suggestions = [
+  "Is #2A8F4C in our approved palette?",
+  "What are our logo clear-space rules?",
+  "Show all failing assets",
+  "Is this post on-brand?",
 ];
 
-const quickChips = [
-  { label: "Brand Colors", query: "What are our brand colors?", icon: Palette },
-  { label: "Typography", query: "What fonts do we use?", icon: Type },
-  { label: "Find Logo", query: "Pull the logo PNG", icon: Image },
-  { label: "Brand Strategy", query: "What's our brand archetype?", icon: Heart },
+const categories = [
+  { name: "Visual Identity", weight: 40, score: 82 },
+  { name: "Messaging", weight: 30, score: 74 },
+  { name: "Strategic Alignment", weight: 20, score: 80 },
+  { name: "Governance", weight: 10, score: 65 },
 ];
 
-// AI capability categories for user guidance - will be updated dynamically with brand name
-const getAiCapabilities = (brandName: string) => [
+const touchpoints = [
   {
-    category: "Understand",
-    icon: MessageSquare,
-    color: "text-blue-500 bg-blue-500/10",
-    examples: [
-      "Explain our brand tone of voice",
-      "What's our brand archetype?",
-      `When should I use ${brandName}'s primary color?`,
-    ]
+    name: "cokelight.com",
+    type: "Website",
+    icon: Globe,
+    scanned: "Scanned 4h ago",
+    status: "issue",
+    issues: [
+      { text: "Off-palette color #2A8F4C on /promo page — 3 instances", rule: "§3.1 Color" },
+      { text: "Outdated logo variant (v2) detected in page header", rule: "§2.1 Logo" },
+    ],
   },
   {
-    category: "Create",
-    icon: Wand2,
-    color: "text-purple-500 bg-purple-500/10",
-    examples: [
-      "Rewrite this in our brand voice: [your text]",
-      "Suggest headlines for a new campaign",
-      "Convert this to a social caption",
-    ]
+    name: "@cocacolalight",
+    type: "Instagram",
+    icon: Instagram,
+    scanned: "Scanned 1h ago",
+    status: "pass",
+    issues: [],
   },
   {
-    category: "Check",
-    icon: ShieldCheck,
-    color: "text-green-500 bg-green-500/10",
-    examples: [
-      "Is this headline on-brand?",
-      "Check compliance for this copy",
-      "Does this match our guidelines?",
-    ]
-  }
+    name: "Coca-Cola Light",
+    type: "LinkedIn",
+    icon: Linkedin,
+    scanned: "Scanned 2d ago",
+    status: "issue",
+    issues: [{ text: "Outdated logo variant on cover image", rule: "§2.1 Logo" }],
+  },
 ];
 
-const Dashboard = () => {
-  const [progressValues, setProgressValues] = useState({
-    brandConsistency: 0,
-    assetLibrary: 0,
-    campaignPerformance: 0,
-    teamActivity: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [aiQuery, setAiQuery] = useState("");
-  const [showAIHelp, setShowAIHelp] = useState(false);
-  const [sections, setSections] = useState<DashboardSection[]>(() => {
-    const saved = localStorage.getItem("dashboard-sections");
-    return saved ? JSON.parse(saved) : defaultSections;
-  });
-  const { isLoading: aiLoading, response: aiResponse, processQuery, clearResponse } = useAIAssistant();
-  const { loading: pixifyLoading, askPixify } = usePixifyAPI();
-  const [pixifyResponse, setPixifyResponse] = useState<string | null>(null);
-  const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
-  const [activeBrand, setActiveBrand] = useState<{
-    id: string;
-    name: string;
-    purpose?: string;
-    archetype?: string;
-    tone?: string;
-  } | null>(null);
-  const [brandLogo, setBrandLogo] = useState<string | null>(null);
-  const [brandColors, setBrandColors] = useState<{ primary?: string; secondary?: string }>({});
-  const [brandFonts, setBrandFonts] = useState<{ display?: string; body?: string }>({});
+const findings = [
+  { sev: "warn", title: "Off-palette color #2A8F4C on cokelight.com/promo", meta: "§3.1 · 2h ago", count: "3 instances" },
+  { sev: "warn", title: "Promo Banner — headline font mismatch (Bebas Neue vs Unity Headline)", meta: "§3.2 · 4h ago" },
+  { sev: "error", title: "Q4 Email Header — logo clear-space violation + unapproved color", meta: "§2.3, §3.1 · Yesterday" },
+];
 
-  // Fetch the active brand from user's organization
-  useEffect(() => {
-    const fetchUserBrand = async () => {
-      try {
-        // Get user's profile to find their organization
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
+const checks = [
+  { name: "Summer Hero — Red Can", meta: "2h ago", status: "pass", icon: ImageIcon },
+  { name: "Promo Banner 1080×1080", meta: "4h ago", status: "issue", icon: ImageIcon },
+  { name: "Logo Lockup — Primary", meta: "1d ago", status: "pass", icon: Layers },
+  { name: "Product Shot — Red Can", meta: "1d ago", status: "pass", icon: ImageIcon },
+];
 
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('organization_id')
-          .eq('id', session.user.id)
-          .maybeSingle();
-
-        if (!profile?.organization_id) return;
-
-        // Fetch the user's brand(s) from their organization
-        const { data: brands } = await supabase
-          .from('brands')
-          .select('id, name, purpose, archetype, tone')
-          .eq('organization_id', profile.organization_id)
-          .limit(1);
-
-        if (brands && brands.length > 0) {
-          const brand = brands[0];
-          setActiveBrandId(brand.id);
-          setActiveBrand(brand);
-
-          // Fetch brand logo
-          const { data: logos } = await supabase
-            .from('assets')
-            .select('storage_url')
-            .eq('brand_id', brand.id)
-            .eq('type', 'logo')
-            .limit(1);
-
-          if (logos && logos.length > 0) {
-            const resolved = await resolveBrandAssetUrl(logos[0].storage_url);
-            setBrandLogo(resolved);
-          }
-
-          // Fetch design tokens (colors and fonts)
-          const { data: tokens } = await supabase
-            .from('design_tokens')
-            .select('name, type, value')
-            .eq('brand_id', brand.id);
-
-          if (tokens) {
-            const colors: { primary?: string; secondary?: string } = {};
-            const fonts: { display?: string; body?: string } = {};
-
-            tokens.forEach((token) => {
-              const value = token.value as Record<string, unknown>;
-              if (token.type === 'color') {
-                if (token.name === 'primary' && value?.hex) {
-                  colors.primary = value.hex as string;
-                } else if (token.name === 'secondary' && value?.hex) {
-                  colors.secondary = value.hex as string;
-                }
-              } else if (token.type === 'typography') {
-                if (token.name === 'display' && value?.font) {
-                  fonts.display = value.font as string;
-                } else if (token.name === 'body' && value?.font) {
-                  fonts.body = value.font as string;
-                }
-              }
-            });
-
-            setBrandColors(colors);
-            setBrandFonts(fonts);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching brand:', error);
-      }
-    };
-    fetchUserBrand();
-  }, []);
-
-  // Save sections to localStorage when changed
-  useEffect(() => {
-    localStorage.setItem("dashboard-sections", JSON.stringify(sections));
-  }, [sections]);
-
-  const isSectionVisible = (id: string) => {
-    const section = sections.find(s => s.id === id);
-    return section?.visible ?? true;
-  };
-
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      if (!activeBrandId) {
-        // No brand yet, use defaults
-        setProgressValues({
-          brandConsistency: 75,
-          assetLibrary: 60,
-          campaignPerformance: 70,
-          teamActivity: 50,
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const { data: metrics } = await supabase
-          .from('brand_metrics')
-          .select('*')
-          .eq('brand_id', activeBrandId)
-          .maybeSingle();
-
-        if (metrics) {
-          setTimeout(() => {
-            setProgressValues({
-              brandConsistency: metrics.brand_consistency_score,
-              assetLibrary: metrics.asset_library_usage,
-              campaignPerformance: metrics.campaign_performance,
-              teamActivity: metrics.team_activity,
-            });
-            setIsLoading(false);
-          }, 300);
-        } else {
-          // No metrics yet for this brand
-          setProgressValues({
-            brandConsistency: 75,
-            assetLibrary: 60,
-            campaignPerformance: 70,
-            teamActivity: 50,
-          });
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error('Error fetching brand metrics:', error);
-        setProgressValues({
-          brandConsistency: 75,
-          assetLibrary: 60,
-          campaignPerformance: 70,
-          teamActivity: 50,
-        });
-        setIsLoading(false);
-      }
-    };
-
-    fetchMetrics();
-
-    const channel = supabase
-      .channel('brand-metrics-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'brand_metrics' },
-        (payload) => {
-          if (payload.new && typeof payload.new === 'object' && 'brand_consistency_score' in payload.new) {
-            const newMetrics = payload.new as {
-              brand_consistency_score: number;
-              asset_library_usage: number;
-              campaign_performance: number;
-              team_activity: number;
-            };
-            setProgressValues({
-              brandConsistency: newMetrics.brand_consistency_score,
-              assetLibrary: newMetrics.asset_library_usage,
-              campaignPerformance: newMetrics.campaign_performance,
-              teamActivity: newMetrics.team_activity,
-            });
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [activeBrandId]);
-
-  const handleChipClick = async (query: string) => {
-    setAiQuery(query);
-    const lowerQuery = query.toLowerCase();
-    
-    // Check if this is an asset/logo request - use local structured data to show the actual image
-    const isAssetRequest = lowerQuery.includes("logo") || lowerQuery.includes("png") || 
-                           lowerQuery.includes("svg") || lowerQuery.includes("pull") ||
-                           lowerQuery.includes("asset") || lowerQuery.includes("download");
-    
-    if (isAssetRequest) {
-      // For asset requests, use the local processor which fetches and displays the actual assets
-      await processQuery(query);
-      // Clear any previous Pixify text response so asset display takes priority
-      setPixifyResponse(null);
-    } else if (activeBrandId) {
-      // For other queries, use the AI for natural language response
-      const result = await askPixify(query, activeBrandId);
-      if (result) {
-        setPixifyResponse(result.answer);
-      }
-    } else {
-      // Fallback to local assistant for structured data
-      processQuery(query);
-    }
-  };
-
-  const handleClearPixifyResponse = () => {
-    setPixifyResponse(null);
-    clearResponse();
-  };
-
+function Donut({ score = 78 }: { score?: number }) {
+  const r = 56;
+  const c = 2 * Math.PI * r;
+  const offset = c - (score / 100) * c;
   return (
-    <div className="min-h-screen bg-background">
-      {/* Increased vertical padding for better breathing room - Aesthetic-Usability Effect */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 max-w-7xl">
-        {/* Header - Clear visual hierarchy with proper spacing */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12"
-        >
-          <div className="flex items-center gap-4">
-            {brandLogo ? (
-              <img 
-                src={brandLogo} 
-                alt={activeBrand?.name || "Brand"} 
-                className="h-16 sm:h-20 object-contain"
-              />
-            ) : (
-              <div className="h-16 sm:h-20 w-16 sm:w-20 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Building2 className="h-8 w-8 text-primary" />
-              </div>
-            )}
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                {activeBrand?.name || "Brand Hub"}
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                {activeBrand?.purpose || "Digital asset management & brand guidelines"}
-              </p>
-            </div>
-          </div>
-          {/* Fitts's Law - Larger touch target for primary CTA */}
-          <Button className="bg-primary hover:bg-primary/90 shadow-md h-11 px-6">
-            <Download className="mr-2 h-4 w-4" />
-            Download Kit
-          </Button>
-        </motion.div>
-
-        {/* Dynamic Sections - rendered in order based on sections array */}
-        <AnimatePresence mode="popLayout">
-        {sections.filter(s => s.visible).map((section, idx) => {
-          switch (section.id) {
-            case "ai-assistant":
-              if (isLoading) return <AIAssistantSkeleton key={section.id} />;
-              return (
-                <motion.div
-                  key={section.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ 
-                    layout: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                >
-                  {/* Law of Common Region - Cards create visual grouping */}
-                  <Card className="mb-12 overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-muted/30">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <Sparkles className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg">Ask Pixify</CardTitle>
-                          <CardDescription className="text-sm">
-                            Find assets, explore guidelines, get answers instantly
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-5">
-                      {/* AI Help Toggle Button */}
-                      <Collapsible open={showAIHelp} onOpenChange={setShowAIHelp}>
-                        <CollapsibleTrigger asChild>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="w-full justify-between h-9 rounded-lg border-dashed hover:border-primary/50 hover:bg-primary/5"
-                          >
-                            <span className="flex items-center gap-2">
-                              <HelpCircle className="h-4 w-4 text-primary" />
-                              <span className="text-sm">AI Help — What can I ask?</span>
-                            </span>
-                            <motion.div
-                              animate={{ rotate: showAIHelp ? 180 : 0 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            </motion.div>
-                          </Button>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3"
-                          >
-                            {getAiCapabilities(activeBrand?.name || 'your brand').map((cap) => (
-                              <div 
-                                key={cap.category}
-                                className="rounded-xl border border-border/50 bg-background/50 p-3 space-y-2"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div className={`h-7 w-7 rounded-lg flex items-center justify-center ${cap.color}`}>
-                                    <cap.icon className="h-3.5 w-3.5" />
-                                  </div>
-                                  <span className="text-sm font-medium">{cap.category}</span>
-                                </div>
-                                <div className="space-y-1">
-                                  {cap.examples.map((example, idx) => (
-                                    <button
-                                      key={idx}
-                                      onClick={() => handleChipClick(example)}
-                                      disabled={aiLoading}
-                                      className="w-full text-left text-xs text-muted-foreground hover:text-foreground 
-                                               hover:bg-muted/50 rounded-md px-2 py-1.5 transition-colors truncate
-                                               disabled:opacity-50"
-                                    >
-                                      "{example}"
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </motion.div>
-                        </CollapsibleContent>
-                      </Collapsible>
-
-                      {/* Quick Action Chips */}
-                      <div className="flex flex-wrap gap-2">
-                        {quickChips.map((chip) => (
-                          <Button
-                            key={chip.label}
-                            variant="outline"
-                            size="sm"
-                            className="h-8 rounded-full text-xs font-medium hover:bg-primary/5 hover:border-primary/30 transition-all"
-                            onClick={() => handleChipClick(chip.query)}
-                            disabled={aiLoading || pixifyLoading}
-                          >
-                            <chip.icon className="h-3.5 w-3.5 mr-1.5" />
-                            {chip.label}
-                          </Button>
-                        ))}
-                      </div>
-
-                      {/* Animated Example Suggestion */}
-                      <AnimatedAIExamples onExampleClick={(text) => {
-                        setAiQuery(text);
-                        handleChipClick(text);
-                      }} />
-
-                      {/* Search Input */}
-                      <form 
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          if (aiQuery.trim()) handleChipClick(aiQuery);
-                        }}
-                        className="relative"
-                      >
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          placeholder="Ask anything about your brand..."
-                          className="pl-11 pr-24 h-12 text-sm rounded-xl border-muted-foreground/20 bg-background focus-visible:ring-primary/30"
-                          value={aiQuery}
-                          onChange={(e) => setAiQuery(e.target.value)}
-                          disabled={aiLoading || pixifyLoading}
-                        />
-                        <Button 
-                          type="submit" 
-                          size="sm"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 rounded-lg"
-                          disabled={aiLoading || pixifyLoading || !aiQuery.trim()}
-                        >
-                          {(aiLoading || pixifyLoading) ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <>
-                              Ask
-                              <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                            </>
-                          )}
-                        </Button>
-                      </form>
-
-                      {/* AI Response - Pixify API response */}
-                      <AnimatePresence>
-                        {pixifyResponse && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="rounded-xl bg-muted/50 p-4 border border-border/50">
-                              <div className="flex items-start justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <Sparkles className="h-4 w-4 text-primary" />
-                                  <span className="text-sm font-medium">Pixify AI</span>
-                                  <Badge variant="secondary" className="text-xs">Live</Badge>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={handleClearPixifyResponse}
-                                >
-                                  <X className="h-3.5 w-3.5" />
-                                </Button>
-                              </div>
-                              <p className="text-sm text-foreground whitespace-pre-wrap">{pixifyResponse}</p>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {/* Fallback AI Response - local structured data */}
-                      <AnimatePresence>
-                        {aiResponse && !pixifyResponse && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="rounded-xl bg-muted/50 p-4 border border-border/50">
-                              <div className="flex items-start justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <Sparkles className="h-4 w-4 text-primary" />
-                                  <span className="text-sm font-medium">Pixify</span>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={handleClearPixifyResponse}
-                                >
-                                  <X className="h-3.5 w-3.5" />
-                                </Button>
-                              </div>
-                              
-                              {aiResponse.message && (
-                                <p className="text-sm text-muted-foreground mb-4">{aiResponse.message}</p>
-                              )}
-
-                              {/* Asset Results */}
-                              {aiResponse.type === "assets" && aiResponse.assets && aiResponse.assets.length > 0 && (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                  {aiResponse.assets.map((asset) => (
-                                    <motion.div
-                                      key={asset.id}
-                                      initial={{ opacity: 0, scale: 0.95 }}
-                                      animate={{ opacity: 1, scale: 1 }}
-                                      className="group relative bg-background rounded-xl border overflow-hidden"
-                                    >
-                                      <div className="aspect-square bg-muted flex items-center justify-center p-4">
-                                        {asset.mime_type?.startsWith("image/svg") ? (
-                                          <img 
-                                            src={asset.storage_url} 
-                                            alt={asset.name}
-                                            className="w-full h-full object-contain"
-                                          />
-                                        ) : asset.mime_type?.startsWith("image/") ? (
-                                          <img 
-                                            src={asset.storage_url} 
-                                            alt={asset.name}
-                                            className="w-full h-full object-cover rounded"
-                                          />
-                                        ) : (
-                                          <FileText className="h-8 w-8 text-muted-foreground" />
-                                        )}
-                                      </div>
-                                      <div className="p-3 border-t">
-                                        <p className="text-xs font-medium truncate">{asset.name}</p>
-                                        <div className="flex items-center justify-between mt-2">
-                                          <Badge variant="secondary" className="text-[10px]">{asset.type}</Badge>
-                                          <a 
-                                            href={asset.storage_url} 
-                                            download={asset.name}
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                          >
-                                            <Download className="h-4 w-4 text-primary hover:text-primary/80" />
-                                          </a>
-                                        </div>
-                                      </div>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* Color Results */}
-                              {aiResponse.type === "colors" && aiResponse.colors && aiResponse.colors.length > 0 && (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                  {aiResponse.colors.map((color, idx) => (
-                                    <motion.div
-                                      key={idx}
-                                      initial={{ opacity: 0, y: 10 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      transition={{ delay: idx * 0.1 }}
-                                      className="bg-background rounded-xl border overflow-hidden"
-                                    >
-                                      <div 
-                                        className="h-16 w-full"
-                                        style={{ backgroundColor: color.value }}
-                                      />
-                                      <div className="p-3">
-                                        <p className="text-xs font-medium">{color.name}</p>
-                                        <p className="text-[10px] font-mono text-muted-foreground">{color.value}</p>
-                                        {color.description && (
-                                          <p className="text-[10px] text-muted-foreground mt-1">{color.description}</p>
-                                        )}
-                                      </div>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* Typography Results */}
-                              {aiResponse.type === "typography" && aiResponse.typography && aiResponse.typography.length > 0 && (
-                                <div className="space-y-3">
-                                  {aiResponse.typography.map((font, idx) => (
-                                    <motion.div
-                                      key={idx}
-                                      initial={{ opacity: 0, y: 10 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      transition={{ delay: idx * 0.1 }}
-                                      className="bg-background rounded-xl border p-4"
-                                    >
-                                      <div className="flex items-center justify-between mb-2">
-                                        <Badge variant="outline" className="text-xs">{font.name}</Badge>
-                                      </div>
-                                      <p className="text-lg font-medium" style={{ fontFamily: font.value }}>
-                                        {font.value}
-                                      </p>
-                                      <p className="text-sm text-muted-foreground" style={{ fontFamily: font.value }}>
-                                        Aa Bb Cc Dd Ee 123
-                                      </p>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* Brand Strategy Response */}
-                              {aiResponse.type === "brand" && aiResponse.brand && (
-                                <motion.div
-                                  initial={{ opacity: 0, y: 10 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  className="bg-background rounded-xl border p-4 space-y-3"
-                                >
-                                  <div className="grid grid-cols-2 gap-4">
-                                    {aiResponse.brand.archetype && (
-                                      <div>
-                                        <p className="text-xs font-medium text-muted-foreground mb-1">Archetype</p>
-                                        <p className="text-sm font-medium">{aiResponse.brand.archetype}</p>
-                                      </div>
-                                    )}
-                                    {aiResponse.brand.tone && (
-                                      <div>
-                                        <p className="text-xs font-medium text-muted-foreground mb-1">Tone</p>
-                                        <p className="text-sm">{aiResponse.brand.tone}</p>
-                                      </div>
-                                    )}
-                                  </div>
-                                  {aiResponse.brand.values && aiResponse.brand.values.length > 0 && (
-                                    <div>
-                                      <p className="text-xs font-medium text-muted-foreground mb-2">Values</p>
-                                      <div className="flex flex-wrap gap-1.5">
-                                        {aiResponse.brand.values.map((value, valueIdx) => (
-                                          <Badge key={valueIdx} variant="secondary" className="text-xs">
-                                            {value}
-                                          </Badge>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                </motion.div>
-                              )}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-
-            case "ai-showcase":
-              return (
-                <motion.div
-                  key={section.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ 
-                    layout: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                  className="mb-12"
-                >
-                  <AIShowcaseSection />
-                </motion.div>
-              );
-
-            case "metrics":
-              if (isLoading) return <MetricsSkeleton key={section.id} />;
-              return (
-                <motion.div
-                  key={section.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ 
-                    layout: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                  className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12"
-                >
-                  {[
-                    { label: "Brand Consistency", value: progressValues.brandConsistency, icon: Target, color: "text-primary" },
-                    { label: "Asset Usage", value: progressValues.assetLibrary, icon: FolderOpen, color: "text-primary" },
-                    { label: "Campaign Score", value: progressValues.campaignPerformance, icon: TrendingUp, color: "text-primary" },
-                    { label: "Team Activity", value: progressValues.teamActivity, icon: Users, color: "text-primary" },
-                  ].map((metric, metricIdx) => (
-                    <motion.div
-                      key={metric.label}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.2 + metricIdx * 0.1 }}
-                    >
-                      {/* Fitts's Law - Adequate card padding for touch targets */}
-                      <Card className="h-full border-0 shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="pt-6 pb-5 px-5">
-                          <div className="flex items-center justify-between mb-4">
-                            <metric.icon className={`h-5 w-5 ${metric.color}`} />
-                            <Badge variant="outline" className="text-[10px] h-5">Live</Badge>
-                          </div>
-                          <div className="text-3xl font-bold mb-2 tracking-tight">
-                            {metric.value}<span className="text-base text-muted-foreground">%</span>
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-3">{metric.label}</p>
-                          <Progress value={metric.value} className="h-1.5" />
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              );
-
-            case "quick-actions":
-              if (isLoading) return <QuickActionsSkeleton key={section.id} />;
-              return (
-                <motion.div
-                  key={section.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ 
-                    layout: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                  className="mb-12"
-                >
-                  {/* Visual Hierarchy - Consistent section headers */}
-                  <h2 className="text-lg font-semibold mb-5 tracking-tight">Quick Actions</h2>
-                  {/* Miller's Law - 5 items is optimal for cognitive load */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {[
-                      { title: "Brand Health", icon: Activity, href: "/brand-health" },
-                      { title: "Playbook", icon: FileStack, href: "/playbook" },
-                      { title: "Guidelines", icon: FileText, href: "/guideline" },
-                      { title: "Asset Library", icon: FolderOpen, href: "/library" },
-                      { title: "Generate", icon: Sparkles, href: "/generate" },
-                    ].map((action) => (
-                      <Link key={action.title} to={action.href}>
-                        {/* Fitts's Law - Larger touch targets with adequate padding */}
-                        <Card className="h-full border-0 shadow-sm hover:shadow-md hover:border-primary/20 transition-all cursor-pointer group">
-                          <CardContent className="flex items-center gap-4 p-5">
-                            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                              <action.icon className="h-5 w-5 text-primary" />
-                            </div>
-                            <span className="text-sm font-medium">{action.title}</span>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              );
-
-            case "brand-overview":
-              if (isLoading) return <BrandOverviewSkeleton key={section.id} />;
-              return (
-                <motion.div
-                  key={section.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ 
-                    layout: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                >
-                  {/* Visual Hierarchy - Consistent section headers */}
-                  <h2 className="text-lg font-semibold mb-5 tracking-tight">Brand Overview</h2>
-                  {/* Law of Proximity - Proper gap between related cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    {/* Strategy Card */}
-                    <Card className="border-0 shadow-sm">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <Heart className="h-4 w-4 text-primary" />
-                          Strategy
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Archetype</p>
-                          <p className="text-sm font-medium">{activeBrand?.archetype || 'Not set'}</p>
-                        </div>
-                        <Separator />
-                        <div>
-                          <p className="text-xs text-muted-foreground">Tone</p>
-                          <p className="text-sm font-medium">{activeBrand?.tone || 'Not set'}</p>
-                        </div>
-                        <Separator />
-                        <div className="flex flex-wrap gap-1.5">
-                          {brandFonts.display && (
-                            <Badge variant="secondary" className="text-xs">{brandFonts.display}</Badge>
-                          )}
-                          {brandFonts.body && (
-                            <Badge variant="secondary" className="text-xs">{brandFonts.body}</Badge>
-                          )}
-                          {!brandFonts.display && !brandFonts.body && (
-                            <span className="text-xs text-muted-foreground">No fonts configured</span>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Colors Card */}
-                    <Card className="border-0 shadow-sm">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <Palette className="h-4 w-4 text-primary" />
-                          Colors
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex gap-2">
-                          {brandColors.primary || brandColors.secondary ? (
-                            <>
-                              {brandColors.primary && (
-                                <div className="flex-1 text-center">
-                                  <div 
-                                    className="h-12 rounded-lg shadow-inner mb-2"
-                                    style={{ backgroundColor: brandColors.primary }}
-                                  />
-                                  <p className="text-xs font-mono text-muted-foreground">Primary</p>
-                                </div>
-                              )}
-                              {brandColors.secondary && (
-                                <div className="flex-1 text-center">
-                                  <div 
-                                    className="h-12 rounded-lg shadow-inner mb-2"
-                                    style={{ backgroundColor: brandColors.secondary }}
-                                  />
-                                  <p className="text-xs font-mono text-muted-foreground">Secondary</p>
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <p className="text-xs text-muted-foreground">No colors configured</p>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Activity Card */}
-                    <Card className="border-0 shadow-sm">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-primary" />
-                          Recent Activity
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        {[
-                          { text: "Brand created", time: "Just now", active: true },
-                          { text: "Logo uploaded", time: brandLogo ? "Recently" : "Pending", active: !!brandLogo },
-                          { text: "Colors configured", time: brandColors.primary ? "Recently" : "Pending", active: !!brandColors.primary },
-                        ].map((item, itemIdx) => (
-                          <div key={itemIdx} className="flex items-center gap-3">
-                            <div className={`h-2 w-2 rounded-full ${item.active ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
-                            <div className="flex-1">
-                              <p className="text-sm">{item.text}</p>
-                              <p className="text-xs text-muted-foreground">{item.time}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </div>
-                </motion.div>
-              );
-
-            default:
-              return null;
-          }
-        })}
-        </AnimatePresence>
-
-        {/* Customize View Floating Button */}
-        <CustomizeView sections={sections} defaultSections={defaultSections} onSectionsChange={setSections} />
+    <div className="relative h-36 w-36 mx-auto">
+      <svg viewBox="0 0 140 140" className="h-full w-full -rotate-90">
+        <circle cx="70" cy="70" r={r} stroke="hsl(var(--muted))" strokeWidth="10" fill="none" />
+        <circle cx="70" cy="70" r={r} stroke="hsl(35 75% 50%)" strokeWidth="10" fill="none" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="text-3xl font-serif">{score}</div>
+        <div className="text-[10px] text-muted-foreground">/ 100</div>
+        <div className="text-[10px] text-[hsl(15_70%_45%)] mt-1">↓ 4 this week</div>
       </div>
     </div>
   );
+}
+
+const Pill = ({ status }: { status: "pass" | "issue" | "fail" }) => {
+  if (status === "pass") return <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[hsl(140_50%_30%)] bg-[hsl(140_40%_92%)] px-2 py-0.5 rounded-md"><CheckCircle2 className="h-3 w-3" />Pass</span>;
+  if (status === "fail") return <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[hsl(0_60%_40%)] bg-[hsl(0_60%_95%)] px-2 py-0.5 rounded-md"><XCircle className="h-3 w-3" />Fail</span>;
+  return <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[hsl(35_75%_35%)] bg-[hsl(40_70%_92%)] px-2 py-0.5 rounded-md"><AlertTriangle className="h-3 w-3" />1 issue</span>;
 };
 
-export default Dashboard;
+export default function Dashboard() {
+  return (
+    <div className="px-8 py-6 max-w-[1600px] mx-auto space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Pepsi MENA</div>
+          <h1 className="text-3xl font-serif">Dashboard</h1>
+        </div>
+        <Button variant="outline" size="sm" className="rounded-lg"><RefreshCw className="h-3.5 w-3.5 mr-2" />Refresh score</Button>
+      </div>
+
+      {/* Ask Pixify */}
+      <div className="rounded-2xl border border-border/60 bg-[hsl(35_30%_97%)] p-5 relative">
+        <button className="absolute top-4 right-4 inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-border/60 hover:bg-muted/40 bg-background">Open full chat <ArrowUpRight className="h-3 w-3" /></button>
+        <div className="flex items-start gap-3 mb-4">
+          <div className="h-9 w-9 rounded-lg bg-foreground text-background flex items-center justify-center"><Sparkles className="h-4 w-4" /></div>
+          <div>
+            <div className="font-semibold text-sm">Ask Pixify</div>
+            <div className="text-xs text-muted-foreground">Pepsi MENA · Guidelines v3.2 · Brand guardian, not a content creator</div>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-3">
+          {suggestions.map((s) => (
+            <button key={s} className="text-xs px-3 py-1.5 rounded-md border border-border/60 bg-background hover:bg-muted/40">{s}</button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 relative">
+            <Input placeholder="Ask about brand guidelines, assets, compliance..." className="h-10 rounded-lg pr-10 bg-background" />
+            <Paperclip className="h-4 w-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2" />
+          </div>
+          <Button className="h-10 rounded-lg bg-foreground hover:bg-foreground/90 text-background"><Send className="h-3.5 w-3.5 mr-2" />Ask</Button>
+        </div>
+      </div>
+
+      {/* 3 columns */}
+      <div className="grid grid-cols-12 gap-5">
+        <div className="col-span-3 rounded-2xl border border-border/60 bg-card p-5">
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">Brand Health Score</div>
+          <Donut />
+          <div className="mt-5 space-y-3.5">
+            {categories.map((c) => (
+              <div key={c.name}>
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span>{c.name}</span>
+                  <span className="text-muted-foreground">{c.weight}% wt <span className="text-foreground font-serif text-sm ml-1">{c.score}</span></span>
+                </div>
+                <div className="h-1 bg-muted rounded-full overflow-hidden">
+                  <div className="h-full bg-[hsl(35_75%_50%)]" style={{ width: `${c.score}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <button className="mt-5 w-full text-xs py-2 rounded-md border border-border/60 hover:bg-muted/40 flex items-center justify-center gap-1">Full health report ›</button>
+        </div>
+
+        <div className="col-span-6 rounded-2xl border border-border/60 bg-card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Connected Touchpoints</div>
+            <button className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-border/60 hover:bg-muted/40"><Plus className="h-3 w-3" />Add</button>
+          </div>
+          <div className="space-y-3">
+            {touchpoints.map((t) => (
+              <div key={t.name} className="rounded-xl border border-border/60 p-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <t.icon className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm font-medium">{t.name}</div>
+                      <div className="text-[11px] text-muted-foreground">{t.type} · {t.scanned}</div>
+                    </div>
+                  </div>
+                  <Pill status={t.status as any} />
+                </div>
+                {t.issues.length > 0 && (
+                  <div className="mt-3 space-y-1.5">
+                    {t.issues.map((i, idx) => (
+                      <div key={idx} className="flex items-center justify-between gap-2 text-xs bg-muted/30 rounded-md px-2.5 py-1.5">
+                        <div className="flex items-center gap-2"><AlertTriangle className="h-3 w-3 text-[hsl(35_75%_45%)]" /><span>{i.text}</span></div>
+                        <span className="text-[10px] text-muted-foreground whitespace-nowrap">{i.rule}</span>
+                      </div>
+                    ))}
+                    <button className="text-xs text-muted-foreground hover:text-foreground mt-1">View details →</button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="col-span-3 rounded-2xl border border-border/60 bg-card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Live Findings</div>
+            <div className="text-[11px] text-muted-foreground">3 open <button className="ml-1 text-foreground hover:underline">View all →</button></div>
+          </div>
+          <div className="space-y-3">
+            {findings.map((f, i) => (
+              <div key={i} className="border-b border-border/40 last:border-0 pb-3 last:pb-0">
+                <div className="flex items-start gap-2">
+                  {f.sev === "error" ? <XCircle className="h-3.5 w-3.5 text-[hsl(0_60%_50%)] mt-0.5 shrink-0" /> : <AlertTriangle className="h-3.5 w-3.5 text-[hsl(35_75%_45%)] mt-0.5 shrink-0" />}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs leading-snug">{f.title}</div>
+                    <div className="text-[10px] text-muted-foreground mt-1">{f.meta}</div>
+                  </div>
+                  <button className="text-[11px] text-muted-foreground hover:text-foreground shrink-0">Fix →</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Compliance Check */}
+      <div className="rounded-2xl border border-border/60 bg-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Compliance Check</div>
+            <div className="text-sm font-medium">Upload an asset to check against brand guidelines</div>
+          </div>
+          <Button variant="outline" size="sm" className="rounded-lg"><Upload className="h-3.5 w-3.5 mr-2" />Upload & Check</Button>
+        </div>
+        <div className="grid grid-cols-4 gap-3">
+          {checks.map((c) => (
+            <div key={c.name} className="rounded-xl border border-border/60 p-3">
+              <div className="flex items-start justify-between mb-2">
+                <div className="h-9 w-9 rounded-md bg-muted/40 flex items-center justify-center"><c.icon className="h-4 w-4 text-muted-foreground" /></div>
+                <Pill status={c.status as any} />
+              </div>
+              <div className="text-sm font-medium truncate">{c.name}</div>
+              <div className="text-[11px] text-muted-foreground">{c.meta}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

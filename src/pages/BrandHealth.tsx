@@ -1,391 +1,173 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { 
-  TrendingUp, 
-  TrendingDown,
-  CheckCircle2,
-  AlertCircle,
-  BarChart3,
-  Users,
-  MessageSquare,
-  Shield,
-  Clock,
-  Eye,
-  Download
-} from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { ArrowLeft, RefreshCw, Download, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { exportBrandHealthPDF } from "@/utils/exportBrandHealthPDF";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-// Mock data - In production, this would come from Qatar Airways Instagram API and website analytics
-const brandHealthData = {
-  overallScore: 82,
-  trend: "+4",
-  lastUpdated: "2 hours ago",
-  categories: [
-    {
-      id: "visual",
-      name: "Visual Consistency",
-      score: 83,
-      weight: 25,
-      trend: "+2",
-      icon: Eye,
-      color: "hsl(var(--primary))",
-      metrics: [
-        { label: "Asset Compliance Rate", value: "87%", status: "good" },
-        { label: "Design System Usage", value: "85%", status: "good" },
-        { label: "Color Accuracy Index", value: "78%", status: "warning" }
-      ]
-    },
-    {
-      id: "voice",
-      name: "Voice & Messaging",
-      score: 76,
-      weight: 15,
-      trend: "-6",
-      icon: MessageSquare,
-      color: "hsl(280 70% 55%)",
-      metrics: [
-        { label: "Tone Match Accuracy", value: "80%", status: "good" },
-        { label: "Message Alignment", value: "72%", status: "warning" }
-      ]
-    },
-    {
-      id: "adoption",
-      name: "System Adoption",
-      score: 88,
-      weight: 20,
-      trend: "+8",
-      icon: Users,
-      color: "hsl(260 70% 60%)",
-      metrics: [
-        { label: "Active User Rate", value: "92%", status: "excellent" },
-        { label: "Guideline Reference", value: "85%", status: "good" },
-        { label: "Version Control", value: "87%", status: "good" }
-      ]
-    },
-    {
-      id: "engagement",
-      name: "Brand Engagement",
-      score: 70,
-      weight: 15,
-      trend: "-3",
-      icon: BarChart3,
-      color: "hsl(240 70% 65%)",
-      metrics: [
-        { label: "Engagement Consistency", value: "68%", status: "warning" },
-        { label: "Asset Reuse Rate", value: "72%", status: "warning" }
-      ]
-    },
-    {
-      id: "responsiveness",
-      name: "Operational Speed",
-      score: 82,
-      weight: 10,
-      trend: "+5",
-      icon: Clock,
-      color: "hsl(220 70% 60%)",
-      metrics: [
-        { label: "Update Implementation", value: "24h avg", status: "good" },
-        { label: "Error Correction", value: "6h avg", status: "excellent" }
-      ]
-    },
-    {
-      id: "governance",
-      name: "Brand Governance",
-      score: 90,
-      weight: 15,
-      trend: "+3",
-      icon: Shield,
-      color: "hsl(200 70% 55%)",
-      metrics: [
-        { label: "Permission Compliance", value: "94%", status: "excellent" },
-        { label: "Documentation Complete", value: "88%", status: "good" },
-        { label: "Audit Trail Coverage", value: "89%", status: "good" }
-      ]
-    }
-  ],
-  insights: [
-    {
-      type: "warning",
-      message: "Your tone consistency dropped 6% this month — check content uploaded by Marketing Team.",
-      action: "Review recent uploads"
-    },
-    {
-      type: "success",
-      message: "System adoption increased significantly! 92% of users are now actively using the DAM.",
-      action: "View adoption report"
-    },
-    {
-      type: "info",
-      message: "Brand engagement on Instagram shows 68% consistency with guidelines.",
-      action: "Run AI audit"
-    }
-  ]
+const categories = [
+  { name: "Visual Identity", weight: 40, score: 82, color: "hsl(140 50% 40%)" },
+  { name: "Messaging", weight: 30, score: 74, color: "hsl(35 75% 50%)" },
+  { name: "Strategic Alignment", weight: 70, score: 80, color: "hsl(140 50% 40%)" },
+  { name: "Governance", weight: 10, score: 65, color: "hsl(35 75% 50%)" },
+];
+
+const channels = ["Website", "Instagram", "LinkedIn"];
+
+const channelData: Record<string, any> = {
+  Website: { pages: 34, issues: 2, lastScan: "4h ago", rate: "83%", bars: [{ k: "Color", v: 78 }, { k: "Logo", v: 88 }, { k: "Typo", v: 91 }], issuesList: ["Off-palette color #2A8F4C on /promo", "Outdated logo variant in header"] },
+  Instagram: { pages: 56, issues: 1, lastScan: "1h ago", rate: "92%", bars: [{ k: "Color", v: 88 }, { k: "Logo", v: 94 }, { k: "Typo", v: 96 }], issuesList: ["Heavy warmth filter on product hero"] },
+  LinkedIn: { pages: 12, issues: 1, lastScan: "2d ago", rate: "75%", bars: [{ k: "Color", v: 70 }, { k: "Logo", v: 65 }, { k: "Typo", v: 80 }], issuesList: ["Outdated logo variant on cover image"] },
 };
 
-const getTierInfo = (score: number) => {
-  if (score >= 90) return { tier: "Excellent", color: "hsl(142 71% 45%)", icon: CheckCircle2 };
-  if (score >= 75) return { tier: "Strong", color: "hsl(47 96% 53%)", icon: CheckCircle2 };
-  if (score >= 60) return { tier: "Needs Attention", color: "hsl(25 95% 53%)", icon: AlertCircle };
-  return { tier: "Critical", color: "hsl(0 84% 60%)", icon: AlertCircle };
-};
-
-const BrandHealth = () => {
-  const tierInfo = getTierInfo(brandHealthData.overallScore);
-  const TierIcon = tierInfo.icon;
-  const { toast } = useToast();
-
-  const handleExportPDF = async () => {
-    try {
-      toast({
-        title: "Generating PDF...",
-        description: "Your report is being created",
-      });
-      await exportBrandHealthPDF(brandHealthData);
-      toast({
-        title: "Success!",
-        description: "Brand Health report downloaded successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Export Failed",
-        description: "Could not generate PDF report",
-        variant: "destructive",
-      });
-    }
-  };
-
+function Donut({ score = 78 }) {
+  const r = 56; const c = 2 * Math.PI * r; const off = c - (score / 100) * c;
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header with Breadcrumb */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="px-8 py-4 flex items-center justify-between">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/dashboard">Dashboard</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Brand Health</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <Button 
-            onClick={handleExportPDF}
-            className="gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Export PDF Report
-          </Button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="p-8 max-w-[1400px] mx-auto">
-        {/* Hero Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-5xl font-bold text-foreground">Brand Health Score</h1>
-            <Badge variant="secondary" className="text-sm">
-              Updated {brandHealthData.lastUpdated}
-            </Badge>
-          </div>
-          <p className="text-lg text-muted-foreground">
-            Real-time analysis of visual, verbal, and operational brand consistency
-          </p>
-        </div>
-
-        {/* Overall Score Card */}
-        <Card className="mb-8 border-2 overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 pointer-events-none" />
-          <CardContent className="p-8 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-              {/* Score Circle */}
-              <div className="flex items-center justify-center">
-                <div className="relative w-48 h-48">
-                  <svg className="w-48 h-48 transform -rotate-90">
-                    <circle
-                      cx="96"
-                      cy="96"
-                      r="88"
-                      stroke="hsl(var(--muted))"
-                      strokeWidth="12"
-                      fill="none"
-                    />
-                    <circle
-                      cx="96"
-                      cy="96"
-                      r="88"
-                      stroke="url(#scoreGradient)"
-                      strokeWidth="12"
-                      fill="none"
-                      strokeDasharray={`${(brandHealthData.overallScore / 100) * 553} 553`}
-                      strokeLinecap="round"
-                      className="transition-all duration-1000"
-                    />
-                    <defs>
-                      <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="hsl(var(--primary))" />
-                        <stop offset="100%" stopColor="hsl(var(--primary-glow))" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-5xl font-bold text-foreground">
-                      {brandHealthData.overallScore}
-                    </span>
-                    <span className="text-sm text-muted-foreground">out of 100</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tier Info */}
-              <div className="text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
-                  <TierIcon className="w-8 h-8" style={{ color: tierInfo.color }} />
-                  <h2 className="text-3xl font-bold" style={{ color: tierInfo.color }}>
-                    {tierInfo.tier}
-                  </h2>
-                </div>
-                <p className="text-muted-foreground text-lg mb-4">
-                  Fully consistent and scalable brand system
-                </p>
-                <div className="flex items-center justify-center md:justify-start gap-2">
-                  <Badge variant="secondary" className="gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    {brandHealthData.trend} vs last month
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="space-y-3">
-                {brandHealthData.categories.slice(0, 3).map((cat) => (
-                  <div key={cat.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <cat.icon className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">{cat.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">{cat.score}</span>
-                      {parseInt(cat.trend) > 0 ? (
-                        <TrendingUp className="w-3 h-3 text-green-500" />
-                      ) : (
-                        <TrendingDown className="w-3 h-3 text-orange-500" />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* AI Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-          {brandHealthData.insights.map((insight, idx) => (
-            <Card 
-              key={idx} 
-              className={`border-l-4 ${
-                insight.type === 'success' ? 'border-l-green-500' :
-                insight.type === 'warning' ? 'border-l-orange-500' :
-                'border-l-blue-500'
-              }`}
-            >
-              <CardHeader className="pb-3">
-                <CardDescription className="text-sm">{insight.message}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <button className="text-sm text-primary hover:underline font-medium">
-                  {insight.action} →
-                </button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Category Breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {brandHealthData.categories.map((category, idx) => {
-            const CategoryIcon = category.icon;
-            return (
-              <Card key={category.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="p-2 rounded-lg" style={{ backgroundColor: `${category.color}20` }}>
-                      <CategoryIcon className="w-5 h-5" style={{ color: category.color }} />
-                    </div>
-                    <Badge variant={parseInt(category.trend) > 0 ? "default" : "secondary"}>
-                      {category.trend}%
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg">{category.name}</CardTitle>
-                  <CardDescription>Weight: {category.weight}%</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Score Progress */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-2xl font-bold">{category.score}</span>
-                      <span className="text-xs text-muted-foreground">/ 100</span>
-                    </div>
-                    <Progress value={category.score} className="h-2" />
-                  </div>
-
-                  {/* Metrics */}
-                  <div className="space-y-2 pt-2 border-t border-border">
-                    {category.metrics.map((metric, mIdx) => (
-                      <div key={mIdx} className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">{metric.label}</span>
-                        <span className={`font-medium ${
-                          metric.status === 'excellent' ? 'text-green-500' :
-                          metric.status === 'good' ? 'text-blue-500' :
-                          'text-orange-500'
-                        }`}>
-                          {metric.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* Data Source Note */}
-        <Card className="mt-8 bg-muted/30">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-muted-foreground mt-0.5" />
-              <div>
-                <h3 className="font-semibold mb-1">Data Sources</h3>
-                <p className="text-sm text-muted-foreground">
-                  Brand Health metrics are calculated from Qatar Airways official Instagram account analytics, 
-                  website performance data, and internal DAM system usage. Data refreshes every 2 hours.
-                  Connect additional social channels for more comprehensive analysis.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="relative h-36 w-36 mx-auto">
+      <svg viewBox="0 0 140 140" className="h-full w-full -rotate-90">
+        <circle cx="70" cy="70" r={r} stroke="hsl(var(--muted))" strokeWidth="10" fill="none" />
+        <circle cx="70" cy="70" r={r} stroke="hsl(35 75% 50%)" strokeWidth="10" fill="none" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={off} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="text-3xl font-serif">{score}</div>
+        <div className="text-[10px] text-muted-foreground">/ 100</div>
+        <div className="text-[10px] text-[hsl(15_70%_45%)] mt-1">↓ 4 this week</div>
       </div>
     </div>
   );
-};
+}
 
-export default BrandHealth;
+function LineChart() {
+  const pts = [78, 79, 78, 76, 77, 75, 76, 78, 79, 80, 79, 81, 82, 78];
+  const w = 800, h = 90, p = 20;
+  const min = 70, max = 85;
+  const path = pts.map((v, i) => {
+    const x = p + (i / (pts.length - 1)) * (w - 2 * p);
+    const y = p + (1 - (v - min) / (max - min)) * (h - 2 * p);
+    return `${i === 0 ? "M" : "L"}${x},${y}`;
+  }).join(" ");
+  return (
+    <svg viewBox={`0 0 ${w} ${h + 20}`} className="w-full">
+      {Array.from({ length: pts.length }).map((_, i) => {
+        const x = p + (i / (pts.length - 1)) * (w - 2 * p);
+        return <line key={i} x1={x} y1={p - 4} x2={x} y2={h - p + 4} stroke="hsl(var(--border))" strokeWidth="0.5" />;
+      })}
+      <path d={path} stroke="hsl(var(--foreground))" strokeWidth="1.5" fill="none" />
+      {pts.map((v, i) => {
+        const x = p + (i / (pts.length - 1)) * (w - 2 * p);
+        const y = p + (1 - (v - min) / (max - min)) * (h - 2 * p);
+        return <circle key={i} cx={x} cy={y} r="2" fill="hsl(var(--foreground))" />;
+      })}
+    </svg>
+  );
+}
+
+export default function BrandHealth() {
+  const [channel, setChannel] = useState("Website");
+  const [range, setRange] = useState("30d");
+  const d = channelData[channel];
+
+  return (
+    <div className="px-8 py-6 max-w-[1600px] mx-auto space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm hover:text-muted-foreground mb-3"><ArrowLeft className="h-4 w-4" />Back</Link>
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Coca-Cola Light</div>
+          <h1 className="text-3xl font-serif">Brand Health Score</h1>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="rounded-lg"><RefreshCw className="h-3.5 w-3.5 mr-2" />Refresh</Button>
+          <Button variant="outline" size="sm" className="rounded-lg"><Download className="h-3.5 w-3.5 mr-2" />Export PDF</Button>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-[hsl(0_60%_85%)] bg-[hsl(0_60%_97%)] p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <AlertTriangle className="h-4 w-4 text-[hsl(0_60%_50%)]" />
+          <div className="text-sm"><span className="font-medium">Score dropped 4 points this week</span> <span className="text-muted-foreground">Visual Identity KPI dragging score down — 2 pages with off-palette colors + 6 posts with imagery issues</span></div>
+        </div>
+        <Button variant="outline" size="sm" className="rounded-lg bg-background">View issues</Button>
+      </div>
+
+      <div className="grid grid-cols-12 gap-5">
+        <div className="col-span-3 rounded-2xl border border-border/60 bg-card p-5">
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-4">Overall Score</div>
+          <Donut />
+          <p className="text-[11px] text-muted-foreground text-center mt-3 leading-relaxed">Computed from 10 KPIs across 3 live touchpoints · Updated 2h ago</p>
+        </div>
+        <div className="col-span-9 rounded-2xl border border-border/60 bg-card p-5">
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-4">Category Breakdown · click to drill down</div>
+          <div className="space-y-5">
+            {categories.map((c) => (
+              <div key={c.name}>
+                <div className="flex items-center justify-between text-sm mb-1.5">
+                  <span className="font-medium">{c.name}</span>
+                  <span className="text-xs text-muted-foreground">{c.weight}% wt <span className="text-foreground font-serif text-base ml-2">{c.score}</span></span>
+                </div>
+                <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div className="h-full" style={{ width: `${c.score}%`, backgroundColor: c.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border/60 bg-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Touchpoint Breakdown</div>
+            <div className="text-sm font-medium">Per-channel compliance performance</div>
+          </div>
+          <Button variant="outline" size="sm" className="rounded-lg">+ Add touchpoint</Button>
+        </div>
+        <div className="flex gap-1 border-b border-border/60 mb-5">
+          {channels.map((c) => (
+            <button key={c} onClick={() => setChannel(c)} className={`px-4 py-2 text-sm transition-colors relative ${channel === c ? "font-medium" : "text-muted-foreground hover:text-foreground"}`}>
+              {c}
+              {channel === c && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground" />}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-4 gap-3 mb-5">
+          {[{ v: d.pages, l: "Pages scanned" }, { v: d.issues, l: "Issues found" }, { v: d.lastScan, l: "Last scan" }, { v: d.rate, l: "Compliance rate" }].map((s, i) => (
+            <div key={i} className="rounded-lg bg-muted/30 p-3">
+              <div className="text-2xl font-serif">{s.v}</div>
+              <div className="text-[11px] text-muted-foreground">{s.l}</div>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-4 mb-5">
+          {d.bars.map((b: any) => (
+            <div key={b.k}>
+              <div className="flex items-center justify-between text-xs mb-1"><span>{b.k}</span><span className="font-serif text-sm">{b.v}</span></div>
+              <div className="h-1 bg-muted rounded-full overflow-hidden"><div className="h-full bg-[hsl(140_50%_40%)]" style={{ width: `${b.v}%` }} /></div>
+            </div>
+          ))}
+        </div>
+        <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">Issues on this touchpoint</div>
+        <div className="space-y-1.5">
+          {d.issuesList.map((it: string, i: number) => (
+            <div key={i} className="flex items-center justify-between text-xs bg-muted/30 rounded-md px-3 py-2">
+              <div className="flex items-center gap-2"><AlertTriangle className="h-3 w-3 text-[hsl(35_75%_45%)]" />{it}</div>
+              <span className="text-[10px] text-muted-foreground">§3.1</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border/60 bg-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Score History</div>
+            <div className="text-sm font-medium">Last 30 days</div>
+          </div>
+          <div className="inline-flex rounded-lg border border-border/60 bg-muted/30 p-0.5 text-xs">
+            {["7d", "14d", "30d"].map((r) => (
+              <button key={r} onClick={() => setRange(r)} className={`px-3 py-1 rounded-md transition-colors ${range === r ? "bg-background shadow-sm font-medium" : "text-muted-foreground"}`}>{r}</button>
+            ))}
+          </div>
+        </div>
+        <LineChart />
+      </div>
+    </div>
+  );
+}
