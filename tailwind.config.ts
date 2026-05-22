@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         'display': ['Cormorant Garamond', 'Georgia', 'serif'],
-        'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        'sans': ['Stack Sans Notch', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'montserrat': ['Montserrat', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         'stack': ['Stack Sans Notch', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
