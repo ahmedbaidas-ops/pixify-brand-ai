@@ -14,9 +14,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        'display': ['Cormorant Garamond', 'Georgia', 'serif'],
+        'display': ['Stack Sans Notch', 'Inter', 'sans-serif'],
         'sans': ['Stack Sans Notch', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        'montserrat': ['Montserrat', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        'serif': ['Stack Sans Notch', 'Inter', 'sans-serif'],
+        'mono': ['Stack Sans Notch', 'ui-monospace', 'monospace'],
+        'montserrat': ['Stack Sans Notch', 'Inter', 'sans-serif'],
         'stack': ['Stack Sans Notch', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       colors: {
