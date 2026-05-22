@@ -283,14 +283,14 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Stack Sans Notch', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   /* Typography - Modern Clean Style */
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Stack Sans Notch', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   h1 {
@@ -305,9 +305,9 @@ All colors MUST be HSL.
     @apply text-2xl md:text-3xl;
   }
 
-  /* UI elements use Inter */
+  /* UI elements use Stack Sans Notch */
   button, input, textarea, select, label {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Stack Sans Notch', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   /* Smooth transitions */
