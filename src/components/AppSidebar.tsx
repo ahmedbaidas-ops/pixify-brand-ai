@@ -1,5 +1,7 @@
-import { LayoutDashboard, BookOpen, FolderOpen, ShieldCheck, Activity, UserCog, Settings as SettingsIcon, Sparkles, ChevronDown } from "lucide-react";
+import { LayoutDashboard, BookOpen, FolderOpen, ShieldCheck, Activity, UserCog, Settings as SettingsIcon, Sparkles, ChevronDown, Check, Plus } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { useNavigate } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +25,16 @@ const navigation = [
   { title: "Settings", url: "/settings", icon: SettingsIcon },
 ];
 
+const brands = [
+  { code: "CCL", name: "Coca-Cola Light", industry: "Beverages", score: 78, color: "hsl(0 75% 45%)" },
+  { code: "PEP", name: "Pepsi MENA", industry: "Beverages", score: 82, color: "hsl(220 70% 25%)", active: true },
+  { code: "ARX", name: "Aramex", industry: "Logistics", score: 71, color: "hsl(15 75% 55%)" },
+  { code: "TLB", name: "Talabat", industry: "Food Delivery", score: 88, color: "hsl(28 90% 55%)" },
+];
+
 export function AppSidebar() {
+  const navigate = useNavigate();
+  const active = brands.find((b) => b.active) ?? brands[0];
   return (
     <Sidebar className="border-r border-border/50">
       <SidebarHeader className="px-5 py-4">
@@ -34,14 +45,39 @@ export function AppSidebar() {
 
       <SidebarContent className="px-3">
         {/* Brand switcher */}
-        <div className="mx-2 mb-4 rounded-xl border border-border/60 bg-muted/30 px-3 py-2.5 flex items-center gap-2.5 cursor-pointer hover:bg-muted/50 transition-colors">
-          <div className="h-8 w-8 rounded-md bg-[hsl(220_70%_25%)] text-white text-[10px] font-bold flex items-center justify-center">PEP</div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate">Pepsi MENA</div>
-            <div className="text-[11px] text-muted-foreground">Switch brand</div>
-          </div>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="mx-2 mb-4 rounded-xl border border-border/60 bg-muted/30 px-3 py-2.5 flex items-center gap-2.5 cursor-pointer hover:bg-muted/50 transition-colors w-[calc(100%-1rem)]">
+              <div className="h-8 w-8 rounded-md text-white text-[10px] font-bold flex items-center justify-center" style={{ backgroundColor: active.color }}>{active.code}</div>
+              <div className="flex-1 min-w-0 text-left">
+                <div className="text-sm font-medium truncate">{active.name}</div>
+                <div className="text-[11px] text-muted-foreground">Switch brand</div>
+              </div>
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent side="right" align="start" sideOffset={8} className="w-72 p-2 rounded-xl">
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase px-2 py-1.5">Leo Burnett · Switch brand</div>
+            <div className="space-y-0.5">
+              {brands.map((b) => (
+                <button key={b.code} className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-muted/50 text-left">
+                  <div className="h-8 w-8 rounded-md text-white text-[10px] font-bold flex items-center justify-center shrink-0" style={{ backgroundColor: b.color }}>{b.code}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">{b.name}</div>
+                    <div className="text-[11px] text-muted-foreground truncate">{b.industry} · {b.score}/100</div>
+                  </div>
+                  {b.active && <Check className="h-4 w-4 text-muted-foreground" />}
+                </button>
+              ))}
+            </div>
+            <div className="mt-2 pt-2 border-t border-border/60">
+              <button onClick={() => navigate("/onboarding")} className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-muted/50 text-sm">
+                <div className="h-8 w-8 rounded-md border border-dashed border-border flex items-center justify-center"><Plus className="h-4 w-4 text-muted-foreground" /></div>
+                <span className="font-medium">Add new brand</span>
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
 
         <SidebarGroup>
           <SidebarGroupContent>
