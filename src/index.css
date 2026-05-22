@@ -22,10 +22,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 235 25% 15%;
 
-    /* Primary: Qatar Maroon #5C0A3A */
-    --primary: 330 85% 20%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 330 70% 35%;
+    /* Primary: Material 3 Yellow with black text */
+    --primary: 48 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --primary-glow: 48 100% 60%;
 
     /* Secondary: Desert Sand */
     --secondary: 28 25% 72%;
@@ -44,31 +44,31 @@ All colors MUST be HSL.
 
     --border: 28 15% 90%;
     --input: 28 15% 90%;
-    --ring: 330 85% 20%;
+    --ring: 48 100% 50%;
 
     --radius: 1rem;
 
-    /* Premium Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(330 85% 20%), hsl(330 70% 35%));
+    /* M3 Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(48 100% 50%), hsl(48 100% 60%));
     --gradient-accent: linear-gradient(135deg, hsl(235 25% 15%), hsl(235 30% 25%));
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(28 15% 98%));
 
     /* Elegant Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(330 85% 20% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(330 85% 20% / 0.1), 0 2px 4px -1px hsl(330 85% 20% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(330 85% 20% / 0.1), 0 4px 6px -2px hsl(330 85% 20% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(330 85% 20% / 0.1), 0 10px 10px -5px hsl(330 85% 20% / 0.04);
-    --shadow-premium: 0 25px 50px -12px hsl(330 85% 20% / 0.25);
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.06);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -1px hsl(0 0% 0% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08), 0 4px 6px -2px hsl(0 0% 0% / 0.04);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 10px 10px -5px hsl(0 0% 0% / 0.04);
+    --shadow-premium: 0 25px 50px -12px hsl(48 100% 50% / 0.25);
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 235 25% 15%;
-    --sidebar-primary: 330 85% 20%;
+    --sidebar-primary: 48 100% 50%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 28 15% 95%;
     --sidebar-accent-foreground: 235 25% 15%;
     --sidebar-border: 28 15% 90%;
-    --sidebar-ring: 330 85% 20%;
+    --sidebar-ring: 48 100% 50%;
 
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -85,9 +85,9 @@ All colors MUST be HSL.
     --popover: 235 25% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 330 70% 45%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 330 65% 55%;
+    --primary: 48 100% 55%;
+    --primary-foreground: 0 0% 0%;
+    --primary-glow: 48 100% 65%;
 
     --secondary: 28 20% 25%;
     --secondary-foreground: 28 25% 72%;
@@ -103,9 +103,9 @@ All colors MUST be HSL.
 
     --border: 235 15% 25%;
     --input: 235 15% 25%;
-    --ring: 330 70% 45%;
+    --ring: 48 100% 55%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(330 70% 45%), hsl(330 65% 55%));
+    --gradient-primary: linear-gradient(135deg, hsl(48 100% 55%), hsl(48 100% 65%));
     --gradient-accent: linear-gradient(135deg, hsl(235 30% 20%), hsl(235 25% 30%));
     --gradient-subtle: linear-gradient(180deg, hsl(235 25% 10%), hsl(235 20% 15%));
 
@@ -117,12 +117,12 @@ All colors MUST be HSL.
 
     --sidebar-background: 235 25% 12%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 330 70% 45%;
+    --sidebar-primary: 48 100% 55%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 235 20% 18%;
     --sidebar-accent-foreground: 0 0% 90%;
     --sidebar-border: 235 15% 20%;
-    --sidebar-ring: 330 70% 45%;
+    --sidebar-ring: 48 100% 55%;
   }
 
   /* Modern Frosty Neumorphic Glassmorphism Theme - Light & Airy */
