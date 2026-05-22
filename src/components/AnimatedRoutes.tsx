@@ -13,6 +13,7 @@ import Governance from "@/pages/Governance";
 import Admin from "@/pages/Admin";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
+import Onboarding from "@/pages/Onboarding";
 import { Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -52,7 +53,7 @@ export const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Index /></PageTransition>} />
         <Route path="/auth" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/onboarding" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/onboarding" element={<PageTransition><Onboarding /></PageTransition>} />
         <Route path="/dashboard" element={<AppLayout><PageTransition><Dashboard /></PageTransition></AppLayout>} />
         <Route path="/guideline" element={<AppLayout><PageTransition><Guideline /></PageTransition></AppLayout>} />
         <Route path="/library" element={<AppLayout><PageTransition><Library /></PageTransition></AppLayout>} />
