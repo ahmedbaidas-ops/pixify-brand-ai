@@ -1,445 +1,154 @@
+import { ArrowLeft, Download, BookOpen, Layers, Palette, Type, MessageSquare, Image as ImageIcon, Ruler, Star, Target, Award, Users, Quote } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, MessageSquare } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const Guideline = () => {
-  const [view, setView] = useState<"brand" | "interactive">("brand");
+const sections = [
+  { id: "introduction", title: "Introduction", icon: BookOpen },
+  { id: "logo", title: "Logo", icon: Layers },
+  { id: "colors", title: "Colors", icon: Palette },
+  { id: "typography", title: "Typography", icon: Type },
+  { id: "voice", title: "Voice & Tone", icon: MessageSquare },
+  { id: "imagery", title: "Imagery", icon: ImageIcon },
+  { id: "spacing", title: "Spacing", icon: Ruler },
+  { id: "examples", title: "Examples", icon: Star },
+];
+
+const introCards = [
+  { icon: Target, label: "Brand Purpose", text: '"To make the light choice feel like the right choice — always."' },
+  { icon: Award, label: "Brand Positioning", text: '"Premium, low-calorie cola for health-conscious adults. The lighter choice without compromise."' },
+  { icon: Users, label: "Primary Audience", text: '"Health-conscious adults 25–45, active lifestyle, GCC + LEVANT region."' },
+  { icon: Quote, label: "Brand Promise", text: '"Zero guilt, full taste. Every time."' },
+];
+
+const logoVariants = [
+  { label: "Primary", desc: "Default. Red on white.", bg: "bg-[hsl(0_75%_50%)]", color: "text-white" },
+  { label: "Reversed", desc: "White on red.", bg: "bg-white border", color: "text-[hsl(0_75%_50%)]" },
+  { label: "Monochrome", desc: "Print use.", bg: "bg-white border", color: "text-foreground" },
+  { label: "Dark", desc: "Dark backgrounds.", bg: "bg-foreground", color: "text-white" },
+];
+
+export default function Guideline() {
+  const [active, setActive] = useState("introduction");
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card sticky top-0 z-10">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Brand Guideline</h1>
-              <p className="text-muted-foreground">Qatar Airways brand standards</p>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant={view === "brand" ? "default" : "outline"}
-                onClick={() => setView("brand")}
-                className={view === "brand" ? "bg-gradient-primary" : ""}
-              >
-                <Eye className="mr-2 h-4 w-4" />
-                Brand View
-              </Button>
-              <Button
-                variant={view === "interactive" ? "default" : "outline"}
-                onClick={() => setView("interactive")}
-                className={view === "interactive" ? "bg-gradient-primary" : ""}
-              >
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Interactive AI
-              </Button>
-            </div>
-          </div>
+    <div className="flex">
+      {/* Sidebar */}
+      <aside className="w-64 border-r border-border/60 bg-background min-h-[calc(100vh-56px)] p-5 sticky top-[56px]">
+        <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm text-foreground hover:text-muted-foreground mb-5">
+          <ArrowLeft className="h-4 w-4" />Back
+        </Link>
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Sections</div>
+          <button className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border border-border/60 hover:bg-muted/40"><Download className="h-3 w-3" />PDF</button>
         </div>
-      </div>
+        <nav className="space-y-0.5">
+          {sections.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setActive(s.id)}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-left transition-colors ${
+                active === s.id ? "bg-muted font-medium" : "hover:bg-muted/40"
+              }`}
+            >
+              <s.icon className="h-4 w-4 text-muted-foreground" />
+              {s.title}
+            </button>
+          ))}
+        </nav>
+        <div className="mt-8 pt-4 border-t border-border/60">
+          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Version</div>
+          <div className="text-sm font-medium">v3.2</div>
+          <div className="text-[11px] text-muted-foreground mt-0.5">Published · Jan 12, 2026</div>
+        </div>
+      </aside>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-8">
-        {view === "brand" ? (
-          <BrandView />
-        ) : (
-          <InteractiveView />
-        )}
-      </div>
-    </div>
-  );
-};
-
-const BrandView = () => {
-  return (
-    <div className="max-w-5xl mx-auto space-y-16">
-      {/* Strategy Section */}
-      <section id="strategy" className="scroll-mt-20">
-        <div className="mb-8">
-          <div className="inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-            STRATEGY
-          </div>
-          <h2 className="text-4xl font-bold mb-4">Brand Purpose</h2>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Qatar Airways connects the world with exceptional hospitality and innovation,
-            making travel a seamless and enriching experience for every passenger.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="p-6">
-            <h3 className="text-lg font-bold mb-3">Archetype</h3>
-            <p className="text-muted-foreground mb-2">Caregiver / Explorer</p>
-            <p className="text-sm">Nurturing journeys while embracing adventure</p>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-lg font-bold mb-3">Tone of Voice</h3>
-            <p className="text-muted-foreground mb-2">Warm, Premium, Trustworthy</p>
-            <p className="text-sm">Professional yet approachable communication</p>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-lg font-bold mb-3">Target Audience</h3>
-            <p className="text-muted-foreground mb-2">Global travelers</p>
-            <p className="text-sm">Business and leisure passengers seeking quality</p>
-          </Card>
-        </div>
-      </section>
-
-      {/* Logo Section */}
-      <section id="logo" className="scroll-mt-20">
-        <div className="mb-8">
-          <div className="inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-            LOGO
-          </div>
-          <h2 className="text-4xl font-bold mb-4">Logo Usage & Guidelines</h2>
-          <p className="text-muted-foreground">The Oryx mark and Qatar Airways wordmark represent our brand identity. Proper usage ensures consistent brand recognition.</p>
-        </div>
-
-        {/* Primary Logo Display */}
-        <Card className="p-12 bg-white mb-8">
-          <div className="flex items-center justify-center min-h-[200px]">
-            <img 
-              src="/qatar-airways-logo.png" 
-              alt="Qatar Airways Logo"
-              className="max-h-[160px] w-auto object-contain"
-            />
-          </div>
-        </Card>
-
-        {/* Clear Space Requirements */}
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold mb-4">Clear Space Requirements</h3>
-          <Card className="p-8">
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-primary">X</span>
-                </div>
-                <div>
-                  <h4 className="font-bold mb-2">Minimum Clear Space</h4>
-                  <p className="text-muted-foreground">
-                    Maintain a clear space equal to the height of the letter "Q" in QATAR around all sides of the logo. 
-                    This ensures the logo maintains its visual impact and is not crowded by other elements.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-muted/30 p-8 rounded-lg">
-                <div className="relative inline-block">
-                  <img 
-                    src="/qatar-airways-logo.png" 
-                    alt="Clear Space Example"
-                    className="h-20 w-auto"
-                  />
-                  <div className="absolute -inset-8 border-2 border-dashed border-primary/40"></div>
-                  <div className="absolute -top-10 left-0 text-xs text-primary font-mono">← X →</div>
-                  <div className="absolute -left-10 top-0 text-xs text-primary font-mono rotate-90">← X →</div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Minimum Size */}
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold mb-4">Minimum Size</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="p-6">
-              <h4 className="font-bold mb-3">Digital / Screen</h4>
-              <div className="space-y-2 text-sm">
-                <p className="text-muted-foreground">Minimum width: <strong className="text-foreground">120px</strong></p>
-                <p className="text-muted-foreground">Minimum height: <strong className="text-foreground">40px</strong></p>
-                <div className="mt-4 pt-4 border-t">
-                  <p className="text-xs text-muted-foreground">Ensures legibility on screens and web applications</p>
-                </div>
-              </div>
-            </Card>
-            <Card className="p-6">
-              <h4 className="font-bold mb-3">Print</h4>
-              <div className="space-y-2 text-sm">
-                <p className="text-muted-foreground">Minimum width: <strong className="text-foreground">40mm</strong></p>
-                <p className="text-muted-foreground">Minimum height: <strong className="text-foreground">14mm</strong></p>
-                <div className="mt-4 pt-4 border-t">
-                  <p className="text-xs text-muted-foreground">Maintains quality and brand recognition in printed materials</p>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* Background Usage */}
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold mb-4">Approved Backgrounds</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="p-6 bg-white">
-              <div className="aspect-square flex items-center justify-center mb-3">
-                <img 
-                  src="/qatar-airways-logo.png" 
-                  alt="Logo on white"
-                  className="h-16 w-auto"
-                />
-              </div>
-              <p className="text-xs text-center font-medium">White</p>
-            </Card>
-            <Card className="p-6 bg-[#0F1020]">
-              <div className="aspect-square flex items-center justify-center mb-3">
-                <img 
-                  src="/qatar-airways-logo.png" 
-                  alt="Logo on dark"
-                  className="h-16 w-auto"
-                  style={{ filter: "brightness(0) invert(1)" }}
-                />
-              </div>
-              <p className="text-xs text-center font-medium text-white">Dark Neutral</p>
-            </Card>
-            <Card className="p-6 bg-[#CBB59C]">
-              <div className="aspect-square flex items-center justify-center mb-3">
-                <img 
-                  src="/qatar-airways-logo.png" 
-                  alt="Logo on sand"
-                  className="h-16 w-auto"
-                />
-              </div>
-              <p className="text-xs text-center font-medium">Desert Sand</p>
-            </Card>
-            <Card className="p-6 bg-neutral-100">
-              <div className="aspect-square flex items-center justify-center mb-3">
-                <img 
-                  src="/qatar-airways-logo.png" 
-                  alt="Logo on light gray"
-                  className="h-16 w-auto"
-                />
-              </div>
-              <p className="text-xs text-center font-medium">Light Gray</p>
-            </Card>
-          </div>
-        </div>
-
-        {/* Do's and Don'ts */}
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold mb-6">Usage Guidelines</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* DO's */}
-            <Card className="p-6 border-2 border-green-500/20 bg-green-500/5">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                  ✓
-                </div>
-                <h3 className="text-xl font-bold">Do</h3>
-              </div>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <span className="text-green-500 mt-0.5">✓</span>
-                  <div>
-                    <p className="font-medium mb-1">Use approved color versions</p>
-                    <p className="text-sm text-muted-foreground">Full color, monochrome, or white versions only</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-500 mt-0.5">✓</span>
-                  <div>
-                    <p className="font-medium mb-1">Maintain aspect ratio</p>
-                    <p className="text-sm text-muted-foreground">Always scale proportionally when resizing</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-500 mt-0.5">✓</span>
-                  <div>
-                    <p className="font-medium mb-1">Use on clean backgrounds</p>
-                    <p className="text-sm text-muted-foreground">Ensure high contrast and visibility</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-500 mt-0.5">✓</span>
-                  <div>
-                    <p className="font-medium mb-1">Respect clear space</p>
-                    <p className="text-sm text-muted-foreground">Keep minimum spacing around the logo</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-500 mt-0.5">✓</span>
-                  <div>
-                    <p className="font-medium mb-1">Use high-resolution files</p>
-                    <p className="text-sm text-muted-foreground">Vector formats for print, PNG for digital</p>
-                  </div>
-                </li>
-              </ul>
-            </Card>
-
-            {/* DON'Ts */}
-            <Card className="p-6 border-2 border-destructive/20 bg-destructive/5">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="h-8 w-8 rounded-full bg-destructive flex items-center justify-center text-white font-bold">
-                  ✕
-                </div>
-                <h3 className="text-xl font-bold">Don&apos;t</h3>
-              </div>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <span className="text-destructive mt-0.5">✕</span>
-                  <div>
-                    <p className="font-medium mb-1">Distort or stretch</p>
-                    <p className="text-sm text-muted-foreground">Never alter the width or height independently</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-destructive mt-0.5">✕</span>
-                  <div>
-                    <p className="font-medium mb-1">Change colors</p>
-                    <p className="text-sm text-muted-foreground">Never use unauthorized color variations</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-destructive mt-0.5">✕</span>
-                  <div>
-                    <p className="font-medium mb-1">Rotate or flip</p>
-                    <p className="text-sm text-muted-foreground">Always keep the logo in its original orientation</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-destructive mt-0.5">✕</span>
-                  <div>
-                    <p className="font-medium mb-1">Add effects or shadows</p>
-                    <p className="text-sm text-muted-foreground">No drop shadows, gradients, or special effects</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-destructive mt-0.5">✕</span>
-                  <div>
-                    <p className="font-medium mb-1">Place on busy backgrounds</p>
-                    <p className="text-sm text-muted-foreground">Avoid patterns, images, or low-contrast surfaces</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-destructive mt-0.5">✕</span>
-                  <div>
-                    <p className="font-medium mb-1">Recreate or redraw</p>
-                    <p className="text-sm text-muted-foreground">Always use official digital files</p>
-                  </div>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-
-        {/* Download Section */}
-        <Card className="p-8 bg-gradient-to-br from-primary/5 to-primary/10">
-          <div className="text-center">
-            <h3 className="text-xl font-bold mb-3">Need Logo Files?</h3>
-            <p className="text-muted-foreground mb-6">
-              Download approved logo assets in various formats from the Library
+      <main className="flex-1 px-10 py-8 max-w-4xl">
+        {active === "introduction" && (
+          <div className="space-y-6">
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Coca-Cola Light · Brand Guidelines v3.2</div>
+            <h1 className="text-3xl font-serif">Introduction</h1>
+            <p className="text-sm leading-relaxed text-foreground/80 max-w-2xl">
+              This document is the single source of truth for the Coca-Cola Light brand. Every element here is a rule — not a suggestion. Consistent application of these guidelines builds the brand equity that makes Coca-Cola Light the leading light cola in the GCC and LEVANT region.
             </p>
-            <Button className="bg-gradient-primary">
-              Go to Asset Library
-            </Button>
-          </div>
-        </Card>
-      </section>
 
-      {/* Color Section */}
-      <section id="color" className="scroll-mt-20">
-        <div className="mb-8">
-          <div className="inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-            COLOR
-          </div>
-          <h2 className="text-4xl font-bold mb-4">Color System</h2>
-          <p className="text-muted-foreground">
-            Our color palette reflects the premium and warm nature of the Qatar Airways brand
-          </p>
-        </div>
+            <div className="grid grid-cols-2 gap-3">
+              {introCards.map((c) => (
+                <div key={c.label} className="rounded-xl border border-border/60 bg-card p-4">
+                  <div className="flex items-center gap-2 mb-2 text-[10px] tracking-[0.15em] text-muted-foreground uppercase">
+                    <c.icon className="h-3.5 w-3.5" />{c.label}
+                  </div>
+                  <p className="text-sm italic text-foreground/85 leading-relaxed">{c.text}</p>
+                </div>
+              ))}
+            </div>
 
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-xl font-bold mb-4">Primary Colors</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="overflow-hidden">
-                <div className="h-48 bg-[#5C0A3A]"></div>
-                <div className="p-6">
-                  <h4 className="font-bold mb-2">Qatar Maroon</h4>
-                  <p className="text-sm text-muted-foreground mb-3">Primary brand color</p>
-                  <div className="space-y-1 font-mono text-sm">
-                    <p>HEX: #5C0A3A</p>
-                    <p>RGB: 92, 10, 58</p>
-                    <p>HSL: 330°, 88%, 20%</p>
-                  </div>
-                </div>
-              </Card>
-              <Card className="overflow-hidden">
-                <div className="h-48 bg-[#CBB59C]"></div>
-                <div className="p-6">
-                  <h4 className="font-bold mb-2">Sand</h4>
-                  <p className="text-sm text-muted-foreground mb-3">Secondary accent</p>
-                  <div className="space-y-1 font-mono text-sm">
-                    <p>HEX: #CBB59C</p>
-                    <p>RGB: 203, 181, 156</p>
-                    <p>HSL: 30°, 32%, 70%</p>
-                  </div>
-                </div>
-              </Card>
-              <Card className="overflow-hidden">
-                <div className="h-48 bg-[#0F1020]"></div>
-                <div className="p-6">
-                  <h4 className="font-bold mb-2">Neutral</h4>
-                  <p className="text-sm text-muted-foreground mb-3">Text and backgrounds</p>
-                  <div className="space-y-1 font-mono text-sm">
-                    <p>HEX: #0F1020</p>
-                    <p>RGB: 15, 16, 32</p>
-                    <p>HSL: 240°, 37%, 10%</p>
-                  </div>
-                </div>
-              </Card>
+            <div className="rounded-xl border border-border/60 bg-card p-4">
+              <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">Brand Values</div>
+              <div className="flex flex-wrap gap-2">
+                {["Freedom", "Lightness", "Authenticity", "Balance", "Refreshment"].map((v) => (
+                  <span key={v} className="text-xs px-3 py-1 rounded-md bg-muted/50 border border-border/60">{v}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border/60 bg-[hsl(35_30%_97%)] p-4">
+              <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">How to use these guidelines</div>
+              <p className="text-sm leading-relaxed text-foreground/80">
+                Navigate sections using the sidebar. Each section contains structured rules — not descriptive text. Rules reference §section.subsection numbers and are the same references cited by Pixify's compliance engine. When you update a rule here, compliance checks update immediately.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        )}
 
-      {/* Typography Section */}
-      <section id="typography" className="scroll-mt-20">
-        <div className="mb-8">
-          <div className="inline-block px-4 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-            TYPOGRAPHY
-          </div>
-          <h2 className="text-4xl font-bold mb-4">Type System</h2>
-        </div>
+        {active === "logo" && (
+          <div className="space-y-6">
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">§2 Logo System</div>
+            <h1 className="text-3xl font-serif">Logo</h1>
+            <p className="text-sm leading-relaxed text-foreground/80 max-w-2xl">
+              The Coca-Cola Light logo is the most protected brand asset. It may not be altered, stretched, recolored, or placed on unapproved backgrounds.
+            </p>
 
-        <Card className="p-8">
-          <div className="space-y-8">
-            <div className="border-b border-border pb-8">
-              <p className="text-sm text-muted-foreground mb-3">Display Font</p>
-              <h3 className="text-5xl font-serif mb-3" style={{ fontFamily: 'Georgia, serif' }}>
-                Cormorant Garamond
-              </h3>
-              <p className="text-muted-foreground">For headlines and hero content</p>
-            </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-3">UI Font</p>
-              <h3 className="text-3xl font-sans mb-3">Inter</h3>
-              <p className="text-muted-foreground">For body text and interface elements</p>
+              <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">§2.1 Approved Variants</div>
+              <div className="grid grid-cols-4 gap-3">
+                {logoVariants.map((v) => (
+                  <div key={v.label}>
+                    <div className={`${v.bg} ${v.color} h-24 rounded-lg flex items-center justify-center font-serif italic text-sm`}>Coca-Cola Light</div>
+                    <div className="mt-2 text-sm font-medium">{v.label}</div>
+                    <div className="text-[11px] text-muted-foreground">{v.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-[hsl(35_60%_70%)] bg-[hsl(40_70%_96%)] p-4">
+              <div className="text-sm font-medium mb-1">§2.3 Clear Space Rule</div>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                Minimum clear space around all logo variants = <strong>logo height</strong>. No text, graphics, or other elements may appear within this zone. Minimum: <strong>24px</strong> in digital, <strong>6mm</strong> in print.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-[hsl(0_60%_85%)] bg-[hsl(0_60%_97%)] p-4">
+              <div className="text-sm font-medium mb-2 text-[hsl(0_60%_40%)]">§2.6 Prohibited Uses</div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-[hsl(0_60%_40%)]">
+                {["Do not stretch or distort", "Do not change colors", "Do not add shadows or effects", "Do not place on busy backgrounds", "Do not use outline-only version", "Do not rotate the logo"].map((r) => (
+                  <div key={r} className="flex items-center gap-2"><span>⊗</span>{r}</div>
+                ))}
+              </div>
             </div>
           </div>
-        </Card>
-      </section>
+        )}
+
+        {!["introduction", "logo"].includes(active) && (
+          <div className="space-y-4">
+            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Coca-Cola Light · Brand Guidelines v3.2</div>
+            <h1 className="text-3xl font-serif">{sections.find((s) => s.id === active)?.title}</h1>
+            <p className="text-sm text-muted-foreground max-w-2xl">Section content for {sections.find((s) => s.id === active)?.title} — structured rules cited by Pixify's compliance engine.</p>
+            <div className="rounded-xl border border-border/60 bg-card p-8 text-sm text-muted-foreground">Rules and visual references will be displayed here.</div>
+          </div>
+        )}
+      </main>
     </div>
   );
-};
-
-const InteractiveView = () => {
-  return (
-    <div className="max-w-5xl mx-auto">
-      <Card className="p-8">
-        <div className="text-center py-12">
-          <MessageSquare className="h-16 w-16 text-primary mx-auto mb-4" />
-          <h3 className="text-2xl font-bold mb-4">AI Brand Assistant</h3>
-          <p className="text-muted-foreground mb-8">
-            Ask questions about brand guidelines, find assets, or generate copy
-          </p>
-          <Button size="lg" className="bg-gradient-primary">
-            Start Conversation
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-export default Guideline;
+}
