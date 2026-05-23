@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,7 +12,37 @@ serve(async (req) => {
   }
 
   try {
-    const { query, context } = await req.json();
+    // Authenticate
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    );
+    const { data: userData, error: userErr } = await supabase.auth.getUser(
+      authHeader.replace('Bearer ', ''),
+    );
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate input
+    const body = await req.json().catch(() => ({}));
+    const query = typeof body?.query === 'string' ? body.query.trim() : '';
+    const context = body?.context && typeof body.context === 'object' ? body.context : {};
+    if (!query || query.length > 2000) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid query: must be 1-2000 characters' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+    const contextStr = JSON.stringify(context).slice(0, 4000);
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -61,7 +92,7 @@ When discussing colors, mention their hex codes and usage context.`;
         model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `User query: ${query}\n\nAdditional context: ${JSON.stringify(context || {})}` }
+          { role: 'user', content: `User query: ${query}\n\nAdditional context: ${contextStr}` }
         ],
         temperature: 0.7,
         max_tokens: 800,
