@@ -37,7 +37,7 @@ export default function Governance() {
       <div className="grid grid-cols-4 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="rounded-2xl border border-border/60 bg-card p-5">
-            <div className={`text-3xl font-serif ${s.color}`}>{s.value}</div>
+            <div className={`text-metric ${s.color}`}>{s.value}</div>
             <div className="text-sm font-medium mt-1">{s.label}</div>
             <div className="text-meta">{s.sub}</div>
           </div>
