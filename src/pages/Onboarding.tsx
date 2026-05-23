@@ -32,11 +32,11 @@ export default function Onboarding() {
       <aside className="w-72 border-r border-border/50 px-6 py-8 bg-[hsl(35_25%_94%)] flex flex-col">
         <div className="mb-8">
           <div className="text-xl font-bold tracking-tight mb-3">Pixi<span className="italic font-serif">fy</span></div>
-          <div className="text-[11px] text-muted-foreground">Setting up</div>
+          <div className="text-meta">Setting up</div>
           <div className="text-sm font-serif">{workspaceName}</div>
         </div>
 
-        <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">Setup Progress</div>
+        <div className="text-eyebrow mb-3">Setup Progress</div>
         <nav className="space-y-1 flex-1">
           {steps.map((s) => {
             const done = s.id < step;
@@ -63,11 +63,11 @@ export default function Onboarding() {
       {/* Main */}
       <main className="flex-1 flex items-start justify-center pt-20 px-10">
         <div className="w-full max-w-xl">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">Step {step}</div>
+          <div className="text-eyebrow mb-2">Step {step}</div>
 
           {step === 1 && (
             <>
-              <h1 className="text-3xl font-serif mb-3">What's this brand called?</h1>
+              <h1 className="text-page-title mb-3">What's this brand called?</h1>
               <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-md">
                 This creates a sealed workspace. Every asset, guideline, and health score will live inside it — separate from every other brand in your organisation.
               </p>
@@ -114,7 +114,7 @@ export default function Onboarding() {
 function UploadStep({ title, desc, cta, onNext, onSkip }: any) {
   return (
     <>
-      <h1 className="text-3xl font-serif mb-3">{title}</h1>
+      <h1 className="text-page-title mb-3">{title}</h1>
       <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-md">{desc}</p>
       <div className="rounded-2xl border-2 border-dashed border-border/60 bg-background p-10 text-center">
         <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
@@ -133,7 +133,7 @@ function UploadStep({ title, desc, cta, onNext, onSkip }: any) {
 function ConfirmStep({ title, desc, items, onNext }: any) {
   return (
     <>
-      <h1 className="text-3xl font-serif mb-3">{title}</h1>
+      <h1 className="text-page-title mb-3">{title}</h1>
       <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-md">{desc}</p>
       <div className="rounded-2xl border border-border/60 bg-background divide-y divide-border/60">
         {items.map((i: string) => (
@@ -154,7 +154,7 @@ function ConfirmStep({ title, desc, items, onNext }: any) {
 function ConnectStep({ onNext }: any) {
   return (
     <>
-      <h1 className="text-3xl font-serif mb-3">Connect your channels</h1>
+      <h1 className="text-page-title mb-3">Connect your channels</h1>
       <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-md">Pixify monitors these touchpoints continuously and surfaces compliance issues live on your dashboard.</p>
       <div className="space-y-2">
         {[{ l: "Website", p: "https://yourbrand.com" }, { l: "Instagram", p: "@handle" }, { l: "LinkedIn", p: "Company page URL" }, { l: "TikTok", p: "@handle" }].map((c) => (
@@ -173,7 +173,7 @@ function ConnectStep({ onNext }: any) {
 function ScanStep({ onNext }: any) {
   return (
     <>
-      <h1 className="text-3xl font-serif mb-3">Running baseline scan</h1>
+      <h1 className="text-page-title mb-3">Running baseline scan</h1>
       <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-md">We're scanning your touchpoints against the rules extracted from your guidelines. This takes ~5 minutes and runs in the background — you can continue to your dashboard now.</p>
       <div className="rounded-2xl border border-border/60 bg-background p-6 space-y-3">
         {[{ l: "Crawling website", v: 100 }, { l: "Analyzing visual identity", v: 80 }, { l: "Checking typography rules", v: 45 }, { l: "Scoring touchpoints", v: 12 }].map((s) => (
@@ -192,7 +192,7 @@ function ReadyStep({ workspaceName, onNext }: any) {
   return (
     <>
       <div className="h-14 w-14 rounded-2xl bg-[hsl(140_40%_92%)] text-[hsl(140_50%_30%)] flex items-center justify-center mb-5"><CheckCircle2 className="h-7 w-7" /></div>
-      <h1 className="text-3xl font-serif mb-3">{workspaceName} is ready</h1>
+      <h1 className="text-page-title mb-3">{workspaceName} is ready</h1>
       <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-md">Your workspace is live. Brand health score, compliance findings, and the Ask Pixify assistant are now active.</p>
       <Button onClick={onNext} className="w-full h-11 rounded-lg bg-foreground text-background hover:bg-foreground/90">Open dashboard <ArrowRight className="h-4 w-4 ml-2" /></Button>
     </>

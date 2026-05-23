@@ -25,8 +25,8 @@ export default function Governance() {
       <div className="flex items-start justify-between">
         <div>
           <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm hover:text-muted-foreground mb-3"><ArrowLeft className="h-4 w-4" />Back</Link>
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Coca-Cola Light</div>
-          <h1 className="text-3xl font-serif">Brand Governance</h1>
+          <div className="text-eyebrow mb-1">Coca-Cola Light</div>
+          <h1 className="text-page-title">Brand Governance</h1>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="rounded-lg"><Upload className="h-3.5 w-3.5 mr-2" />Check asset</Button>
@@ -37,9 +37,9 @@ export default function Governance() {
       <div className="grid grid-cols-4 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="rounded-2xl border border-border/60 bg-card p-5">
-            <div className={`text-3xl font-serif ${s.color}`}>{s.value}</div>
+            <div className={`text-metric ${s.color}`}>{s.value}</div>
             <div className="text-sm font-medium mt-1">{s.label}</div>
-            <div className="text-[11px] text-muted-foreground">{s.sub}</div>
+            <div className="text-meta">{s.sub}</div>
           </div>
         ))}
       </div>

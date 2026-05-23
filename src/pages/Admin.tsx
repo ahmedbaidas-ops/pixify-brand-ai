@@ -29,8 +29,8 @@ export default function Admin() {
       <div className="flex items-start justify-between">
         <div>
           <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm hover:text-muted-foreground mb-3"><ArrowLeft className="h-4 w-4" />Back</Link>
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Coca-Cola Light</div>
-          <h1 className="text-3xl font-serif">Admin Portal</h1>
+          <div className="text-eyebrow mb-1">Coca-Cola Light</div>
+          <h1 className="text-page-title">Admin Portal</h1>
         </div>
         <Button size="sm" className="h-9 rounded-lg bg-foreground hover:bg-foreground/90 text-background"><Plus className="h-3.5 w-3.5 mr-2" />Invite member</Button>
       </div>
@@ -50,7 +50,7 @@ export default function Admin() {
                     <span className={`h-1.5 w-1.5 rounded-full ${m.online ? "bg-[hsl(140_60%_45%)]" : "bg-[hsl(35_75%_55%)]"}`} />
                     {m.name}
                   </div>
-                  <div className="text-[11px] text-muted-foreground">{m.email}</div>
+                  <div className="text-meta">{m.email}</div>
                 </div>
                 <span className="text-[10px] px-2 py-0.5 rounded-md border border-border/60 bg-muted/30">{m.role}</span>
                 <button className="text-muted-foreground hover:text-foreground"><MoreHorizontal className="h-4 w-4" /></button>
@@ -81,7 +81,7 @@ export default function Admin() {
       </div>
 
       <div className="rounded-2xl border border-border/60 bg-card p-5">
-        <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-4">Role Permissions</div>
+        <div className="text-eyebrow mb-4">Role Permissions</div>
         <div className="grid grid-cols-3 gap-4">
           {permissions.map((p) => (
             <div key={p.role} className="rounded-xl bg-muted/30 p-4">
