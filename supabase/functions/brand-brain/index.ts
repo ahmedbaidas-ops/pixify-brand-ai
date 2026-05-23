@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -55,7 +56,37 @@ serve(async (req) => {
   }
 
   try {
-    const { action, query, content, context } = await req.json();
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    );
+    const { data: userData, error: userErr } = await supabase.auth.getUser(
+      authHeader.replace('Bearer ', ''),
+    );
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const allowedActions = new Set(['explain', 'rewrite', 'check', 'suggest', 'analyze', 'convert']);
+    const action = typeof body?.action === 'string' && allowedActions.has(body.action) ? body.action : '';
+    const query = typeof body?.query === 'string' ? body.query.slice(0, 2000) : undefined;
+    const content = typeof body?.content === 'string' ? body.content.slice(0, 5000) : undefined;
+    const context = typeof body?.context === 'string' ? body.context.slice(0, 2000) : undefined;
+    if (!query && !content) {
+      return new Response(
+        JSON.stringify({ error: 'Either query or content is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
     if (!LOVABLE_API_KEY) {

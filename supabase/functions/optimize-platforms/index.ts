@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -62,14 +63,54 @@ serve(async (req) => {
   }
 
   try {
-    const { copy, imageUrl, platforms } = await req.json();
-    
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    );
+    const { data: userData, error: userErr } = await supabase.auth.getUser(
+      authHeader.replace('Bearer ', ''),
+    );
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const copy = typeof body?.copy === 'string' ? body.copy.trim() : '';
+    const imageUrl = typeof body?.imageUrl === 'string' ? body.imageUrl : '';
+    const rawPlatforms = Array.isArray(body?.platforms) ? body.platforms : null;
+    if (!copy || copy.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid copy: must be 1-5000 characters' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+    if (imageUrl && !/^https?:\/\//i.test(imageUrl)) {
+      return new Response(
+        JSON.stringify({ error: 'imageUrl must be an http(s) URL' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+    const validPlatforms = Object.keys(PLATFORM_SPECS);
+    const platforms = rawPlatforms
+      ? rawPlatforms.filter((p: unknown) => typeof p === 'string' && validPlatforms.includes(p)).slice(0, 10)
+      : null;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const targetPlatforms = platforms || ["instagram_post", "instagram_story", "linkedin", "x"];
+    const targetPlatforms = platforms && platforms.length > 0
+      ? platforms
+      : ["instagram_post", "instagram_story", "linkedin", "x"];
     
     const results = await Promise.all(
       targetPlatforms.map(async (platform: string) => {
