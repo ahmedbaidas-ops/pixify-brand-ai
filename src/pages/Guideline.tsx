@@ -38,7 +38,7 @@ export default function Guideline() {
           <ArrowLeft className="h-4 w-4" />Back
         </Link>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Sections</div>
+          <div className="text-eyebrow">Sections</div>
           <button className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border border-border/60 hover:bg-muted/40"><Download className="h-3 w-3" />PDF</button>
         </div>
         <nav className="space-y-0.5">
@@ -56,7 +56,7 @@ export default function Guideline() {
           ))}
         </nav>
         <div className="mt-8 pt-4 border-t border-border/60">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Version</div>
+          <div className="text-eyebrow mb-1">Version</div>
           <div className="text-sm font-medium">v3.2</div>
           <div className="text-[11px] text-muted-foreground mt-0.5">Published · Jan 12, 2026</div>
         </div>
@@ -66,8 +66,8 @@ export default function Guideline() {
       <main className="flex-1 px-10 py-8 max-w-4xl">
         {active === "introduction" && (
           <div className="space-y-6">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Coca-Cola Light · Brand Guidelines v3.2</div>
-            <h1 className="text-3xl font-serif">Introduction</h1>
+            <div className="text-eyebrow">Coca-Cola Light · Brand Guidelines v3.2</div>
+            <h1 className="text-page-title">Introduction</h1>
             <p className="text-sm leading-relaxed text-foreground/80 max-w-2xl">
               This document is the single source of truth for the Coca-Cola Light brand. Every element here is a rule — not a suggestion. Consistent application of these guidelines builds the brand equity that makes Coca-Cola Light the leading light cola in the GCC and LEVANT region.
             </p>
@@ -84,7 +84,7 @@ export default function Guideline() {
             </div>
 
             <div className="rounded-xl border border-border/60 bg-card p-4">
-              <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">Brand Values</div>
+              <div className="text-eyebrow mb-3">Brand Values</div>
               <div className="flex flex-wrap gap-2">
                 {["Freedom", "Lightness", "Authenticity", "Balance", "Refreshment"].map((v) => (
                   <span key={v} className="text-xs px-3 py-1 rounded-md bg-muted/50 border border-border/60">{v}</span>
@@ -93,7 +93,7 @@ export default function Guideline() {
             </div>
 
             <div className="rounded-xl border border-border/60 bg-[hsl(35_30%_97%)] p-4">
-              <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">How to use these guidelines</div>
+              <div className="text-eyebrow mb-2">How to use these guidelines</div>
               <p className="text-sm leading-relaxed text-foreground/80">
                 Navigate sections using the sidebar. Each section contains structured rules — not descriptive text. Rules reference §section.subsection numbers and are the same references cited by Pixify's compliance engine. When you update a rule here, compliance checks update immediately.
               </p>
@@ -103,20 +103,20 @@ export default function Guideline() {
 
         {active === "logo" && (
           <div className="space-y-6">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">§2 Logo System</div>
-            <h1 className="text-3xl font-serif">Logo</h1>
+            <div className="text-eyebrow">§2 Logo System</div>
+            <h1 className="text-page-title">Logo</h1>
             <p className="text-sm leading-relaxed text-foreground/80 max-w-2xl">
               The Coca-Cola Light logo is the most protected brand asset. It may not be altered, stretched, recolored, or placed on unapproved backgrounds.
             </p>
 
             <div>
-              <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">§2.1 Approved Variants</div>
+              <div className="text-eyebrow mb-3">§2.1 Approved Variants</div>
               <div className="grid grid-cols-4 gap-3">
                 {logoVariants.map((v) => (
                   <div key={v.label}>
                     <div className={`${v.bg} ${v.color} h-24 rounded-lg flex items-center justify-center font-serif italic text-sm`}>Coca-Cola Light</div>
                     <div className="mt-2 text-sm font-medium">{v.label}</div>
-                    <div className="text-[11px] text-muted-foreground">{v.desc}</div>
+                    <div className="text-meta">{v.desc}</div>
                   </div>
                 ))}
               </div>
@@ -142,8 +142,8 @@ export default function Guideline() {
 
         {!["introduction", "logo"].includes(active) && (
           <div className="space-y-4">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Coca-Cola Light · Brand Guidelines v3.2</div>
-            <h1 className="text-3xl font-serif">{sections.find((s) => s.id === active)?.title}</h1>
+            <div className="text-eyebrow">Coca-Cola Light · Brand Guidelines v3.2</div>
+            <h1 className="text-page-title">{sections.find((s) => s.id === active)?.title}</h1>
             <p className="text-sm text-muted-foreground max-w-2xl">Section content for {sections.find((s) => s.id === active)?.title} — structured rules cited by Pixify's compliance engine.</p>
             <div className="rounded-xl border border-border/60 bg-card p-8 text-sm text-muted-foreground">Rules and visual references will be displayed here.</div>
           </div>

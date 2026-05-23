@@ -27,7 +27,7 @@ function Donut({ score = 78 }) {
         <circle cx="70" cy="70" r={r} stroke="hsl(35 75% 50%)" strokeWidth="10" fill="none" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={off} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-3xl font-serif">{score}</div>
+        <div className="text-page-title">{score}</div>
         <div className="text-[10px] text-muted-foreground">/ 100</div>
         <div className="text-[10px] text-[hsl(15_70%_45%)] mt-1">↓ 4 this week</div>
       </div>
@@ -70,8 +70,8 @@ export default function BrandHealth() {
       <div className="flex items-start justify-between">
         <div>
           <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm hover:text-muted-foreground mb-3"><ArrowLeft className="h-4 w-4" />Back</Link>
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Coca-Cola Light</div>
-          <h1 className="text-3xl font-serif">Brand Health Score</h1>
+          <div className="text-eyebrow mb-1">Coca-Cola Light</div>
+          <h1 className="text-page-title">Brand Health Score</h1>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="rounded-lg"><RefreshCw className="h-3.5 w-3.5 mr-2" />Refresh</Button>
@@ -89,18 +89,18 @@ export default function BrandHealth() {
 
       <div className="grid grid-cols-12 gap-5">
         <div className="col-span-3 rounded-2xl border border-border/60 bg-card p-5">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-4">Overall Score</div>
+          <div className="text-eyebrow mb-4">Overall Score</div>
           <Donut />
           <p className="text-[11px] text-muted-foreground text-center mt-3 leading-relaxed">Computed from 10 KPIs across 3 live touchpoints · Updated 2h ago</p>
         </div>
         <div className="col-span-9 rounded-2xl border border-border/60 bg-card p-5">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-4">Category Breakdown · click to drill down</div>
+          <div className="text-eyebrow mb-4">Category Breakdown · click to drill down</div>
           <div className="space-y-5">
             {categories.map((c) => (
               <div key={c.name}>
                 <div className="flex items-center justify-between text-sm mb-1.5">
                   <span className="font-medium">{c.name}</span>
-                  <span className="text-xs text-muted-foreground">{c.weight}% wt <span className="text-foreground font-serif text-base ml-2">{c.score}</span></span>
+                  <span className="text-xs text-muted-foreground">{c.weight}% wt <span className="text-foreground text-metric-sm ml-2">{c.score}</span></span>
                 </div>
                 <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                   <div className="h-full" style={{ width: `${c.score}%`, backgroundColor: c.color }} />
@@ -114,7 +114,7 @@ export default function BrandHealth() {
       <div className="rounded-2xl border border-border/60 bg-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Touchpoint Breakdown</div>
+            <div className="text-eyebrow mb-1">Touchpoint Breakdown</div>
             <div className="text-sm font-medium">Per-channel compliance performance</div>
           </div>
           <Button variant="outline" size="sm" className="rounded-lg">+ Add touchpoint</Button>
@@ -130,20 +130,20 @@ export default function BrandHealth() {
         <div className="grid grid-cols-4 gap-3 mb-5">
           {[{ v: d.pages, l: "Pages scanned" }, { v: d.issues, l: "Issues found" }, { v: d.lastScan, l: "Last scan" }, { v: d.rate, l: "Compliance rate" }].map((s, i) => (
             <div key={i} className="rounded-lg bg-muted/30 p-3">
-              <div className="text-2xl font-serif">{s.v}</div>
-              <div className="text-[11px] text-muted-foreground">{s.l}</div>
+              <div className="text-metric-sm">{s.v}</div>
+              <div className="text-meta">{s.l}</div>
             </div>
           ))}
         </div>
         <div className="grid grid-cols-3 gap-4 mb-5">
           {d.bars.map((b: any) => (
             <div key={b.k}>
-              <div className="flex items-center justify-between text-xs mb-1"><span>{b.k}</span><span className="font-serif text-sm">{b.v}</span></div>
+              <div className="flex items-center justify-between text-xs mb-1"><span>{b.k}</span><span className="text-metric-sm text-base">{b.v}</span></div>
               <div className="h-1 bg-muted rounded-full overflow-hidden"><div className="h-full bg-[hsl(140_50%_40%)]" style={{ width: `${b.v}%` }} /></div>
             </div>
           ))}
         </div>
-        <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">Issues on this touchpoint</div>
+        <div className="text-eyebrow mb-2">Issues on this touchpoint</div>
         <div className="space-y-1.5">
           {d.issuesList.map((it: string, i: number) => (
             <div key={i} className="flex items-center justify-between text-xs bg-muted/30 rounded-md px-3 py-2">
@@ -157,7 +157,7 @@ export default function BrandHealth() {
       <div className="rounded-2xl border border-border/60 bg-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Score History</div>
+            <div className="text-eyebrow mb-1">Score History</div>
             <div className="text-sm font-medium">Last 30 days</div>
           </div>
           <div className="inline-flex rounded-lg border border-border/60 bg-muted/30 p-0.5 text-xs">

@@ -16,8 +16,8 @@ export default function Settings() {
   return (
     <div className="px-8 py-6 max-w-[1200px] mx-auto">
       <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm hover:text-muted-foreground mb-3"><ArrowLeft className="h-4 w-4" />Back</Link>
-      <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Coca-Cola Light</div>
-      <h1 className="text-3xl font-serif mb-6">Settings</h1>
+      <div className="text-eyebrow mb-1">Coca-Cola Light</div>
+      <h1 className="text-metric mb-6">Settings</h1>
 
       <div className="flex gap-6">
         <aside className="w-48 shrink-0">
@@ -30,7 +30,7 @@ export default function Settings() {
 
         <div className="flex-1 space-y-5 max-w-2xl">
           <div className="rounded-2xl border border-border/60 bg-card p-5">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-4">Brand Profile</div>
+            <div className="text-eyebrow mb-4">Brand Profile</div>
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-medium block mb-1.5">Brand name</label>
@@ -45,7 +45,7 @@ export default function Settings() {
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-card p-5">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">Brand Documents</div>
+            <div className="text-eyebrow mb-2">Brand Documents</div>
             <p className="text-xs text-muted-foreground mb-4 leading-relaxed">Your brand strategy and guidelines power everything in Pixify — AI context, compliance rules, health scoring. Upload or replace documents here at any time.</p>
             <div className="space-y-2 mb-3">
               {[

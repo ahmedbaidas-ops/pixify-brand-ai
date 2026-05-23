@@ -70,7 +70,7 @@ function Donut({ score = 78 }: { score?: number }) {
         <circle cx="70" cy="70" r={r} stroke="hsl(35 75% 50%)" strokeWidth="10" fill="none" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-3xl font-serif">{score}</div>
+        <div className="text-page-title">{score}</div>
         <div className="text-[10px] text-muted-foreground">/ 100</div>
         <div className="text-[10px] text-[hsl(15_70%_45%)] mt-1">↓ 4 this week</div>
       </div>
@@ -89,8 +89,8 @@ export default function Dashboard() {
     <div className="px-8 py-6 max-w-[1600px] mx-auto space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Pepsi MENA</div>
-          <h1 className="text-3xl font-serif">Dashboard</h1>
+          <div className="text-eyebrow mb-1">Pepsi MENA</div>
+          <h1 className="text-page-title">Dashboard</h1>
         </div>
         <Button variant="outline" size="sm" className="rounded-lg"><RefreshCw className="h-3.5 w-3.5 mr-2" />Refresh score</Button>
       </div>
@@ -122,14 +122,14 @@ export default function Dashboard() {
       {/* 3 columns */}
       <div className="grid grid-cols-12 gap-5">
         <div className="col-span-3 rounded-2xl border border-border/60 bg-card p-5">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-3">Brand Health Score</div>
+          <div className="text-eyebrow mb-3">Brand Health Score</div>
           <Donut />
           <div className="mt-5 space-y-3.5">
             {categories.map((c) => (
               <div key={c.name}>
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span>{c.name}</span>
-                  <span className="text-muted-foreground">{c.weight}% wt <span className="text-foreground font-serif text-sm ml-1">{c.score}</span></span>
+                  <span className="text-muted-foreground">{c.weight}% wt <span className="text-foreground text-metric-sm text-base ml-1">{c.score}</span></span>
                 </div>
                 <div className="h-1 bg-muted rounded-full overflow-hidden">
                   <div className="h-full bg-[hsl(35_75%_50%)]" style={{ width: `${c.score}%` }} />
@@ -142,7 +142,7 @@ export default function Dashboard() {
 
         <div className="col-span-6 rounded-2xl border border-border/60 bg-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Connected Touchpoints</div>
+            <div className="text-eyebrow">Connected Touchpoints</div>
             <button className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-border/60 hover:bg-muted/40"><Plus className="h-3 w-3" />Add</button>
           </div>
           <div className="space-y-3">
@@ -153,7 +153,7 @@ export default function Dashboard() {
                     <t.icon className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <div className="text-sm font-medium">{t.name}</div>
-                      <div className="text-[11px] text-muted-foreground">{t.type} · {t.scanned}</div>
+                      <div className="text-meta">{t.type} · {t.scanned}</div>
                     </div>
                   </div>
                   <Pill status={t.status as any} />
@@ -176,8 +176,8 @@ export default function Dashboard() {
 
         <div className="col-span-3 rounded-2xl border border-border/60 bg-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Live Findings</div>
-            <div className="text-[11px] text-muted-foreground">3 open <button className="ml-1 text-foreground hover:underline">View all →</button></div>
+            <div className="text-eyebrow">Live Findings</div>
+            <div className="text-meta">3 open <button className="ml-1 text-foreground hover:underline">View all →</button></div>
           </div>
           <div className="space-y-3">
             {findings.map((f, i) => (
@@ -200,7 +200,7 @@ export default function Dashboard() {
       <div className="rounded-2xl border border-border/60 bg-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-1">Compliance Check</div>
+            <div className="text-eyebrow mb-1">Compliance Check</div>
             <div className="text-sm font-medium">Upload an asset to check against brand guidelines</div>
           </div>
           <Button variant="outline" size="sm" className="rounded-lg"><Upload className="h-3.5 w-3.5 mr-2" />Upload & Check</Button>
@@ -213,7 +213,7 @@ export default function Dashboard() {
                 <Pill status={c.status as any} />
               </div>
               <div className="text-sm font-medium truncate">{c.name}</div>
-              <div className="text-[11px] text-muted-foreground">{c.meta}</div>
+              <div className="text-meta">{c.meta}</div>
             </div>
           ))}
         </div>

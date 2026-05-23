@@ -51,7 +51,7 @@ export default function Library() {
       <aside className="w-64 border-r border-border/60 bg-background min-h-[calc(100vh-56px)] p-5 sticky top-[56px]">
         <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm hover:text-muted-foreground mb-5"><ArrowLeft className="h-4 w-4" />Back</Link>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Library</div>
+          <div className="text-eyebrow">Library</div>
           <button className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border border-border/60 hover:bg-muted/40"><Upload className="h-3 w-3" />Upload</button>
         </div>
         <nav className="space-y-0.5">
@@ -74,7 +74,7 @@ export default function Library() {
           ))}
         </nav>
         <div className="mt-8 pt-4 border-t border-border/60">
-          <div className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase mb-2">Filters</div>
+          <div className="text-eyebrow mb-2">Filters</div>
           <div className="space-y-1 text-xs">
             <div className="px-2 py-1.5 rounded hover:bg-muted/30 cursor-pointer">All statuses</div>
             <div className="px-2 py-1.5 rounded hover:bg-muted/30 cursor-pointer text-[hsl(35_75%_45%)]">Compliance issues</div>
