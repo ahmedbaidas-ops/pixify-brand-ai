@@ -22,10 +22,11 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 235 25% 15%;
 
-    /* Primary: Material 3 Yellow with black text */
-    --primary: 48 100% 50%;
+    /* Primary: Accessible amber/gold — meets WCAG AA non-text contrast (3:1) vs white
+       and AAA (7:1+) for black body text on the primary surface. */
+    --primary: 38 92% 42%;
     --primary-foreground: 0 0% 0%;
-    --primary-glow: 48 100% 60%;
+    --primary-glow: 42 95% 52%;
 
     /* Secondary: Desert Sand */
     --secondary: 28 25% 72%;
@@ -44,12 +45,12 @@ All colors MUST be HSL.
 
     --border: 28 15% 90%;
     --input: 28 15% 90%;
-    --ring: 48 100% 50%;
+    --ring: 38 92% 42%;
 
     --radius: 1rem;
 
     /* M3 Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(48 100% 50%), hsl(48 100% 60%));
+    --gradient-primary: linear-gradient(135deg, hsl(38 92% 42%), hsl(42 95% 52%));
     --gradient-accent: linear-gradient(135deg, hsl(235 25% 15%), hsl(235 30% 25%));
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(28 15% 98%));
 
@@ -58,17 +59,17 @@ All colors MUST be HSL.
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -1px hsl(0 0% 0% / 0.04);
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08), 0 4px 6px -2px hsl(0 0% 0% / 0.04);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 10px 10px -5px hsl(0 0% 0% / 0.04);
-    --shadow-premium: 0 25px 50px -12px hsl(48 100% 50% / 0.25);
+    --shadow-premium: 0 25px 50px -12px hsl(38 92% 42% / 0.25);
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 235 25% 15%;
-    --sidebar-primary: 48 100% 50%;
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary: 38 92% 42%;
+    --sidebar-primary-foreground: 0 0% 0%;
     --sidebar-accent: 28 15% 95%;
     --sidebar-accent-foreground: 235 25% 15%;
     --sidebar-border: 28 15% 90%;
-    --sidebar-ring: 48 100% 50%;
+    --sidebar-ring: 38 92% 42%;
 
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -85,9 +86,10 @@ All colors MUST be HSL.
     --popover: 235 25% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 48 100% 55%;
+    /* Dark mode: brighter amber keeps 7:1+ contrast on dark surfaces with black text. */
+    --primary: 42 100% 60%;
     --primary-foreground: 0 0% 0%;
-    --primary-glow: 48 100% 65%;
+    --primary-glow: 45 100% 68%;
 
     --secondary: 28 20% 25%;
     --secondary-foreground: 28 25% 72%;
@@ -103,9 +105,9 @@ All colors MUST be HSL.
 
     --border: 235 15% 25%;
     --input: 235 15% 25%;
-    --ring: 48 100% 55%;
+    --ring: 42 100% 60%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(48 100% 55%), hsl(48 100% 65%));
+    --gradient-primary: linear-gradient(135deg, hsl(42 100% 60%), hsl(45 100% 68%));
     --gradient-accent: linear-gradient(135deg, hsl(235 30% 20%), hsl(235 25% 30%));
     --gradient-subtle: linear-gradient(180deg, hsl(235 25% 10%), hsl(235 20% 15%));
 
